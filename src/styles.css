@@ -1,8 +1,42 @@
-
 @import "tailwindcss";
+
+@theme {
+  --color-primary: #47d7a4;
+  --color-primary-hover: #38b387;
+  --color-primary-dark: #2cb382;
+  --color-background: #f8f9fa;
+  --color-surface: #ffffff;
+  --color-text-main: #1e293b;
+  --color-text-muted: #64748b;
+  --color-border: #e2e8f0;
+
+  --color-success: #10b981;
+  --color-success-bg: #e6f4ea;
+  --color-warning: #f59e0b;
+  --color-warning-bg: #fef3c7;
+  --color-danger: #ef4444;
+  --color-danger-bg: #fee2e2;
+  --color-info: #3b82f6;
+  --color-info-bg: #dbeafe;
+
+  --font-sans: "Satoshi", ui-sans-serif, system-ui, sans-serif;
+  --radius-xl: 0.75rem;
+  --radius-2xl: 1rem;
+  --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.05), 0 1px 2px -1px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+@font-face {
+  font-family: "Satoshi";
+  src: url("/fonts/Satoshi-Variable.woff2") format("woff2");
+  font-display: swap;
+  font-weight: 100 900;
+  font-style: normal;
+}
 
 * {
   box-sizing: border-box;
+  font-family: "Satoshi", sans-serif;
 }
 
 html,
@@ -13,5 +47,38 @@ body,
 
 body {
   margin: 0;
+  background-color: var(--color-background);
+  color: var(--color-text-main);
+  font-size: 16px;
+  line-height: 24px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+h1 {
+  @apply text-2xl font-bold text-text-main;
+}
+
+h2 {
+  @apply text-xl font-bold text-text-main;
+}
+
+h3 {
+  @apply text-lg font-medium text-text-main;
+}
+
+h4 {
+  @apply text-base font-medium text-text-main;
+}
+
+p {
+  @apply text-base font-normal text-text-muted;
 }
 
