@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">PrestamosApp</string>
+    <string name="title_activity_main">PrestamosApp</string>
+    <string name="package_name">com.orlandodev.prestamos</string>
+    <string name="custom_url_scheme">com.orlandodev.prestamos</string>
+</resources>

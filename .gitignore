@@ -1,0 +1,38 @@
+# Dependencias
+node_modules/
+.pnpm-store/
+
+# Archivos de construcción / Build
+dist/
+.output/
+.vinxi/
+.tanstack/
+.cache/
+
+# Variables de entorno (¡SÚPER IMPORTANTE NO SUBIR TUS KEYS DE SUPABASE!)
+.env
+.env.local
+.env.*.local
+
+# Android & Gradle (Archivos temporales del sistema nativo)
+.gradle/
+build/
+android/app/build/
+android/.gradle/
+android/build/
+android/.idea/
+android/app/build/
+android/app/release/
+*.apk
+*.aab
+
+# Configuración del editor de código
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+DS_Store
+Thumbs.db
