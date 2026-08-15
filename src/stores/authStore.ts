@@ -1,4 +1,3 @@
-import { Preferences } from "@capacitor/preferences";
 import { create } from "zustand";
 import { supabase } from "#/lib/supabase";
 
@@ -18,6 +17,38 @@ interface AuthState {
 
 const AUTH_KEY = "prestamos_auth_user";
 
+// Helper: detectar si estamos en Capacitor (nativo) o web
+const isNative = () =>
+	typeof window !== "undefined" && window.location.protocol === "capacitor:";
+
+// Storage adapter: Capacitor Preferences en nativo, localStorage en web
+const storage = {
+	get: async (key: string): Promise<string | null> => {
+		if (isNative()) {
+			const { Preferences } = await import("@capacitor/preferences");
+			const { value } = await Preferences.get({ key });
+			return value;
+		}
+		return localStorage.getItem(key);
+	},
+	set: async (key: string, value: string): Promise<void> => {
+		if (isNative()) {
+			const { Preferences } = await import("@capacitor/preferences");
+			await Preferences.set({ key, value });
+		} else {
+			localStorage.setItem(key, value);
+		}
+	},
+	remove: async (key: string): Promise<void> => {
+		if (isNative()) {
+			const { Preferences } = await import("@capacitor/preferences");
+			await Preferences.remove({ key });
+		} else {
+			localStorage.removeItem(key);
+		}
+	},
+};
+
 export const useAuthStore = create<AuthState>((set) => ({
 	user: null,
 	isAuthenticated: false,
@@ -25,16 +56,16 @@ export const useAuthStore = create<AuthState>((set) => ({
 	setUser: async (user) => {
 		set({ user, isAuthenticated: !!user });
 		if (user) {
-			await Preferences.set({ key: AUTH_KEY, value: JSON.stringify(user) });
+			await storage.set(AUTH_KEY, JSON.stringify(user));
 		} else {
-			await Preferences.remove({ key: AUTH_KEY });
+			await storage.remove(AUTH_KEY);
 		}
 	},
 
 	logout: async () => {
 		await supabase.auth.signOut();
 		set({ user: null, isAuthenticated: false });
-		await Preferences.remove({ key: AUTH_KEY });
+		await storage.remove(AUTH_KEY);
 	},
 
 	getStoreSession: async () => {
@@ -49,14 +80,14 @@ export const useAuthStore = create<AuthState>((set) => ({
 				return null;
 			}
 
-			// 2. Intentar cargar el perfil de Preferences (cache offline)
-			const { value } = await Preferences.get({ key: AUTH_KEY });
-			if (value) {
-				const cached: UserProfile = JSON.parse(value);
+			// 2. Intentar cargar el perfil de storage (cache offline)
+			const cached = await storage.get(AUTH_KEY);
+			if (cached) {
+				const userProfile: UserProfile = JSON.parse(cached);
 				// Verificar que el cache pertenece al mismo usuario
-				if (cached.id === session.user.id) {
-					set({ user: cached, isAuthenticated: true });
-					return cached;
+				if (userProfile.id === session.user.id) {
+					set({ user: userProfile, isAuthenticated: true });
+					return userProfile;
 				}
 			}
 
@@ -74,10 +105,7 @@ export const useAuthStore = create<AuthState>((set) => ({
 					role: profileData.role,
 				};
 				// Guardar en cache para offline
-				await Preferences.set({
-					key: AUTH_KEY,
-					value: JSON.stringify(userProfile),
-				});
+				await storage.set(AUTH_KEY, JSON.stringify(userProfile));
 				set({ user: userProfile, isAuthenticated: true });
 				return userProfile;
 			}

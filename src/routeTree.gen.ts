@@ -9,90 +9,58 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AuthRouteImport } from './routes/auth'
-import { Route as LenderRouteImport } from './routes/lender'
 import { Route as AdminLendersRouteImport } from './routes/admin/lenders'
 import { Route as LenderDashboardRouteImport } from './routes/lender/dashboard'
 
-const AdminRoute = AdminRouteImport.update({
-  id: '/admin',
-  path: '/admin',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LenderRoute = LenderRouteImport.update({
-  id: '/lender',
-  path: '/lender',
+const AdminLendersRoute = AdminLendersRouteImport.update({
+  id: '/admin/lenders',
+  path: '/admin/lenders',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AdminLendersRoute = AdminLendersRouteImport.update({
-  id: '/lenders',
-  path: '/lenders',
-  getParentRoute: () => AdminRoute,
-} as any)
 const LenderDashboardRoute = LenderDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
-  getParentRoute: () => LenderRoute,
+  id: '/lender/dashboard',
+  path: '/lender/dashboard',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
-  '/lender': typeof LenderRouteWithChildren
   '/admin/lenders': typeof AdminLendersRoute
   '/lender/dashboard': typeof LenderDashboardRoute
 }
 export interface FileRoutesByTo {
-  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
-  '/lender': typeof LenderRouteWithChildren
   '/admin/lenders': typeof AdminLendersRoute
   '/lender/dashboard': typeof LenderDashboardRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRoute
-  '/lender': typeof LenderRouteWithChildren
   '/admin/lenders': typeof AdminLendersRoute
   '/lender/dashboard': typeof LenderDashboardRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    '/admin' | '/auth' | '/lender' | '/admin/lenders' | '/lender/dashboard'
+  fullPaths: '/auth' | '/admin/lenders' | '/lender/dashboard'
   fileRoutesByTo: FileRoutesByTo
-  to: '/admin' | '/auth' | '/lender' | '/admin/lenders' | '/lender/dashboard'
-  id:
-    | '__root__'
-    | '/admin'
-    | '/auth'
-    | '/lender'
-    | '/admin/lenders'
-    | '/lender/dashboard'
+  to: '/auth' | '/admin/lenders' | '/lender/dashboard'
+  id: '__root__' | '/auth' | '/admin/lenders' | '/lender/dashboard'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  AdminRoute: typeof AdminRouteWithChildren
   AuthRoute: typeof AuthRoute
-  LenderRoute: typeof LenderRouteWithChildren
+  AdminLendersRoute: typeof AdminLendersRoute
+  LenderDashboardRoute: typeof LenderDashboardRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/admin': {
-      id: '/admin'
-      path: '/admin'
-      fullPath: '/admin'
-      preLoaderRoute: typeof AdminRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -100,55 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/lender': {
-      id: '/lender'
-      path: '/lender'
-      fullPath: '/lender'
-      preLoaderRoute: typeof LenderRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/admin/lenders': {
       id: '/admin/lenders'
-      path: '/lenders'
+      path: '/admin/lenders'
       fullPath: '/admin/lenders'
       preLoaderRoute: typeof AdminLendersRouteImport
-      parentRoute: typeof AdminRoute
+      parentRoute: typeof rootRouteImport
     }
     '/lender/dashboard': {
       id: '/lender/dashboard'
-      path: '/dashboard'
+      path: '/lender/dashboard'
       fullPath: '/lender/dashboard'
       preLoaderRoute: typeof LenderDashboardRouteImport
-      parentRoute: typeof LenderRoute
+      parentRoute: typeof rootRouteImport
     }
   }
 }
 
-interface AdminRouteChildren {
-  AdminLendersRoute: typeof AdminLendersRoute
-}
-
-const AdminRouteChildren: AdminRouteChildren = {
-  AdminLendersRoute: AdminLendersRoute,
-}
-
-const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
-
-interface LenderRouteChildren {
-  LenderDashboardRoute: typeof LenderDashboardRoute
-}
-
-const LenderRouteChildren: LenderRouteChildren = {
-  LenderDashboardRoute: LenderDashboardRoute,
-}
-
-const LenderRouteWithChildren =
-  LenderRoute._addFileChildren(LenderRouteChildren)
-
 const rootRouteChildren: RootRouteChildren = {
-  AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRoute,
-  LenderRoute: LenderRouteWithChildren,
+  AdminLendersRoute: AdminLendersRoute,
+  LenderDashboardRoute: LenderDashboardRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

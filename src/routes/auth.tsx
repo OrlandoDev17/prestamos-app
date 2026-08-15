@@ -17,7 +17,8 @@ function RouteComponent() {
       const user = useAuthStore.getState().user;
       if (user) {
         navigate({
-          to: user.role === "superadmin" ? "/admin" : "/lender",
+          to:
+            user.role === "superadmin" ? "/admin/lenders" : "/lender/dashboard",
         });
       }
     }
@@ -31,4 +32,3 @@ function RouteComponent() {
     />
   );
 }
-
