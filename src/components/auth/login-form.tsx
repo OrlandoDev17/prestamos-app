@@ -4,7 +4,7 @@ import { FORM } from "#/constants/auth.constants";
 import { Input } from "@/components/ui/Input";
 
 export interface LoginFormValues {
-	username: string;
+	email: string;
 	password: string;
 }
 
@@ -21,7 +21,7 @@ export function LoginForm({
 }: LoginFormProps) {
 	const form = useForm({
 		defaultValues: {
-			username: "",
+			email: "",
 			password: "",
 		},
 		onSubmit: async ({ value }) => {

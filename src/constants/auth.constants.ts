@@ -1,12 +1,12 @@
 import type { LucideIcon } from "lucide-react";
-import { Lock, User } from "lucide-react";
+import { Lock, Mail } from "lucide-react";
 
 export type FieldValidator = (ctx: { value: string }) => string | undefined;
 
 export interface FormFieldConfig {
 	label: string;
 	placeholder: string;
-	name: "username" | "password";
+	name: "email" | "password";
 	type: "text" | "password" | "email" | "number";
 	icon: LucideIcon;
 	validators?: {
@@ -17,16 +17,16 @@ export interface FormFieldConfig {
 
 export const FORM: FormFieldConfig[] = [
 	{
-		label: "Nombre de Usuario",
-		placeholder: "orlando.admin",
-		name: "username",
-		type: "text",
-		icon: User,
+		label: "Correo Electrónico",
+		placeholder: "correo@ejemplo.com",
+		name: "email",
+		type: "email",
+		icon: Mail,
 		validators: {
 			onChange: ({ value }: { value: string }) =>
-				!value ? "El nombre de usuario es obligatorio" : undefined,
+				!value ? "El correo es obligatorio" : undefined,
 			onSubmit: ({ value }: { value: string }) =>
-				!value ? "El nombre de usuario es obligatorio" : undefined,
+				!value ? "El correo es obligatorio" : undefined,
 		},
 	},
 	{
