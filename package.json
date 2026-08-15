@@ -17,6 +17,7 @@
   "dependencies": {
     "@capacitor/android": "^8.5.0",
     "@capacitor/core": "^8.5.0",
+    "@capacitor/preferences": "^8.0.1",
     "@supabase/supabase-js": "^2.112.2",
     "@tailwindcss/vite": "^4.1.18",
     "@tanstack/react-devtools": "latest",
