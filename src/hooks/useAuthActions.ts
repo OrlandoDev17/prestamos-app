@@ -31,9 +31,15 @@ export function useAuthActions() {
 				.eq("id", authData.user.id)
 				.single();
 
-			if (profileError || !profileData) {
+			if (profileError) {
 				throw new Error(
-					"Error al cargar el perfil. Contacta al administrador.",
+					`Error de perfil: ${profileError.message} (codigo: ${profileError.code})`,
+				);
+			}
+
+			if (!profileData) {
+				throw new Error(
+					"No se encontro un perfil asociado a este usuario. Verifica que el usuario tenga un perfil en la tabla profiles.",
 				);
 			}
 
