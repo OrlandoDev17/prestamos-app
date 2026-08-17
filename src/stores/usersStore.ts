@@ -66,7 +66,7 @@ export const useUsersStore = create<UsersState>((set, get) => ({
 	},
 
 	createLender: async ({ full_name, email, password }) => {
-		// 1. Guardar sesión del superadmin antes del signUp
+		// 1. Guardar sesión del superadmin
 		const {
 			data: { session: adminSession },
 		} = await supabase.auth.getSession();
@@ -74,7 +74,41 @@ export const useUsersStore = create<UsersState>((set, get) => ({
 			return { success: false, error: "No hay sesion de administrador activa" };
 		}
 
-		// 2. Crear usuario en Auth
+		// 2. Verificar si ya existe un perfil con ese email
+		const { data: existingProfile } = await supabase
+			.from("profiles")
+			.select("id")
+			.eq("email", email)
+			.maybeSingle();
+
+		if (existingProfile) {
+			return { success: false, error: "Ya existe un perfil con este correo" };
+		}
+
+		// 3. Generar username slug y verificar que no exista
+		const username = full_name
+			.toLowerCase()
+			.normalize("NFD")
+			.replace(/[\u0300-\u036f]/g, "")
+			.replace(/[^a-z0-9\s-]/g, "")
+			.replace(/\s+/g, "-")
+			.replace(/-+/g, "-")
+			.replace(/^-|-$/g, "");
+
+		const { data: existingUsername } = await supabase
+			.from("profiles")
+			.select("id")
+			.eq("username", username)
+			.maybeSingle();
+
+		if (existingUsername) {
+			return {
+				success: false,
+				error: "Ya existe un prestamista con ese nombre, usa uno diferente",
+			};
+		}
+
+		// 4. Crear usuario en Auth
 		const { data, error: signUpError } = await supabase.auth.signUp({
 			email,
 			password,
@@ -97,37 +131,53 @@ export const useUsersStore = create<UsersState>((set, get) => ({
 			return { success: false, error: "No se pudo crear el usuario en Auth" };
 		}
 
-		// 3. Verificar si el usuario fue creado con confirmacion de email pendiente
 		if (data.user.identities?.length === 0) {
 			return { success: false, error: "Este correo ya esta registrado" };
 		}
 
-		// 4. Restaurar sesión del superadmin para tener permisos de insert
+		// 5. Restaurar sesión del superadmin para tener permisos de insert
 		await supabase.auth.setSession(adminSession);
 
-		// 5. Insertar perfil en la tabla profiles
-		const { error: profileError } = await supabase.from("profiles").insert({
-			id: data.user.id,
-			full_name,
-			email,
-			role: "lender",
-			is_active: true,
-		});
+		// 6. Insertar o actualizar perfil en profiles
+		// (maneja el caso donde un trigger crea el perfil automáticamente)
+		const newUserId = data.user.id;
+		const { error: profileError } = await supabase
+			.from("profiles")
+			.upsert(
+				{
+					id: newUserId,
+					full_name,
+					username,
+					email,
+					role: "lender",
+					is_active: true,
+				},
+				{ onConflict: "id" },
+			);
 
 		if (profileError) {
-			if (profileError.code === "23505") {
-				return { success: false, error: "Ya existe un perfil con este correo" };
-			}
+			// Rollback: eliminar el usuario de Auth que se acaba de crear
+			const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+			await fetch(`${supabaseUrl}/functions/v1/delete-user`, {
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${adminSession.access_token}`,
+					"Content-Type": "application/json",
+					apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+				},
+				body: JSON.stringify({ user_id: newUserId }),
+			});
+
 			return {
 				success: false,
 				error: `Error al crear perfil: ${profileError.message}`,
 			};
 		}
 
-		// 6. Asegurar que la sesión activa sigue siendo la del superadmin
+		// 7. Restaurar sesión del superadmin
 		await supabase.auth.setSession(adminSession);
 
-		// 7. Refrescar lista de lenders
+		// 8. Refrescar lista de lenders
 		await get().fetchLenders();
 		return { success: true };
 	},
@@ -165,6 +215,29 @@ export const useUsersStore = create<UsersState>((set, get) => ({
 			return { success: false, error: "No hay sesion de administrador activa" };
 		}
 
+		// Eliminar usuario de Auth via Edge Function (requiere service role)
+		const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+		const functionResponse = await fetch(
+			`${supabaseUrl}/functions/v1/delete-user`,
+			{
+				method: "POST",
+				headers: {
+					Authorization: `Bearer ${adminSession.access_token}`,
+					"Content-Type": "application/json",
+					apikey: import.meta.env.VITE_SUPABASE_ANON_KEY,
+				},
+				body: JSON.stringify({ user_id: id }),
+			},
+		);
+
+		if (!functionResponse.ok) {
+			const functionError = await functionResponse.json();
+			return {
+				success: false,
+				error: `Error al eliminar usuario de Auth: ${functionError.error}`,
+			};
+		}
+
 		// Eliminar perfil de profiles
 		const { error: profileError } = await supabase
 			.from("profiles")
@@ -178,8 +251,6 @@ export const useUsersStore = create<UsersState>((set, get) => ({
 			};
 		}
 
-		// Eliminar usuario de auth usando service role via edge function no disponible
-		// El usuario queda en auth pero sin perfil visible
 		await supabase.auth.setSession(adminSession);
 		await get().fetchLenders();
 		return { success: true };
