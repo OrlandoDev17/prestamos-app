@@ -1,49 +1,55 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { ArrowLeft, Calendar, Landmark } from "lucide-react";
+import { createFileRoute } from "@tanstack/react-router";
+import { Calendar, Landmark } from "lucide-react";
+import { useMemo } from "react";
 import { PaymentTimeline } from "#/components/lender/payment-timeline";
-import { useLoansStore } from "#/stores/loansStore";
-import type { Payment } from "#/stores/loansStore";
+import { Avatar } from "#/components/ui/avatar";
+import { PageHeader } from "#/components/ui/page-header";
+import { SkeletonCards } from "#/components/ui/skeleton-cards";
+import { currency } from "#/lib/format";
+import {
+	allLoansQuery,
+	loanPaymentsQuery,
+	useAllLoansQuery,
+	useLoanPaymentsQuery,
+} from "#/queries/loans.queries";
 
-export const Route = createFileRoute("/lender/loans/$loanId")({
+export const Route = createFileRoute("/lender/loans/$clientId/$loanId")({
+	loader: async ({ context, params }) => {
+		const { queryClient } = context;
+		await Promise.all([
+			queryClient.ensureQueryData(allLoansQuery),
+			queryClient.ensureQueryData(loanPaymentsQuery(params.loanId)),
+		]);
+	},
 	component: LoanDetail,
 });
 
 function LoanDetail() {
-	const { loanId } = Route.useParams();
-	const { loans, fetchLoans } = useLoansStore();
-	const fetchLoanPayments = useLoansStore((s) => s.fetchLoanPayments);
+	const { clientId, loanId } = Route.useParams();
+	const { data: loans = [], isLoading: loansLoading } = useAllLoansQuery();
+	const {
+		data: payments = [],
+		isLoading: paymentsLoading,
+		refetch: refetchPayments,
+	} = useLoanPaymentsQuery(loanId);
 
-	const [payments, setPayments] = useState<Payment[]>([]);
-	const [isLoadingPayments, setIsLoadingPayments] = useState(true);
+	const loan = useMemo(
+		() => loans.find((l) => l.id === loanId),
+		[loans, loanId],
+	);
 
-	const loan = loans.find((l) => l.id === loanId);
-
-	useEffect(() => {
-		fetchLoans();
-	}, [fetchLoans]);
-
-	useEffect(() => {
-		const loadPayments = async () => {
-			if (!loanId) return;
-			setIsLoadingPayments(true);
-			const data = await fetchLoanPayments(loanId);
-			setPayments(data);
-			setIsLoadingPayments(false);
-		};
-		loadPayments();
-	}, [loanId, fetchLoanPayments]);
-
-	const currency = (val: number) =>
-		new Intl.NumberFormat("es-VE", {
-			style: "currency",
-			currency: "USD",
-		}).format(val);
+	if (loansLoading) {
+		return (
+			<main className="flex flex-col gap-4 pb-24">
+				<SkeletonCards count={2} />
+			</main>
+		);
+	}
 
 	if (!loan) {
 		return (
 			<main className="flex flex-col gap-4 pb-24">
-				<p className="text-text-muted">Cargando prestamo...</p>
+				<p className="text-text-muted">Prestamo no encontrado.</p>
 			</main>
 		);
 	}
@@ -52,35 +58,18 @@ function LoanDetail() {
 	const pendingCount = payments.length - paidCount;
 
 	return (
-		<main className="flex flex-col gap-4 pb-24">
-			<header className="flex items-center gap-3">
-				<Link
-					to="/lender/loans"
-					className="p-2 rounded-lg hover:bg-background transition-colors"
-				>
-					<ArrowLeft size={20} className="text-text-muted" />
-				</Link>
-				<div>
-					<h1 className="text-xl font-bold">Detalle del Prestamo</h1>
-					<p className="text-xs text-text-muted">{loan.client_name}</p>
-				</div>
-			</header>
+		<main className="flex flex-col gap-4 pb-24 min-h-[calc(100dvh-5.5rem)]">
+			<PageHeader
+				title="Detalle del Prestamo"
+				subtitle={loan.client_name}
+				backTo={`/lender/loans/${clientId}`}
+			/>
 
-			{/* Loan Info Card */}
 			<div className="bg-surface rounded-xl p-4 shadow-sm">
 				<div className="flex items-center gap-3 mb-4">
-					<span className="size-12 rounded-full flex items-center justify-center text-sm font-bold text-white bg-linear-to-br from-primary to-primary-dark">
-						{loan.client_name
-							.split(" ")
-							.map((n) => n[0])
-							.slice(0, 2)
-							.join("")
-							.toUpperCase()}
-					</span>
+					<Avatar name={loan.client_name} size="lg" />
 					<div>
-						<h2 className="font-semibold text-text-main">
-							{loan.client_name}
-						</h2>
+						<h2 className="font-semibold text-text-main">{loan.client_name}</h2>
 						<p className="text-xs text-text-muted capitalize">
 							{loan.payment_frequency}
 						</p>
@@ -135,29 +124,24 @@ function LoanDetail() {
 				</div>
 			</div>
 
-			{/* Timeline */}
 			<div>
 				<h3 className="text-sm font-semibold text-text-main mb-3 flex items-center gap-2">
 					<Calendar size={16} />
 					Cronograma de pagos
 				</h3>
 
-				{isLoadingPayments ? (
-					<div className="flex flex-col gap-3">
-						{["skeleton-1", "skeleton-2", "skeleton-3"].map((id) => (
-							<div
-								key={id}
-								className="h-20 bg-surface rounded-xl animate-pulse"
-							/>
-						))}
+				{paymentsLoading ? (
+					<SkeletonCards count={3} />
+				) : payments.length === 0 ? (
+					<div className="bg-surface rounded-xl p-6 text-center">
+						<p className="text-sm text-text-muted">
+							No se encontraron cuotas para este prestamo.
+						</p>
 					</div>
 				) : (
 					<PaymentTimeline
 						payments={payments}
-						onPaymentUpdated={async () => {
-							const data = await fetchLoanPayments(loanId);
-							setPayments(data);
-						}}
+						onPaymentUpdated={() => refetchPayments()}
 					/>
 				)}
 			</div>

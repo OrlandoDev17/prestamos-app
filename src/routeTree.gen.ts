@@ -14,8 +14,12 @@ import { Route as AdminLendersRouteImport } from './routes/admin/lenders'
 import { Route as LenderClientsRouteImport } from './routes/lender/clients'
 import { Route as LenderDashboardRouteImport } from './routes/lender/dashboard'
 import { Route as LenderLoansRouteImport } from './routes/lender/loans'
-import { Route as LenderLoansLoanIdRouteImport } from './routes/lender/loans.$loanId'
-import { Route as LenderClientsClientIdLoansRouteImport } from './routes/lender/clients.$clientId.loans'
+import { Route as LenderReportsRouteImport } from './routes/lender/reports'
+import { Route as LenderLoansIndexRouteImport } from './routes/lender/loans/index'
+import { Route as LenderLoansClientIdRouteImport } from './routes/lender/loans/$clientId'
+import { Route as LenderLoansPendingTodayRouteImport } from './routes/lender/loans/pending-today'
+import { Route as LenderLoansClientIdIndexRouteImport } from './routes/lender/loans/$clientId/index'
+import { Route as LenderLoansClientIdLoanIdRouteImport } from './routes/lender/loans/$clientId.$loanId'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
@@ -42,45 +46,76 @@ const LenderLoansRoute = LenderLoansRouteImport.update({
   path: '/lender/loans',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LenderLoansLoanIdRoute = LenderLoansLoanIdRouteImport.update({
-  id: '/$loanId',
-  path: '/$loanId',
+const LenderReportsRoute = LenderReportsRouteImport.update({
+  id: '/lender/reports',
+  path: '/lender/reports',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LenderLoansIndexRoute = LenderLoansIndexRouteImport.update({
+  id: '/',
+  path: '/',
   getParentRoute: () => LenderLoansRoute,
 } as any)
-const LenderClientsClientIdLoansRoute =
-  LenderClientsClientIdLoansRouteImport.update({
-    id: '/$clientId/loans',
-    path: '/$clientId/loans',
-    getParentRoute: () => LenderClientsRoute,
+const LenderLoansClientIdRoute = LenderLoansClientIdRouteImport.update({
+  id: '/$clientId',
+  path: '/$clientId',
+  getParentRoute: () => LenderLoansRoute,
+} as any)
+const LenderLoansPendingTodayRoute = LenderLoansPendingTodayRouteImport.update({
+  id: '/pending-today',
+  path: '/pending-today',
+  getParentRoute: () => LenderLoansRoute,
+} as any)
+const LenderLoansClientIdIndexRoute =
+  LenderLoansClientIdIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => LenderLoansClientIdRoute,
+  } as any)
+const LenderLoansClientIdLoanIdRoute =
+  LenderLoansClientIdLoanIdRouteImport.update({
+    id: '/$loanId',
+    path: '/$loanId',
+    getParentRoute: () => LenderLoansClientIdRoute,
   } as any)
 
 export interface FileRoutesByFullPath {
   '/auth': typeof AuthRoute
   '/admin/lenders': typeof AdminLendersRoute
-  '/lender/clients': typeof LenderClientsRouteWithChildren
+  '/lender/clients': typeof LenderClientsRoute
   '/lender/dashboard': typeof LenderDashboardRoute
   '/lender/loans': typeof LenderLoansRouteWithChildren
-  '/lender/loans/$loanId': typeof LenderLoansLoanIdRoute
-  '/lender/clients/$clientId/loans': typeof LenderClientsClientIdLoansRoute
+  '/lender/reports': typeof LenderReportsRoute
+  '/lender/loans/$clientId': typeof LenderLoansClientIdRouteWithChildren
+  '/lender/loans/pending-today': typeof LenderLoansPendingTodayRoute
+  '/lender/loans/': typeof LenderLoansIndexRoute
+  '/lender/loans/$clientId/$loanId': typeof LenderLoansClientIdLoanIdRoute
+  '/lender/loans/$clientId/': typeof LenderLoansClientIdIndexRoute
 }
 export interface FileRoutesByTo {
   '/auth': typeof AuthRoute
   '/admin/lenders': typeof AdminLendersRoute
-  '/lender/clients': typeof LenderClientsRouteWithChildren
+  '/lender/clients': typeof LenderClientsRoute
   '/lender/dashboard': typeof LenderDashboardRoute
-  '/lender/loans': typeof LenderLoansRouteWithChildren
-  '/lender/loans/$loanId': typeof LenderLoansLoanIdRoute
-  '/lender/clients/$clientId/loans': typeof LenderClientsClientIdLoansRoute
+  '/lender/reports': typeof LenderReportsRoute
+  '/lender/loans/pending-today': typeof LenderLoansPendingTodayRoute
+  '/lender/loans': typeof LenderLoansIndexRoute
+  '/lender/loans/$clientId/$loanId': typeof LenderLoansClientIdLoanIdRoute
+  '/lender/loans/$clientId': typeof LenderLoansClientIdIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/auth': typeof AuthRoute
   '/admin/lenders': typeof AdminLendersRoute
-  '/lender/clients': typeof LenderClientsRouteWithChildren
+  '/lender/clients': typeof LenderClientsRoute
   '/lender/dashboard': typeof LenderDashboardRoute
   '/lender/loans': typeof LenderLoansRouteWithChildren
-  '/lender/loans/$loanId': typeof LenderLoansLoanIdRoute
-  '/lender/clients/$clientId/loans': typeof LenderClientsClientIdLoansRoute
+  '/lender/reports': typeof LenderReportsRoute
+  '/lender/loans/$clientId': typeof LenderLoansClientIdRouteWithChildren
+  '/lender/loans/pending-today': typeof LenderLoansPendingTodayRoute
+  '/lender/loans/': typeof LenderLoansIndexRoute
+  '/lender/loans/$clientId/$loanId': typeof LenderLoansClientIdLoanIdRoute
+  '/lender/loans/$clientId/': typeof LenderLoansClientIdIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -90,17 +125,23 @@ export interface FileRouteTypes {
     | '/lender/clients'
     | '/lender/dashboard'
     | '/lender/loans'
-    | '/lender/loans/$loanId'
-    | '/lender/clients/$clientId/loans'
+    | '/lender/reports'
+    | '/lender/loans/$clientId'
+    | '/lender/loans/pending-today'
+    | '/lender/loans/'
+    | '/lender/loans/$clientId/$loanId'
+    | '/lender/loans/$clientId/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/auth'
     | '/admin/lenders'
     | '/lender/clients'
     | '/lender/dashboard'
+    | '/lender/reports'
+    | '/lender/loans/pending-today'
     | '/lender/loans'
-    | '/lender/loans/$loanId'
-    | '/lender/clients/$clientId/loans'
+    | '/lender/loans/$clientId/$loanId'
+    | '/lender/loans/$clientId'
   id:
     | '__root__'
     | '/auth'
@@ -108,16 +149,21 @@ export interface FileRouteTypes {
     | '/lender/clients'
     | '/lender/dashboard'
     | '/lender/loans'
-    | '/lender/loans/$loanId'
-    | '/lender/clients/$clientId/loans'
+    | '/lender/reports'
+    | '/lender/loans/$clientId'
+    | '/lender/loans/pending-today'
+    | '/lender/loans/'
+    | '/lender/loans/$clientId/$loanId'
+    | '/lender/loans/$clientId/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   AuthRoute: typeof AuthRoute
   AdminLendersRoute: typeof AdminLendersRoute
-  LenderClientsRoute: typeof LenderClientsRouteWithChildren
+  LenderClientsRoute: typeof LenderClientsRoute
   LenderDashboardRoute: typeof LenderDashboardRoute
   LenderLoansRoute: typeof LenderLoansRouteWithChildren
+  LenderReportsRoute: typeof LenderReportsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -157,41 +203,74 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LenderLoansRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/lender/loans/$loanId': {
-      id: '/lender/loans/$loanId'
-      path: '/$loanId'
-      fullPath: '/lender/loans/$loanId'
-      preLoaderRoute: typeof LenderLoansLoanIdRouteImport
+    '/lender/reports': {
+      id: '/lender/reports'
+      path: '/lender/reports'
+      fullPath: '/lender/reports'
+      preLoaderRoute: typeof LenderReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lender/loans/': {
+      id: '/lender/loans/'
+      path: '/'
+      fullPath: '/lender/loans/'
+      preLoaderRoute: typeof LenderLoansIndexRouteImport
       parentRoute: typeof LenderLoansRoute
     }
-    '/lender/clients/$clientId/loans': {
-      id: '/lender/clients/$clientId/loans'
-      path: '/$clientId/loans'
-      fullPath: '/lender/clients/$clientId/loans'
-      preLoaderRoute: typeof LenderClientsClientIdLoansRouteImport
-      parentRoute: typeof LenderClientsRoute
+    '/lender/loans/$clientId': {
+      id: '/lender/loans/$clientId'
+      path: '/$clientId'
+      fullPath: '/lender/loans/$clientId'
+      preLoaderRoute: typeof LenderLoansClientIdRouteImport
+      parentRoute: typeof LenderLoansRoute
+    }
+    '/lender/loans/pending-today': {
+      id: '/lender/loans/pending-today'
+      path: '/pending-today'
+      fullPath: '/lender/loans/pending-today'
+      preLoaderRoute: typeof LenderLoansPendingTodayRouteImport
+      parentRoute: typeof LenderLoansRoute
+    }
+    '/lender/loans/$clientId/': {
+      id: '/lender/loans/$clientId/'
+      path: '/'
+      fullPath: '/lender/loans/$clientId/'
+      preLoaderRoute: typeof LenderLoansClientIdIndexRouteImport
+      parentRoute: typeof LenderLoansClientIdRoute
+    }
+    '/lender/loans/$clientId/$loanId': {
+      id: '/lender/loans/$clientId/$loanId'
+      path: '/$loanId'
+      fullPath: '/lender/loans/$clientId/$loanId'
+      preLoaderRoute: typeof LenderLoansClientIdLoanIdRouteImport
+      parentRoute: typeof LenderLoansClientIdRoute
     }
   }
 }
 
-interface LenderClientsRouteChildren {
-  LenderClientsClientIdLoansRoute: typeof LenderClientsClientIdLoansRoute
+interface LenderLoansClientIdRouteChildren {
+  LenderLoansClientIdLoanIdRoute: typeof LenderLoansClientIdLoanIdRoute
+  LenderLoansClientIdIndexRoute: typeof LenderLoansClientIdIndexRoute
 }
 
-const LenderClientsRouteChildren: LenderClientsRouteChildren = {
-  LenderClientsClientIdLoansRoute: LenderClientsClientIdLoansRoute,
+const LenderLoansClientIdRouteChildren: LenderLoansClientIdRouteChildren = {
+  LenderLoansClientIdLoanIdRoute: LenderLoansClientIdLoanIdRoute,
+  LenderLoansClientIdIndexRoute: LenderLoansClientIdIndexRoute,
 }
 
-const LenderClientsRouteWithChildren = LenderClientsRoute._addFileChildren(
-  LenderClientsRouteChildren,
-)
+const LenderLoansClientIdRouteWithChildren =
+  LenderLoansClientIdRoute._addFileChildren(LenderLoansClientIdRouteChildren)
 
 interface LenderLoansRouteChildren {
-  LenderLoansLoanIdRoute: typeof LenderLoansLoanIdRoute
+  LenderLoansClientIdRoute: typeof LenderLoansClientIdRouteWithChildren
+  LenderLoansPendingTodayRoute: typeof LenderLoansPendingTodayRoute
+  LenderLoansIndexRoute: typeof LenderLoansIndexRoute
 }
 
 const LenderLoansRouteChildren: LenderLoansRouteChildren = {
-  LenderLoansLoanIdRoute: LenderLoansLoanIdRoute,
+  LenderLoansClientIdRoute: LenderLoansClientIdRouteWithChildren,
+  LenderLoansPendingTodayRoute: LenderLoansPendingTodayRoute,
+  LenderLoansIndexRoute: LenderLoansIndexRoute,
 }
 
 const LenderLoansRouteWithChildren = LenderLoansRoute._addFileChildren(
@@ -201,9 +280,10 @@ const LenderLoansRouteWithChildren = LenderLoansRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   AuthRoute: AuthRoute,
   AdminLendersRoute: AdminLendersRoute,
-  LenderClientsRoute: LenderClientsRouteWithChildren,
+  LenderClientsRoute: LenderClientsRoute,
   LenderDashboardRoute: LenderDashboardRoute,
   LenderLoansRoute: LenderLoansRouteWithChildren,
+  LenderReportsRoute: LenderReportsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
