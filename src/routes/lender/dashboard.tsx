@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Banknote, Clock, Landmark, Users } from "lucide-react";
-import { KPICard } from "#/components/lender/kpi-card";
+import { KPICard } from "@/components/lender/kpi-card";
 
 export const Route = createFileRoute("/lender/dashboard")({
 	component: LenderDashboard,
