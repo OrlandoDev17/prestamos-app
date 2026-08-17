@@ -1,12 +1,12 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { motion } from "motion/react";
 import {
 	Banknote,
+	BarChart3,
 	LayoutDashboard,
 	type LucideIcon,
-	Route,
 	Users,
 } from "lucide-react";
+import { motion } from "motion/react";
 import { useAuthStore } from "#/stores/authStore";
 
 interface NavItem {
@@ -32,9 +32,9 @@ const lenderLinks: NavItem[] = [
 		label: "Prestamos",
 	},
 	{
-		icon: Route,
-		href: "/lender/routes",
-		label: "Rutas",
+		icon: BarChart3,
+		href: "/lender/reports",
+		label: "Reportes",
 	},
 ];
 
@@ -51,7 +51,10 @@ export function BottomNav() {
 	const links = role === "superadmin" ? adminLinks : lenderLinks;
 
 	return (
-		<nav className="flex items-center justify-around fixed bottom-0 w-full z-50 h-16 shadow-sm bg-surface border-t border-text-muted/10">
+		<nav
+			aria-label="Navegación principal"
+			className="flex items-center justify-around fixed bottom-0 w-full z-50 h-16 shadow-sm bg-surface border-t border-text-muted/10"
+		>
 			{links.map((link) => (
 				<NavLink key={link.href} {...link} />
 			))}
@@ -66,6 +69,7 @@ function NavLink({ icon: Icon, href, label }: NavItem) {
 	return (
 		<Link
 			to={href}
+			preload="intent"
 			className="relative flex flex-col items-center justify-center gap-0.5 w-20 py-2 rounded-xl select-none active:scale-90 transition-transform duration-150"
 		>
 			{isActive && (
@@ -84,9 +88,7 @@ function NavLink({ icon: Icon, href, label }: NavItem) {
 			/>
 			<span
 				className={`relative z-10 text-xs leading-tight transition-colors duration-200 ${
-					isActive
-						? "font-semibold text-primary-dark"
-						: "text-text-muted"
+					isActive ? "font-semibold text-primary-dark" : "text-text-muted"
 				}`}
 			>
 				{label}

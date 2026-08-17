@@ -73,7 +73,7 @@ p {
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-primary-500);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
@@ -96,5 +96,15 @@ p {
     html {
       font-size: 120%; /* 1rem pasa a ser 19.2px */
     }
+  }
+
+  /* Aceleración de rendering */
+  section, article, nav, aside {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 200px;
+  }
+
+  main {
+    contain: layout style;
   }
 }

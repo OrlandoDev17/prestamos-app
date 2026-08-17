@@ -1,15 +1,16 @@
 import type { QueryClient } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import {
 	createRootRouteWithContext,
 	HeadContent,
 	Outlet,
-	Scripts,
 	redirect,
+	Scripts,
 	useLocation,
 } from "@tanstack/react-router";
 import { useEffect } from "react";
-import { useAuthStore } from "#/stores/authStore";
 import { AppLayout } from "#/components/layout/app-layout";
+import { useAuthStore } from "#/stores/authStore";
 import appCss from "../styles.css?url";
 
 interface MyRouterContext {
@@ -22,10 +23,27 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 	head: () => ({
 		meta: [
 			{ charSet: "utf-8" },
-			{ name: "viewport", content: "width=device-width, initial-scale=1" },
-			{ title: "Prestamos" },
+			{
+				name: "viewport",
+				content: "width=device-width, initial-scale=1, viewport-fit=cover",
+			},
+			{ title: "PrestamosApp" },
+			{
+				name: "description",
+				content: "Gestiona prestamos, clientes y cobranzas de forma sencilla",
+			},
+			{ name: "theme-color", content: "#47d7a4" },
+			{ name: "apple-mobile-web-app-capable", content: "yes" },
+			{
+				name: "apple-mobile-web-app-status-bar-style",
+				content: "black-translucent",
+			},
 		],
-		links: [{ rel: "stylesheet", href: appCss }],
+		links: [
+			{ rel: "stylesheet", href: appCss },
+			{ rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
+			{ rel: "manifest", href: "/manifest.json" },
+		],
 	}),
 	beforeLoad: async ({ location }) => {
 		// En el servidor, no podemos verificar la sesión (no hay localStorage)
@@ -76,13 +94,15 @@ function RootLayout() {
 				<HeadContent />
 			</head>
 			<body>
-				{isAuth ? (
-					<Outlet />
-				) : (
-					<AppLayout>
+				<QueryClientProvider client={Route.useRouteContext().queryClient}>
+					{isAuth ? (
 						<Outlet />
-					</AppLayout>
-				)}
+					) : (
+						<AppLayout>
+							<Outlet />
+						</AppLayout>
+					)}
+				</QueryClientProvider>
 				<Scripts />
 			</body>
 		</html>
