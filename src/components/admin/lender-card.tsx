@@ -1,5 +1,5 @@
-import { useEffect, useRef, useState } from "react";
 import { EllipsisVertical, Pencil, Trash2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { Toggle } from "#/components/ui/toggle";
 
 interface Lender {

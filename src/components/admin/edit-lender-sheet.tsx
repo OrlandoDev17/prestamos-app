@@ -1,5 +1,5 @@
+import { Mail, Save, User } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Mail, User, Save } from "lucide-react";
 import { BottomSheet } from "#/components/ui/bottom-sheet";
 import { useUsersStore } from "#/stores/usersStore";
 

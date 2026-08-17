@@ -1,5 +1,5 @@
-import { useState } from "react";
 import { LogOut } from "lucide-react";
+import { useState } from "react";
 
 interface HeaderProps {
 	logout: () => Promise<void>;
@@ -16,7 +16,9 @@ export function Header({ logout }: HeaderProps) {
 
 	return (
 		<header className="flex items-center justify-between w-full h-14 px-4 bg-surface shadow-xs">
-			<h3 className="text-xl text-primary-dark font-bold">Prestamistas</h3>
+			<h3 className="text-xl text-text-main font-bold">
+				Tu<span className="text-primary-dark">Prestamo</span>
+			</h3>
 			<button
 				type="button"
 				onClick={handleLogout}

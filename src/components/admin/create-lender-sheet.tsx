@@ -1,5 +1,5 @@
+import { Eye, EyeOff, Lock, Mail, User, UserPlus } from "lucide-react";
 import { useState } from "react";
-import { Eye, EyeOff, Mail, Lock, User, UserPlus } from "lucide-react";
 import { BottomSheet } from "#/components/ui/bottom-sheet";
 import { useUsersStore } from "#/stores/usersStore";
 

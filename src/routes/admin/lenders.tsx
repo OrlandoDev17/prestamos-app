@@ -1,13 +1,13 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 import { Plus, UserPlus } from "lucide-react";
-import { LenderCard } from "#/components/admin/lender-card";
+import { useEffect, useState } from "react";
 import { CreateLenderSheet } from "#/components/admin/create-lender-sheet";
 import { EditLenderSheet } from "#/components/admin/edit-lender-sheet";
+import { LenderCard } from "#/components/admin/lender-card";
 import { SkeletonCard } from "#/components/admin/skeleton-card";
 import { BottomSheet } from "#/components/ui/bottom-sheet";
-import { useUsersStore } from "#/stores/usersStore";
 import type { Lender } from "#/stores/usersStore";
+import { useUsersStore } from "#/stores/usersStore";
 
 export const Route = createFileRoute("/admin/lenders")({
 	component: AdminLenders,
@@ -110,7 +110,7 @@ function AdminLenders() {
 				<button
 					type="button"
 					onClick={() => setShowCreateSheet(true)}
-					className="fixed bottom-6 right-6 size-14 bg-primary text-white rounded-full shadow-lg hover:bg-primary-hover hover:shadow-xl active:scale-95 transition-all duration-200 flex items-center justify-center cursor-pointer z-40"
+					className="fixed bottom-20 right-6 size-14 bg-primary text-white rounded-full shadow-lg hover:bg-primary-hover hover:shadow-xl active:scale-95 transition-all duration-200 flex items-center justify-center cursor-pointer z-40"
 				>
 					<Plus size={24} strokeWidth={2.5} />
 				</button>
