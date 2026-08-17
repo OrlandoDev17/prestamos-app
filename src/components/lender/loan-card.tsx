@@ -1,5 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { Landmark, Users } from "lucide-react";
+import { Avatar } from "#/components/ui/avatar";
+import { currency } from "#/lib/format";
 import type { Loan } from "#/stores/loansStore";
 
 interface LoanCardProps {
@@ -7,17 +9,17 @@ interface LoanCardProps {
 }
 
 const statusConfig = {
-	activo: {
+	active: {
 		label: "Activo",
 		className: "text-success bg-success-bg",
 		dotClass: "bg-success",
 	},
-	pagado: {
+	paid: {
 		label: "Pagado",
 		className: "text-text-muted bg-background",
 		dotClass: "bg-text-muted/50",
 	},
-	vencido: {
+	overdue: {
 		label: "Vencido",
 		className: "text-danger bg-danger-bg",
 		dotClass: "bg-danger",
@@ -25,31 +27,21 @@ const statusConfig = {
 };
 
 export function LoanCard({ loan }: LoanCardProps) {
-	const status = statusConfig[loan.status as keyof typeof statusConfig] ?? statusConfig.activo;
-
-	const currency = (amount: number) =>
-		new Intl.NumberFormat("es-VE", {
-			style: "currency",
-			currency: "USD",
-		}).format(amount);
+	const status =
+		statusConfig[loan.status as keyof typeof statusConfig] ??
+		statusConfig.activo;
 
 	return (
 		<Link
-			to="/lender/loans/$loanId"
-			params={{ loanId: loan.id }}
+			to="/lender/loans/$clientId/$loanId"
+			params={{ clientId: loan.client_id, loanId: loan.id }}
+			preload="intent"
 			className="flex flex-col gap-3 bg-surface p-4 rounded-xl shadow-sm transition-all duration-200 hover:shadow-md active:scale-[0.98]"
 		>
 			<div className="flex items-start justify-between">
 				<div className="flex items-center gap-3">
 					<div className="relative">
-						<span className="size-12 rounded-full flex items-center justify-center text-sm font-bold text-white ring-2 ring-offset-2 ring-offset-surface bg-linear-to-br from-primary to-primary-dark ring-primary/30">
-							{loan.client_name
-								.split(" ")
-								.map((n) => n[0])
-								.slice(0, 2)
-								.join("")
-								.toUpperCase()}
-						</span>
+						<Avatar name={loan.client_name} size="lg" />
 						<span
 							className={`absolute -bottom-0.5 -right-0.5 size-3.5 rounded-full border-2 border-surface ${status.dotClass}`}
 						/>

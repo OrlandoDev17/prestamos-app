@@ -1,8 +1,10 @@
-import { useState } from "react";
 import { Check, Circle, Clock } from "lucide-react";
 import { motion } from "motion/react";
+import { useState } from "react";
+import { BottomSheet } from "#/components/ui/bottom-sheet";
+import { currency, formatDateShort } from "#/lib/format";
+import { useMarkPaymentPaid } from "#/queries/loans.queries";
 import type { Payment } from "#/stores/loansStore";
-import { useLoansStore } from "#/stores/loansStore";
 
 interface PaymentTimelineProps {
 	payments: Payment[];
@@ -13,25 +15,9 @@ export function PaymentTimeline({
 	payments,
 	onPaymentUpdated,
 }: PaymentTimelineProps) {
-	const markPaymentPaid = useLoansStore((s) => s.markPaymentPaid);
+	const markPaid = useMarkPaymentPaid();
 	const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
 	const [showConfirmSheet, setShowConfirmSheet] = useState(false);
-	const [isMarking, setIsMarking] = useState(false);
-
-	const currency = (amount: number) =>
-		new Intl.NumberFormat("es-VE", {
-			style: "currency",
-			currency: "USD",
-		}).format(amount);
-
-	const formatDate = (dateStr: string) => {
-		const date = new Date(dateStr);
-		return date.toLocaleDateString("es-VE", {
-			day: "numeric",
-			month: "short",
-			year: "numeric",
-		});
-	};
 
 	const handleMarkPaid = (payment: Payment) => {
 		setSelectedPayment(payment);
@@ -40,20 +26,19 @@ export function PaymentTimeline({
 
 	const confirmMarkPaid = async () => {
 		if (!selectedPayment) return;
-		setIsMarking(true);
 
-		const result = await markPaymentPaid(
-			selectedPayment.id,
-			selectedPayment.amount,
-		);
+		try {
+			await markPaid.mutateAsync({
+				paymentId: selectedPayment.id,
+				amount: selectedPayment.amount,
+			});
+			onPaymentUpdated();
+		} catch {
+			// Error handled by mutation
+		}
 
-		setIsMarking(false);
 		setShowConfirmSheet(false);
 		setSelectedPayment(null);
-
-		if (result.success) {
-			onPaymentUpdated();
-		}
 	};
 
 	const now = new Date();
@@ -73,7 +58,6 @@ export function PaymentTimeline({
 						transition={{ delay: index * 0.05 }}
 						className="relative flex gap-4"
 					>
-						{/* Line + dot */}
 						<div className="flex flex-col items-center">
 							<div
 								className={`size-8 rounded-full flex items-center justify-center shrink-0 ${
@@ -99,7 +83,6 @@ export function PaymentTimeline({
 							)}
 						</div>
 
-						{/* Content */}
 						<div
 							className={`flex-1 pb-6 ${
 								index === payments.length - 1 ? "pb-0" : ""
@@ -136,7 +119,7 @@ export function PaymentTimeline({
 								<div className="flex items-center justify-between text-xs text-text-muted mb-2">
 									<span className="flex items-center gap-1">
 										<Clock size={12} />
-										{formatDate(payment.due_date)}
+										{formatDateShort(payment.due_date)}
 									</span>
 									<span className="font-semibold text-sm text-text-main">
 										{currency(payment.amount)}
@@ -147,7 +130,7 @@ export function PaymentTimeline({
 									<p className="text-xs text-success">
 										Pagado: {currency(payment.paid_amount)} el{" "}
 										{payment.payment_date
-											? formatDate(payment.payment_date)
+											? formatDateShort(payment.payment_date)
 											: ""}
 									</p>
 								)}
@@ -167,58 +150,51 @@ export function PaymentTimeline({
 				);
 			})}
 
-			{/* Confirm Sheet */}
-			{showConfirmSheet && selectedPayment && (
-				<>
-					<button
-						type="button"
-						className="fixed inset-0 z-50 bg-black/40 backdrop-blur-xs"
-						onClick={() => setShowConfirmSheet(false)}
-						aria-label="Cerrar"
-					/>
-					<div className="fixed bottom-0 left-0 right-0 z-50 bg-surface rounded-t-2xl p-6 pb-8">
-						<div className="w-10 h-1 rounded-full bg-text-muted/30 mx-auto mb-4" />
-						<h3 className="text-lg font-bold mb-1">Confirmar Pago</h3>
-						<p className="text-text-muted text-sm mb-4">
-							Marcar cuota #{selectedPayment.installment_number} como pagada
-						</p>
-						<div className="bg-background rounded-xl p-4 mb-6">
-							<div className="flex justify-between text-sm mb-2">
-								<span className="text-text-muted">Monto a pagar:</span>
-								<span className="font-semibold">
-									{currency(selectedPayment.amount)}
-								</span>
-							</div>
-							<div className="flex justify-between text-sm">
-								<span className="text-text-muted">Vencimiento:</span>
-								<span className="font-semibold">
-									{formatDate(selectedPayment.due_date)}
-								</span>
-							</div>
+			<BottomSheet
+				isOpen={showConfirmSheet}
+				onClose={() => setShowConfirmSheet(false)}
+			>
+				<h3 className="text-lg font-bold mb-1">Confirmar Pago</h3>
+				<p className="text-text-muted text-sm mb-4">
+					Marcar cuota #{selectedPayment?.installment_number} como pagada
+				</p>
+				{selectedPayment && (
+					<div className="bg-background rounded-xl p-4 mb-6">
+						<div className="flex justify-between text-sm mb-2">
+							<span className="text-text-muted">Monto a pagar:</span>
+							<span className="font-semibold">
+								{currency(selectedPayment.amount)}
+							</span>
 						</div>
-						<div className="flex gap-3">
-							<button
-								type="button"
-								onClick={() => setShowConfirmSheet(false)}
-								className="flex-1 py-3 border border-text-muted/30 text-text-main font-semibold rounded-lg hover:bg-background transition-colors cursor-pointer"
-							>
-								Cancelar
-							</button>
-							<button
-								type="button"
-								onClick={confirmMarkPaid}
-								disabled={isMarking}
-								className="flex-1 py-3 bg-success text-white font-semibold rounded-lg hover:bg-emerald-600 active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
-							>
-								{isMarking && (
-									<span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-								)}
-								{isMarking ? "Procesando..." : "Confirmar"}
-							</button>
+						<div className="flex justify-between text-sm">
+							<span className="text-text-muted">Vencimiento:</span>
+							<span className="font-semibold">
+								{formatDateShort(selectedPayment.due_date)}
+							</span>
 						</div>
 					</div>
-				</>
-			)}
+				)}
+				<div className="flex gap-3">
+					<button
+						type="button"
+						onClick={() => setShowConfirmSheet(false)}
+						className="flex-1 py-3 border border-text-muted/30 text-text-main font-semibold rounded-lg hover:bg-background transition-colors cursor-pointer"
+					>
+						Cancelar
+					</button>
+					<button
+						type="button"
+						onClick={confirmMarkPaid}
+						disabled={markPaid.isPending}
+						className="flex-1 py-3 bg-success text-white font-semibold rounded-lg hover:bg-emerald-600 active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+					>
+						{markPaid.isPending && (
+							<span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+						)}
+						{markPaid.isPending ? "Procesando..." : "Confirmar"}
+					</button>
+				</div>
+			</BottomSheet>
 		</div>
 	);
 }

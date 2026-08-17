@@ -1,7 +1,7 @@
-import { useState } from "react";
 import { CreditCard, MapPin, Phone, User, UserPlus } from "lucide-react";
+import { useState } from "react";
 import { BottomSheet } from "#/components/ui/bottom-sheet";
-import { useClientsStore } from "#/stores/clientsStore";
+import { useCreateClient } from "#/queries/clients.queries";
 
 interface CreateClientSheetProps {
 	isOpen: boolean;
@@ -9,13 +9,12 @@ interface CreateClientSheetProps {
 }
 
 export function CreateClientSheet({ isOpen, onClose }: CreateClientSheetProps) {
-	const createClient = useClientsStore((s) => s.createClient);
+	const createClient = useCreateClient();
 	const [name, setName] = useState("");
 	const [cedula, setCedula] = useState("");
 	const [phone, setPhone] = useState("");
 	const [address, setAddress] = useState("");
 	const [errorMsg, setErrorMsg] = useState<string | null>(null);
-	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const resetForm = () => {
 		setName("");
@@ -33,21 +32,19 @@ export function CreateClientSheet({ isOpen, onClose }: CreateClientSheetProps) {
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
 		setErrorMsg(null);
-		setIsSubmitting(true);
 
-		const result = await createClient({
-			full_name: name,
-			cedula,
-			phone,
-			address,
-		});
-
-		setIsSubmitting(false);
-
-		if (result.success) {
+		try {
+			await createClient.mutateAsync({
+				full_name: name,
+				cedula,
+				phone,
+				address,
+			});
 			handleClose();
-		} else {
-			setErrorMsg(result.error ?? "Error al crear cliente");
+		} catch (err) {
+			setErrorMsg(
+				err instanceof Error ? err.message : "Error al crear cliente",
+			);
 		}
 	};
 
@@ -127,15 +124,15 @@ export function CreateClientSheet({ isOpen, onClose }: CreateClientSheetProps) {
 
 				<button
 					type="submit"
-					disabled={isSubmitting}
+					disabled={createClient.isPending}
 					className="mt-2 w-full flex items-center justify-center gap-2 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
 				>
-					{isSubmitting ? (
+					{createClient.isPending ? (
 						<span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
 					) : (
 						<UserPlus size={16} />
 					)}
-					{isSubmitting ? "Creando..." : "Crear Cliente"}
+					{createClient.isPending ? "Creando..." : "Crear Cliente"}
 				</button>
 			</form>
 		</BottomSheet>

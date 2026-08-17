@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
 	ArrowLeft,
 	ArrowRight,
@@ -6,11 +5,15 @@ import {
 	Calendar,
 	Check,
 	Percent,
-	Users,
 } from "lucide-react";
+import { useState } from "react";
+import { ClientSelector } from "#/components/lender/client-selector";
 import { BottomSheet } from "#/components/ui/bottom-sheet";
-import { useClientsStore } from "#/stores/clientsStore";
-import { useLoansStore } from "#/stores/loansStore";
+import { FormError } from "#/components/ui/form-error";
+import { SpinnerButton } from "#/components/ui/spinner-button";
+import { currency } from "#/lib/format";
+import { useAllClientsQuery } from "#/queries/clients.queries";
+import { useCreateLoan } from "#/queries/loans.queries";
 
 interface CreateLoanSheetProps {
 	isOpen: boolean;
@@ -20,6 +23,7 @@ interface CreateLoanSheetProps {
 
 const quickInstallments = [4, 8, 12, 24];
 const quickFrequencies = [
+	{ value: "diaria", label: "Diaria", days: "1 dia" },
 	{ value: "semanal", label: "Semanal", days: "7 dias" },
 	{ value: "quincenal", label: "Quincenal", days: "15 dias" },
 	{ value: "mensual", label: "Mensual", days: "30 dias" },
@@ -30,8 +34,8 @@ export function CreateLoanSheet({
 	onClose,
 	preselectedClientId,
 }: CreateLoanSheetProps) {
-	const clients = useClientsStore((s) => s.clients);
-	const createLoan = useLoansStore((s) => s.createLoan);
+	const { data: clients = [] } = useAllClientsQuery();
+	const createLoan = useCreateLoan();
 
 	const [step, setStep] = useState(0);
 	const [clientId, setClientId] = useState(preselectedClientId ?? "");
@@ -40,7 +44,6 @@ export function CreateLoanSheet({
 	const [installments, setInstallments] = useState("");
 	const [frequency, setFrequency] = useState("");
 	const [errorMsg, setErrorMsg] = useState<string | null>(null);
-	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	const resetForm = () => {
 		setStep(0);
@@ -57,17 +60,12 @@ export function CreateLoanSheet({
 		onClose();
 	};
 
-	const currency = (val: number) =>
-		new Intl.NumberFormat("es-VE", {
-			style: "currency",
-			currency: "USD",
-		}).format(val);
-
 	const numAmount = Number.parseFloat(amount) || 0;
 	const numRate = Number.parseFloat(rate) || 0;
 	const numInstallments = Number.parseInt(installments, 10) || 0;
 	const totalToPay = numAmount + numAmount * (numRate / 100);
-	const installmentAmount = numInstallments > 0 ? totalToPay / numInstallments : 0;
+	const installmentAmount =
+		numInstallments > 0 ? totalToPay / numInstallments : 0;
 
 	const canNext = () => {
 		switch (step) {
@@ -86,22 +84,20 @@ export function CreateLoanSheet({
 
 	const handleSubmit = async () => {
 		setErrorMsg(null);
-		setIsSubmitting(true);
 
-		const result = await createLoan({
-			client_id: clientId,
-			amount_borrowed: numAmount,
-			interest_rate: numRate,
-			installment_count: numInstallments,
-			payment_frequency: frequency,
-		});
-
-		setIsSubmitting(false);
-
-		if (result.success) {
+		try {
+			await createLoan.mutateAsync({
+				client_id: clientId,
+				amount_borrowed: numAmount,
+				interest_rate: numRate,
+				installment_count: numInstallments,
+				payment_frequency: frequency,
+			});
 			handleClose();
-		} else {
-			setErrorMsg(result.error ?? "Error al crear prestamo");
+		} catch (err) {
+			setErrorMsg(
+				err instanceof Error ? err.message : "Error al crear prestamo",
+			);
 			setStep(4);
 		}
 	};
@@ -143,35 +139,15 @@ export function CreateLoanSheet({
 				))}
 			</div>
 
-			{errorMsg && (
-				<div className="p-3 bg-danger-bg text-danger text-sm rounded-lg mb-4">
-					{errorMsg}
-				</div>
-			)}
+			{errorMsg && <FormError message={errorMsg} />}
 
 			{/* Step 0: Client */}
 			{step === 0 && (
-				<div className="flex flex-col gap-3">
-					<label className="flex flex-col gap-1.5">
-						<span className="text-sm font-medium">Seleccionar cliente</span>
-						<div className="relative">
-							<select
-								value={clientId}
-								onChange={(e) => setClientId(e.target.value)}
-								required
-								className="w-full bg-background pl-10 pr-4 py-3 rounded-lg text-sm appearance-none focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all duration-200"
-							>
-								<option value="">Selecciona un cliente</option>
-								{clients.map((c) => (
-									<option key={c.id} value={c.id}>
-										{c.full_name} — {c.cedula}
-									</option>
-								))}
-							</select>
-							<Users className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-text-muted" />
-						</div>
-					</label>
-				</div>
+				<ClientSelector
+					clients={clients}
+					value={clientId}
+					onChange={setClientId}
+				/>
 			)}
 
 			{/* Step 1: Amount */}
@@ -222,6 +198,7 @@ export function CreateLoanSheet({
 							<button
 								key={n}
 								type="button"
+								aria-pressed={installments === String(n)}
 								onClick={() => setInstallments(String(n))}
 								className={`py-3 rounded-xl text-sm font-semibold transition-all duration-200 cursor-pointer active:scale-95 ${
 									installments === String(n)
@@ -251,40 +228,45 @@ export function CreateLoanSheet({
 			{step === 3 && (
 				<div className="flex flex-col gap-3">
 					<span className="text-sm font-medium">Frecuencia de pago</span>
-					{quickFrequencies.map((f) => (
-						<button
-							key={f.value}
-							type="button"
-							onClick={() => setFrequency(f.value)}
-							className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-200 cursor-pointer active:scale-[0.98] ${
-								frequency === f.value
-									? "border-primary bg-primary/5 ring-2 ring-primary/20"
-									: "border-text-muted/20 bg-surface hover:border-text-muted/40"
-							}`}
-						>
-							<div className="flex items-center gap-3">
-								<Calendar
-									size={18}
-									className={
-										frequency === f.value
-											? "text-primary-dark"
-											: "text-text-muted"
-									}
-								/>
-								<div className="flex flex-col items-start">
-									<span className="text-sm font-semibold text-text-main">
-										{f.label}
-									</span>
-									<span className="text-xs text-text-muted">Cada {f.days}</span>
+					<div>
+						{quickFrequencies.map((f) => (
+							<button
+								key={f.value}
+								type="button"
+								aria-pressed={frequency === f.value}
+								onClick={() => setFrequency(f.value)}
+								className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-200 cursor-pointer active:scale-[0.98] ${
+									frequency === f.value
+										? "border-primary bg-primary/5 ring-2 ring-primary/20"
+										: "border-text-muted/20 bg-surface hover:border-text-muted/40"
+								}`}
+							>
+								<div className="flex items-center gap-3">
+									<Calendar
+										size={18}
+										className={
+											frequency === f.value
+												? "text-primary-dark"
+												: "text-text-muted"
+										}
+									/>
+									<div className="flex flex-col items-start">
+										<span className="text-sm font-semibold text-text-main">
+											{f.label}
+										</span>
+										<span className="text-xs text-text-muted">
+											Cada {f.days}
+										</span>
+									</div>
 								</div>
-							</div>
-							{frequency === f.value && (
-								<div className="size-6 rounded-full bg-primary flex items-center justify-center">
-									<Check size={14} className="text-white" strokeWidth={3} />
-								</div>
-							)}
-						</button>
-					))}
+								{frequency === f.value && (
+									<div className="size-6 rounded-full bg-primary flex items-center justify-center">
+										<Check size={14} className="text-white" strokeWidth={3} />
+									</div>
+								)}
+							</button>
+						))}
+					</div>
 				</div>
 			)}
 
@@ -351,17 +333,14 @@ export function CreateLoanSheet({
 						<ArrowRight size={16} />
 					</button>
 				) : (
-					<button
+					<SpinnerButton
 						type="button"
+						isLoading={createLoan.isPending}
 						onClick={handleSubmit}
-						disabled={isSubmitting}
-						className="flex-1 flex items-center justify-center gap-2 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+						className="flex-1 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover active:scale-[0.98] transition-all duration-200"
 					>
-						{isSubmitting && (
-							<span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-						)}
-						{isSubmitting ? "Creando..." : "Crear Prestamo"}
-					</button>
+						{createLoan.isPending ? "Creando..." : "Crear Prestamo"}
+					</SpinnerButton>
 				)}
 			</div>
 		</BottomSheet>
