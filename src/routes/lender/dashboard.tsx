@@ -1,47 +1,62 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useAuthStore } from "#/stores/authStore";
+import { Banknote, Clock, Landmark, Users } from "lucide-react";
+import { KPICard } from "#/components/lender/kpi-card";
 
 export const Route = createFileRoute("/lender/dashboard")({
 	component: LenderDashboard,
 });
 
+const kpis = [
+	{
+		label: "Pendiente Hoy",
+		value: "4,500",
+		icon: Clock,
+		iconClassName: "text-amber-500 bg-amber-50",
+		prefix: "$",
+	},
+	{
+		label: "Cobrado Hoy",
+		value: "1,200",
+		prefix: "$",
+		icon: Banknote,
+		bgColor: "bg-primary-dark",
+		className: "text-surface",
+		iconClassName: "bg-primary",
+	},
+	{
+		label: "Prestamos Activos",
+		value: "35",
+		icon: Landmark,
+		iconClassName: "text-sky-500 bg-sky-50",
+	},
+	{
+		label: "Total Clientes",
+		value: "42",
+		icon: Users,
+		iconClassName: "text-purple-500 bg-purple-50",
+	},
+];
+
 function LenderDashboard() {
-	const user = useAuthStore((state) => state.user);
+	const today = new Date();
+	const day = today.toLocaleDateString("es-VE", {
+		weekday: "long",
+		day: "numeric",
+		month: "long",
+	});
 
 	return (
-		<div className="space-y-4">
-			<div>
-				<h1 className="text-xl font-bold text-text">
-					Hola, {user?.full_name?.split(" ")[0]}
-				</h1>
-				<p className="text-sm text-textMuted">Resumen del día</p>
-			</div>
+		<main className="flex flex-col gap-6 pb-24">
+			<header>
+				<h1 className="text-2xl font-bold">Resumen Diario</h1>
+				<p className="text-text-muted">{day}</p>
+			</header>
 
-			<div className="grid grid-cols-2 gap-3">
-				<div className="bg-white rounded-xl p-4 border border-border">
-					<p className="text-2xl font-bold text-primary">$0</p>
-					<p className="text-xs text-textMuted mt-1">Cobrado hoy</p>
-				</div>
-				<div className="bg-white rounded-xl p-4 border border-border">
-					<p className="text-2xl font-bold text-text">0</p>
-					<p className="text-xs text-textMuted mt-1">Préstamos activos</p>
-				</div>
-				<div className="bg-white rounded-xl p-4 border border-border">
-					<p className="text-2xl font-bold text-success">$0</p>
-					<p className="text-xs text-textMuted mt-1">Pendiente</p>
-				</div>
-				<div className="bg-white rounded-xl p-4 border border-border">
-					<p className="text-2xl font-bold text-error">0</p>
-					<p className="text-xs text-textMuted mt-1">Vencidos</p>
-				</div>
-			</div>
-
-			<div className="bg-white rounded-xl p-4 border border-border">
-				<h2 className="font-semibold text-text mb-3">Actividad reciente</h2>
-				<p className="text-sm text-textMuted text-center py-4">
-					Sin actividad reciente
-				</p>
-			</div>
-		</div>
+			<section className="grid grid-cols-2 gap-2">
+				{kpis.map((kpi) => (
+					<KPICard {...kpi} key={kpi.label} />
+				))}
+			</section>
+		</main>
 	);
 }
