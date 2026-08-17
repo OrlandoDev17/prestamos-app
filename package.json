@@ -28,6 +28,8 @@
     "@tanstack/react-router-devtools": "latest",
     "@tanstack/react-router-ssr-query": "latest",
     "@tanstack/react-start": "latest",
+    "jspdf": "^4.2.1",
+    "jspdf-autotable": "^5.0.8",
     "lucide-react": "^1.30.0",
     "motion": "^13.1.0",
     "nitro": "3.0.260610-beta",
@@ -47,6 +49,8 @@
     "@types/react-dom": "^19.2.0",
     "@vitejs/plugin-react": "^6.0.1",
     "typescript": "^6.0.2",
-    "vite": "^8.0.0"
+    "vite": "^8.0.0",
+    "vite-plugin-compression": "^0.5.1",
+    "vite-plugin-pwa": "^1.3.0"
   }
 }

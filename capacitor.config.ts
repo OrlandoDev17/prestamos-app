@@ -4,10 +4,13 @@ const config: CapacitorConfig = {
   appId: 'com.orlandodev.prestamos',
   appName: 'PrestamosApp',
   webDir: '.output/public',
+  android: {
+    backgroundColor: '#f8f9fa',
+    allowMixedContent: true,
+  },
   server: {
-    url: "http://192.168.1.8:3000",
-    cleartext: true
-  }
+    androidScheme: 'https',
+  },
 };
 
 export default config;
