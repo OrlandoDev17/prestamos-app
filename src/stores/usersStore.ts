@@ -141,19 +141,17 @@ export const useUsersStore = create<UsersState>((set, get) => ({
 		// 6. Insertar o actualizar perfil en profiles
 		// (maneja el caso donde un trigger crea el perfil automáticamente)
 		const newUserId = data.user.id;
-		const { error: profileError } = await supabase
-			.from("profiles")
-			.upsert(
-				{
-					id: newUserId,
-					full_name,
-					username,
-					email,
-					role: "lender",
-					is_active: true,
-				},
-				{ onConflict: "id" },
-			);
+		const { error: profileError } = await supabase.from("profiles").upsert(
+			{
+				id: newUserId,
+				full_name,
+				username,
+				email,
+				role: "lender",
+				is_active: true,
+			},
+			{ onConflict: "id" },
+		);
 
 		if (profileError) {
 			// Rollback: eliminar el usuario de Auth que se acaba de crear
