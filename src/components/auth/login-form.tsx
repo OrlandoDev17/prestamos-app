@@ -1,7 +1,7 @@
 import { useForm } from "@tanstack/react-form";
 import { AlertCircle, ArrowRight, Loader2 } from "lucide-react";
 import { FORM } from "#/constants/auth.constants";
-import { Input } from "@/components/ui/Input";
+import { Input } from "@/components/ui/input";
 
 export interface LoginFormValues {
   email: string;

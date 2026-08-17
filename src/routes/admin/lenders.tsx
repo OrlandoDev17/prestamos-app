@@ -5,7 +5,7 @@ import { LenderCard } from "#/components/admin/lender-card";
 import { CreateLenderSheet } from "#/components/admin/create-lender-sheet";
 import { EditLenderSheet } from "#/components/admin/edit-lender-sheet";
 import { SkeletonCard } from "#/components/admin/skeleton-card";
-import { BottomSheet } from "#/components/ui/BottomSheet";
+import { BottomSheet } from "#/components/ui/bottom-sheet";
 import { useUsersStore } from "#/stores/usersStore";
 import type { Lender } from "#/stores/usersStore";
 

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Eye, EyeOff, Mail, Lock, User, UserPlus } from "lucide-react";
-import { BottomSheet } from "#/components/ui/BottomSheet";
+import { BottomSheet } from "#/components/ui/bottom-sheet";
 import { useUsersStore } from "#/stores/usersStore";
 
 interface CreateLenderSheetProps {
