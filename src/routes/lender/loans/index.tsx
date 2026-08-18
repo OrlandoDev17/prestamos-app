@@ -4,9 +4,9 @@ import { useState } from "react";
 import { CreateLoanSheet } from "#/components/lender/create-loan-sheet";
 import { LoanCard } from "#/components/lender/loan-card";
 import { EmptyState } from "#/components/ui/empty-state";
-import { FAB } from "#/components/ui/fab";
 import { SkeletonCards } from "#/components/ui/skeleton-cards";
 import { TabBar } from "#/components/ui/tab-bar";
+import { useFab } from "#/hooks/useFab";
 import { useLoansInfiniteQuery } from "#/queries/loans.queries";
 
 export const Route = createFileRoute("/lender/loans/")({
@@ -46,6 +46,12 @@ function LenderLoans() {
 	const hasNext = tab === "active" ? hasNextActive : hasNextPaid;
 	const fetchingNext = tab === "active" ? fetchingNextActive : fetchingNextPaid;
 	const fetchNext = tab === "active" ? fetchNextActive : fetchNextPaid;
+
+	useFab(
+		tab === "active" && activeLoans.length > 0
+			? () => setShowCreateSheet(true)
+			: null,
+	);
 
 	return (
 		<main className="flex flex-col gap-4 pb-24 min-h-[calc(100dvh-5.5rem)]">
@@ -158,10 +164,6 @@ function LenderLoans() {
 						</button>
 					)}
 				</div>
-			)}
-
-			{tab === "active" && activeLoans.length > 0 && (
-				<FAB onClick={() => setShowCreateSheet(true)} />
 			)}
 
 			<CreateLoanSheet

@@ -1,11 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Plus, UserPlus } from "lucide-react";
+import { UserPlus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { CreateLenderSheet } from "#/components/admin/create-lender-sheet";
 import { EditLenderSheet } from "#/components/admin/edit-lender-sheet";
 import { LenderCard } from "#/components/admin/lender-card";
 import { SkeletonCard } from "#/components/admin/skeleton-card";
 import { BottomSheet } from "#/components/ui/bottom-sheet";
+import { useFab } from "#/hooks/useFab";
 import type { Lender } from "#/stores/usersStore";
 import { useUsersStore } from "#/stores/usersStore";
 
@@ -25,6 +26,10 @@ function AdminLenders() {
 	useEffect(() => {
 		fetchLenders();
 	}, [fetchLenders]);
+
+	useFab(
+		lenders.length > 0 ? () => setShowCreateSheet(true) : null,
+	);
 
 	const handleToggle = (id: string, checked: boolean) => {
 		useUsersStore.setState((state) => ({
@@ -56,7 +61,7 @@ function AdminLenders() {
 	};
 
 	return (
-		<main className="flex flex-col gap-4 pb-24">
+		<main className="flex flex-col gap-4 pb-24 min-h-[calc(100dvh-5.5rem)]">
 			<header>
 				<h1 className="text-xl font-bold">Gestión de Prestamistas</h1>
 			</header>
@@ -104,17 +109,6 @@ function AdminLenders() {
 					/>
 				))}
 			</div>
-
-			{/* FAB */}
-			{lenders.length > 0 && (
-				<button
-					type="button"
-					onClick={() => setShowCreateSheet(true)}
-					className="fixed bottom-20 right-6 size-14 bg-primary text-white rounded-full shadow-lg hover:bg-primary-hover hover:shadow-xl active:scale-95 transition-all duration-200 flex items-center justify-center cursor-pointer z-40"
-				>
-					<Plus size={24} strokeWidth={2.5} />
-				</button>
-			)}
 
 			<CreateLenderSheet
 				isOpen={showCreateSheet}

@@ -4,8 +4,8 @@ import { useState } from "react";
 import { CreateClientSheet } from "#/components/lender/create-client-sheet";
 import { Avatar } from "#/components/ui/avatar";
 import { EmptyState } from "#/components/ui/empty-state";
-import { FAB } from "#/components/ui/fab";
 import { SkeletonCards } from "#/components/ui/skeleton-cards";
+import { useFab } from "#/hooks/useFab";
 import { currency } from "#/lib/format";
 import { useClientsInfiniteQuery } from "#/queries/clients.queries";
 
@@ -23,6 +23,8 @@ function LenderClients() {
 		isFetchingNextPage,
 	} = useClientsInfiniteQuery();
 	const [showCreateSheet, setShowCreateSheet] = useState(false);
+
+	useFab(() => setShowCreateSheet(true));
 
 	const clients = data?.pages.flatMap((p) => p.clients) ?? [];
 	const total = data?.pages[0]?.total ?? 0;
@@ -92,8 +94,6 @@ function LenderClients() {
 					)}
 				</div>
 			)}
-
-			<FAB onClick={() => setShowCreateSheet(true)} />
 
 			<CreateClientSheet
 				isOpen={showCreateSheet}

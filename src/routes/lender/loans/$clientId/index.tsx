@@ -4,9 +4,9 @@ import { useMemo, useState } from "react";
 import { CreateLoanSheet } from "#/components/lender/create-loan-sheet";
 import { LoanCard } from "#/components/lender/loan-card";
 import { EmptyState } from "#/components/ui/empty-state";
-import { FAB } from "#/components/ui/fab";
 import { PageHeader } from "#/components/ui/page-header";
 import { SkeletonCards } from "#/components/ui/skeleton-cards";
+import { useFab } from "#/hooks/useFab";
 import { allClientsQuery, useAllClientsQuery } from "#/queries/clients.queries";
 import { allLoansQuery, useAllLoansQuery } from "#/queries/loans.queries";
 
@@ -35,6 +35,10 @@ function ClientLoans() {
 	const clientLoans = useMemo(
 		() => loans.filter((l) => l.client_id === clientId),
 		[loans, clientId],
+	);
+
+	useFab(
+		clientLoans.length > 0 ? () => setShowCreateSheet(true) : null,
 	);
 
 	return (
@@ -67,10 +71,6 @@ function ClientLoans() {
 						<LoanCard key={loan.id} loan={loan} />
 					))}
 				</div>
-			)}
-
-			{clientLoans.length > 0 && (
-				<FAB onClick={() => setShowCreateSheet(true)} />
 			)}
 
 			<CreateLoanSheet
