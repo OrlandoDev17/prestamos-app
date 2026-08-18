@@ -40,7 +40,7 @@ export function LenderCard({
 	}, [menuOpen]);
 
 	return (
-		<article
+		<div
 			className={`relative flex flex-col gap-3 bg-surface p-4 rounded-xl shadow-sm transition-all duration-200 hover:shadow-md ${
 				!lender.isActive ? "opacity-60" : ""
 			}`}
@@ -129,6 +129,6 @@ export function LenderCard({
 					onCheckedChange={(checked) => onToggle?.(lender.id, checked)}
 				/>
 			</footer>
-		</article>
+		</div>
 	);
 }
