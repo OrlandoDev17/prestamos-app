@@ -13,7 +13,14 @@ const config = defineConfig({
 		devtools(),
 		nitro({ rollupConfig: { external: [/^@sentry\//] } }),
 		tailwindcss(),
-		tanstackStart(),
+		tanstackStart({
+			spa: {
+				enabled: true,
+				prerender: {
+					outputPath: "index",
+				},
+			},
+		}),
 		viteReact(),
 		VitePWA({
 			registerType: "autoUpdate",
@@ -40,11 +47,19 @@ const config = defineConfig({
 	build: {
 		rollupOptions: {
 			output: {
-				manualChunks: {
-					"react-vendor": ["react", "react-dom"],
-					supabase: ["@supabase/supabase-js"],
-					pdf: ["jspdf", "jspdf-autotable"],
-					motion: ["motion"],
+				manualChunks(id) {
+					if (id.includes("node_modules/react") || id.includes("node_modules/react-dom")) {
+						return "react-vendor";
+					}
+					if (id.includes("node_modules/@supabase")) {
+						return "supabase";
+					}
+					if (id.includes("node_modules/jspdf")) {
+						return "pdf";
+					}
+					if (id.includes("node_modules/motion")) {
+						return "motion";
+					}
 				},
 			},
 		},
