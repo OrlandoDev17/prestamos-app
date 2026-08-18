@@ -67,6 +67,13 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 			});
 		}
 
+		// Con sesión en "/" → redirigir al dashboard por rol
+		if (user && location.pathname === "/") {
+			throw redirect({
+				to: user.role === "superadmin" ? "/admin/lenders" : "/lender/dashboard",
+			});
+		}
+
 		return { user };
 	},
 	component: RootLayout,
