@@ -13,7 +13,7 @@ Tu cuenta la crea el administrador. El te proporcionara:
 - **Correo electronico** — tu identificador de usuario
 - **Contrasena** — tu clave de acceso
 
-Si aun no tienes cuenta, contacta al administrador de tu organisation.
+Si aun no tienes cuenta, contacta al administrador.
 
 ### 1.2. Iniciar sesion
 
