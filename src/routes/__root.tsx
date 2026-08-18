@@ -46,7 +46,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 		],
 	}),
 	beforeLoad: async ({ location }) => {
-		// En el servidor, no podemos verificar la sesión (no hay localStorage)
+		// En el servidor (prerender/SSR), no verificar sesión
 		if (typeof window === "undefined") {
 			return { user: null };
 		}

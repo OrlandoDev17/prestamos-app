@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AdminLendersRouteImport } from './routes/admin/lenders'
 import { Route as LenderClientsRouteImport } from './routes/lender/clients'
@@ -21,6 +22,11 @@ import { Route as LenderLoansPendingTodayRouteImport } from './routes/lender/loa
 import { Route as LenderLoansClientIdIndexRouteImport } from './routes/lender/loans/$clientId/index'
 import { Route as LenderLoansClientIdLoanIdRouteImport } from './routes/lender/loans/$clientId.$loanId'
 
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -80,6 +86,7 @@ const LenderLoansClientIdLoanIdRoute =
   } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/admin/lenders': typeof AdminLendersRoute
   '/lender/clients': typeof LenderClientsRoute
@@ -93,6 +100,7 @@ export interface FileRoutesByFullPath {
   '/lender/loans/$clientId/': typeof LenderLoansClientIdIndexRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/admin/lenders': typeof AdminLendersRoute
   '/lender/clients': typeof LenderClientsRoute
@@ -105,6 +113,7 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
   '/auth': typeof AuthRoute
   '/admin/lenders': typeof AdminLendersRoute
   '/lender/clients': typeof LenderClientsRoute
@@ -120,6 +129,7 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/auth'
     | '/admin/lenders'
     | '/lender/clients'
@@ -133,6 +143,7 @@ export interface FileRouteTypes {
     | '/lender/loans/$clientId/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
     | '/auth'
     | '/admin/lenders'
     | '/lender/clients'
@@ -144,6 +155,7 @@ export interface FileRouteTypes {
     | '/lender/loans/$clientId'
   id:
     | '__root__'
+    | '/'
     | '/auth'
     | '/admin/lenders'
     | '/lender/clients'
@@ -158,6 +170,7 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
   AuthRoute: typeof AuthRoute
   AdminLendersRoute: typeof AdminLendersRoute
   LenderClientsRoute: typeof LenderClientsRoute
@@ -168,6 +181,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -278,6 +298,7 @@ const LenderLoansRouteWithChildren = LenderLoansRoute._addFileChildren(
 )
 
 const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
   AuthRoute: AuthRoute,
   AdminLendersRoute: AdminLendersRoute,
   LenderClientsRoute: LenderClientsRoute,
