@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.orlandodev.prestamos',
-  appName: 'PrestamosApp',
+  appId: 'com.orlandodev.tuprestamo',
+  appName: 'TuPrestamo',
   webDir: '.output/public',
   android: {
     backgroundColor: '#f8f9fa',
