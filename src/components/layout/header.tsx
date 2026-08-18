@@ -16,7 +16,7 @@ export function Header({ logout }: HeaderProps) {
 
 	return (
 		<header className="flex items-center justify-between w-full h-14 px-4 bg-surface shadow-xs">
-			<h3 className="text-xl text-text-main font-bold">
+			<h3 className="text-xl text-sky-800 font-bold">
 				Tu<span className="text-primary-dark">Prestamo</span>
 			</h3>
 			<button
