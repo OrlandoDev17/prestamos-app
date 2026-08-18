@@ -13,6 +13,7 @@ interface AppLayoutProps {
 export function AppLayout({ children }: AppLayoutProps) {
 	const navigate = useNavigate();
 	const logout = useAuthStore((state) => state.logout);
+	const user = useAuthStore((state) => state.user);
 	const fab = useFabStore();
 
 	const handleLogout = async () => {
@@ -22,7 +23,7 @@ export function AppLayout({ children }: AppLayoutProps) {
 
 	return (
 		<div className="min-h-screen bg-background flex flex-col">
-			<Header logout={handleLogout} />
+			<Header logout={handleLogout} userName={user?.full_name} />
 
 			<div className="flex-1 overflow-y-auto px-4 py-4">{children}</div>
 			<BottomNav />
