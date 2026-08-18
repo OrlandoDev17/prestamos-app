@@ -41,6 +41,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.5",
+    "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^8.5.0",
     "@tanstack/devtools-vite": "latest",
     "@tanstack/router-cli": "^1.132.0",
