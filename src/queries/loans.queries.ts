@@ -250,7 +250,7 @@ function getFrequencyDays(frequency: string): number {
 
 function addDays(date: Date, days: number): Date {
 	const result = new Date(date);
-	result.setDate(result.getDate() + days);
+	result.setUTCDate(result.getUTCDate() + days);
 	return result;
 }
 

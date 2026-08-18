@@ -41,10 +41,10 @@ export function formatDate(
 	dateStr: string,
 	opts?: Intl.DateTimeFormatOptions,
 ): string {
-	return new Date(dateStr).toLocaleDateString(
-		"es-VE",
-		opts ?? FULL_DATE_OPTIONS,
-	);
+	const date = dateStr.includes("T")
+		? new Date(dateStr)
+		: new Date(`${dateStr}T12:00:00`);
+	return date.toLocaleDateString("es-VE", opts ?? FULL_DATE_OPTIONS);
 }
 
 export function formatDateShort(dateStr: string): string {

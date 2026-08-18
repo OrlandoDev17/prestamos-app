@@ -47,7 +47,9 @@ export function PaymentTimeline({
 		<div className="relative">
 			{payments.map((payment, index) => {
 				const isPaid = payment.paid_amount !== null;
-				const dueDate = new Date(payment.due_date);
+				const dueDate = payment.due_date.includes("T")
+					? new Date(payment.due_date)
+					: new Date(`${payment.due_date}T23:59:59`);
 				const isOverdue = !isPaid && dueDate < now;
 
 				return (
