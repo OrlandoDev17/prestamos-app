@@ -5,7 +5,7 @@ import { PaymentTimeline } from "#/components/lender/payment-timeline";
 import { Avatar } from "#/components/ui/avatar";
 import { PageHeader } from "#/components/ui/page-header";
 import { SkeletonCards } from "#/components/ui/skeleton-cards";
-import { currency } from "#/lib/format";
+import { currency, formatDateFull } from "#/lib/format";
 import {
 	allLoansQuery,
 	loanPaymentsQuery,
@@ -109,6 +109,15 @@ function LoanDetail() {
 							{loan.interest_rate}%
 						</span>
 					</div>
+				</div>
+
+				<div className="bg-background rounded-lg p-3 mt-3">
+					<span className="text-[10px] text-text-muted uppercase tracking-wider block mb-1">
+						Fecha de inicio
+					</span>
+					<span className="text-sm font-bold text-text-main">
+						{formatDateFull(loan.loan_date)}
+					</span>
 				</div>
 
 				<div className="flex items-center justify-between mt-4 pt-3 border-t border-text-muted/10">

@@ -12,6 +12,7 @@ export interface Loan {
 	installment_amount: number;
 	installment_count: number;
 	status: string;
+	loan_date: string;
 	created_at: string;
 }
 

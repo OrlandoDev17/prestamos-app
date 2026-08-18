@@ -6,7 +6,11 @@ import {
 	Check,
 	Percent,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/style.css";
+import { format } from "date-fns";
+import { es } from "date-fns/locale";
 import { ClientSelector } from "#/components/lender/client-selector";
 import { BottomSheet } from "#/components/ui/bottom-sheet";
 import { FormError } from "#/components/ui/form-error";
@@ -29,6 +33,11 @@ const quickFrequencies = [
 	{ value: "mensual", label: "Mensual", days: "30 dias" },
 ];
 
+function todayStr(): string {
+	const d = new Date();
+	return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
 export function CreateLoanSheet({
 	isOpen,
 	onClose,
@@ -43,6 +52,12 @@ export function CreateLoanSheet({
 	const [rate, setRate] = useState("0");
 	const [installments, setInstallments] = useState("");
 	const [frequency, setFrequency] = useState("");
+	const [loanDate, setLoanDate] = useState<Date | undefined>(() => {
+		const parts = todayStr().split("-");
+		return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+	});
+	const [showCalendar, setShowCalendar] = useState(false);
+	const calendarRef = useRef<HTMLDivElement>(null);
 	const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
 	const resetForm = () => {
@@ -52,6 +67,11 @@ export function CreateLoanSheet({
 		setRate("0");
 		setInstallments("");
 		setFrequency("");
+		const parts = todayStr().split("-");
+		setLoanDate(
+			new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2])),
+		);
+		setShowCalendar(false);
 		setErrorMsg(null);
 	};
 
@@ -59,6 +79,20 @@ export function CreateLoanSheet({
 		resetForm();
 		onClose();
 	};
+
+	useEffect(() => {
+		if (!showCalendar) return;
+		const handleClickOutside = (e: MouseEvent) => {
+			if (
+				calendarRef.current &&
+				!calendarRef.current.contains(e.target as Node)
+			) {
+				setShowCalendar(false);
+			}
+		};
+		document.addEventListener("mousedown", handleClickOutside);
+		return () => document.removeEventListener("mousedown", handleClickOutside);
+	}, [showCalendar]);
 
 	const numAmount = Number.parseFloat(amount) || 0;
 	const numRate = Number.parseFloat(rate) || 0;
@@ -76,7 +110,7 @@ export function CreateLoanSheet({
 			case 2:
 				return numInstallments > 0;
 			case 3:
-				return !!frequency;
+				return !!frequency && !!loanDate;
 			default:
 				return true;
 		}
@@ -92,6 +126,9 @@ export function CreateLoanSheet({
 				interest_rate: numRate,
 				installment_count: numInstallments,
 				payment_frequency: frequency,
+				loan_date: loanDate
+					? `${loanDate.getFullYear()}-${String(loanDate.getMonth() + 1).padStart(2, "0")}-${String(loanDate.getDate()).padStart(2, "0")}`
+					: todayStr(),
 			});
 			handleClose();
 		} catch (err) {
@@ -224,48 +261,84 @@ export function CreateLoanSheet({
 				</div>
 			)}
 
-			{/* Step 3: Frequency */}
+			{/* Step 3: Frequency + Date */}
 			{step === 3 && (
-				<div className="flex flex-col gap-3">
-					<span className="text-sm font-medium">Frecuencia de pago</span>
-					<div>
-						{quickFrequencies.map((f) => (
-							<button
-								key={f.value}
-								type="button"
-								aria-pressed={frequency === f.value}
-								onClick={() => setFrequency(f.value)}
-								className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-200 cursor-pointer active:scale-[0.98] ${
-									frequency === f.value
-										? "border-primary bg-primary/5 ring-2 ring-primary/20"
-										: "border-text-muted/20 bg-surface hover:border-text-muted/40"
-								}`}
-							>
-								<div className="flex items-center gap-3">
-									<Calendar
-										size={18}
-										className={
-											frequency === f.value
-												? "text-primary-dark"
-												: "text-text-muted"
-										}
-									/>
-									<div className="flex flex-col items-start">
-										<span className="text-sm font-semibold text-text-main">
-											{f.label}
-										</span>
-										<span className="text-xs text-text-muted">
-											Cada {f.days}
-										</span>
+				<div className="flex flex-col gap-4">
+					<div className="flex flex-col gap-3">
+						<span className="text-sm font-medium">Frecuencia de pago</span>
+						<div className="flex flex-col gap-3 w-full">
+							{quickFrequencies.map((f) => (
+								<button
+									key={f.value}
+									type="button"
+									aria-pressed={frequency === f.value}
+									onClick={() => setFrequency(f.value)}
+									className={`flex items-center justify-between p-4 rounded-xl border transition-all duration-200 cursor-pointer active:scale-[0.98] ${
+										frequency === f.value
+											? "border-primary bg-primary/5 ring-2 ring-primary/20"
+											: "border-text-muted/20 bg-surface hover:border-text-muted/40"
+									}`}
+								>
+									<div className="flex items-center gap-3">
+										<Calendar
+											size={18}
+											className={
+												frequency === f.value
+													? "text-primary-dark"
+													: "text-text-muted"
+											}
+										/>
+										<div className="flex flex-col items-start">
+											<span className="text-sm font-semibold text-text-main">
+												{f.label}
+											</span>
+											<span className="text-xs text-text-muted">
+												Cada {f.days}
+											</span>
+										</div>
 									</div>
-								</div>
-								{frequency === f.value && (
-									<div className="size-6 rounded-full bg-primary flex items-center justify-center">
-										<Check size={14} className="text-white" strokeWidth={3} />
-									</div>
-								)}
-							</button>
-						))}
+									{frequency === f.value && (
+										<div className="size-6 rounded-full bg-primary flex items-center justify-center">
+											<Check size={14} className="text-white" strokeWidth={3} />
+										</div>
+									)}
+								</button>
+							))}
+						</div>
+					</div>
+
+					<div className="flex flex-col gap-2 relative" ref={calendarRef}>
+						<span className="text-sm font-medium">Fecha de inicio</span>
+						<button
+							type="button"
+							onClick={() => setShowCalendar(!showCalendar)}
+							className="w-full flex items-center gap-3 bg-background px-4 py-3 rounded-lg text-sm cursor-pointer hover:bg-text-muted/5 transition-colors"
+						>
+							<Calendar size={16} className="text-text-muted shrink-0" />
+							<span className="text-text-main">
+								{loanDate
+									? format(loanDate, "d 'de' MMMM 'de' yyyy", { locale: es })
+									: "Seleccionar fecha"}
+							</span>
+						</button>
+						{showCalendar && (
+							<div className="absolute bottom-full left-0 mb-2 z-50 bg-surface rounded-xl shadow-lg border border-text-muted/10 p-3">
+								<DayPicker
+									mode="single"
+									selected={loanDate}
+									onSelect={(day) => {
+										setLoanDate(day);
+										setShowCalendar(false);
+									}}
+									locale={es}
+									defaultMonth={loanDate}
+									classNames={{
+										selected: "bg-primary text-white rounded-full",
+										today: "font-bold text-primary-dark",
+									}}
+								/>
+							</div>
+						)}
 					</div>
 				</div>
 			)}
@@ -300,6 +373,12 @@ export function CreateLoanSheet({
 							<span className="text-text-muted">Frecuencia</span>
 							<span className="font-semibold text-text-main capitalize">
 								{frequency}
+							</span>
+						</div>
+						<div className="flex justify-between text-sm">
+							<span className="text-text-muted">Fecha de inicio</span>
+							<span className="font-semibold text-text-main">
+								{loanDate ? format(loanDate, "d MMM yyyy", { locale: es }) : ""}
 							</span>
 						</div>
 						<div className="border-t border-text-muted/20 pt-3 flex justify-between text-sm">

@@ -21,7 +21,7 @@ async function fetchAllLoans(): Promise<Loan[]> {
 	const { data, error } = await supabase
 		.from("loans")
 		.select(
-			"id, client_id, amount_borrowed, interest_rate, total_to_pay, payment_frequency, installment_amount, installment_count, status, created_at, clients(full_name)",
+			"id, client_id, amount_borrowed, interest_rate, total_to_pay, payment_frequency, installment_amount, installment_count, status, loan_date, created_at, clients(full_name)",
 		)
 		.eq("user_id", session.user.id)
 		.is("deleted_at", null)
@@ -41,6 +41,7 @@ async function fetchAllLoans(): Promise<Loan[]> {
 		installment_amount: row.installment_amount,
 		installment_count: row.installment_count,
 		status: row.status,
+		loan_date: row.loan_date,
 		created_at: row.created_at,
 	})) as Loan[];
 }
@@ -185,7 +186,7 @@ export function useLoansInfiniteQuery(status?: "active" | "paid") {
 			let query = supabase
 				.from("loans")
 				.select(
-					"id, client_id, amount_borrowed, interest_rate, total_to_pay, payment_frequency, installment_amount, installment_count, status, created_at, clients(full_name)",
+					"id, client_id, amount_borrowed, interest_rate, total_to_pay, payment_frequency, installment_amount, installment_count, status, loan_date, created_at, clients(full_name)",
 					{ count: "exact" },
 				)
 				.eq("user_id", session.user.id)
@@ -202,22 +203,23 @@ export function useLoansInfiniteQuery(status?: "active" | "paid") {
 
 			if (error) throw error;
 
-			const loans: Loan[] = (data ?? []).map(
-				(row: Record<string, unknown>) => ({
-					id: row.id,
-					client_id: row.client_id,
-					client_name:
-						(row.clients as Record<string, string>)?.full_name ?? "Sin nombre",
-					amount_borrowed: row.amount_borrowed,
-					interest_rate: row.interest_rate,
-					total_to_pay: row.total_to_pay,
-					payment_frequency: row.payment_frequency,
-					installment_amount: row.installment_amount,
-					installment_count: row.installment_count,
-					status: row.status,
-					created_at: row.created_at,
-				}),
-			);
+		const loans: Loan[] = (data ?? []).map(
+			(row: Record<string, unknown>) => ({
+				id: row.id,
+				client_id: row.client_id,
+				client_name:
+					(row.clients as Record<string, string>)?.full_name ?? "Sin nombre",
+				amount_borrowed: row.amount_borrowed,
+				interest_rate: row.interest_rate,
+				total_to_pay: row.total_to_pay,
+				payment_frequency: row.payment_frequency,
+				installment_amount: row.installment_amount,
+				installment_count: row.installment_count,
+				status: row.status,
+				loan_date: row.loan_date,
+				created_at: row.created_at,
+			}),
+		);
 
 			return { loans, total: count ?? 0, page: pageParam };
 		},
@@ -262,6 +264,7 @@ export function useCreateLoan() {
 			interest_rate: number;
 			installment_count: number;
 			payment_frequency: string;
+			loan_date: string;
 		}) => {
 			const {
 				data: { session },
@@ -285,6 +288,7 @@ export function useCreateLoan() {
 					installment_amount,
 					installment_count: payload.installment_count,
 					status: "active",
+					loan_date: payload.loan_date,
 				})
 				.select("id")
 				.single();
@@ -293,7 +297,7 @@ export function useCreateLoan() {
 				throw new Error(`Error al crear prestamo: ${loanError.message}`);
 
 			const frequencyDays = getFrequencyDays(payload.payment_frequency);
-			const now = new Date();
+			const startDate = new Date(payload.loan_date);
 
 			const payments = Array.from(
 				{ length: payload.installment_count },
@@ -301,7 +305,7 @@ export function useCreateLoan() {
 					loan_id: loanData.id,
 					installment_number: i + 1,
 					amount: installment_amount,
-					due_date: addDays(now, frequencyDays * (i + 1))
+					due_date: addDays(startDate, frequencyDays * (i + 1))
 						.toISOString()
 						.split("T")[0],
 				}),

@@ -1,7 +1,7 @@
 import { Link } from "@tanstack/react-router";
-import { Landmark, Users } from "lucide-react";
+import { Calendar, Landmark, Users } from "lucide-react";
 import { Avatar } from "#/components/ui/avatar";
-import { currency } from "#/lib/format";
+import { currency, formatDateShort } from "#/lib/format";
 import type { Loan } from "#/stores/loansStore";
 
 interface LoanCardProps {
@@ -83,6 +83,10 @@ export function LoanCard({ loan }: LoanCardProps) {
 			</div>
 
 			<footer className="flex items-center justify-between text-xs text-text-muted pt-2 border-t border-text-muted/10">
+				<span className="flex items-center gap-1.5">
+					<Calendar size={13} />
+					{formatDateShort(loan.loan_date)}
+				</span>
 				<span className="flex items-center gap-1.5">
 					<Landmark size={13} />
 					{loan.installment_count} cuotas
