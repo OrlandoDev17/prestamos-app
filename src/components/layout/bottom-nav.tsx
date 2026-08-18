@@ -53,7 +53,7 @@ export function BottomNav() {
 	return (
 		<nav
 			aria-label="Navegación principal"
-			className="flex items-center justify-around fixed bottom-0 w-full z-50 h-16 shadow-sm bg-surface border-t border-text-muted/10"
+			className="flex items-center justify-around fixed bottom-0 w-full z-50 h-16 pb-[env(safe-area-inset-bottom)] shadow-sm bg-surface border-t border-text-muted/10"
 		>
 			{links.map((link) => (
 				<NavLink key={link.href} {...link} />

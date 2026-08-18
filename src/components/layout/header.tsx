@@ -17,7 +17,7 @@ export function Header({ logout, userName }: HeaderProps) {
 	};
 
 	return (
-		<header className="flex items-center justify-between w-full h-14 px-4 bg-surface shadow-xs">
+		<header className="flex items-center justify-between w-full h-14 px-4 pt-[env(safe-area-inset-top)] bg-surface shadow-xs">
 			<h3 className="text-xl text-sky-800 font-bold">
 				Tu<span className="text-primary-dark">Prestamo</span>
 			</h3>
