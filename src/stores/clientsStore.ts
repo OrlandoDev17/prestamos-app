@@ -7,6 +7,7 @@ export interface Client {
 	cedula: string;
 	phone: string;
 	address: string;
+	route: string | null;
 	is_active: boolean;
 	active_loan_amount: number | null;
 	active_loan_id: string | null;

@@ -12,36 +12,62 @@ const PAGE_SIZE = 20;
 // ── Query functions (reusable in loaders) ──
 
 async function fetchAllClients(): Promise<Client[]> {
-	const { data, error } = await supabase
-		.from("clients")
-		.select("id, full_name, cedula, phone, address, is_active")
-		.order("full_name");
+	try {
+		const { data, error } = await supabase
+			.from("clients")
+			.select("id, full_name, cedula, phone, address, route, is_active")
+			.order("full_name");
 
-	if (error) throw error;
+		if (error) {
+			const { data: fallback, error: fbErr } = await supabase
+				.from("clients")
+				.select("id, full_name, cedula, phone, address, is_active")
+				.order("full_name");
+			if (fbErr) throw fbErr;
+			return mapClientsSimple(fallback);
+		}
 
-	const { data: activeLoans } = await supabase
-		.from("loans")
-		.select("client_id, id, total_to_pay")
-		.eq("status", "active")
-		.is("deleted_at", null);
+		const { data: activeLoans } = await supabase
+			.from("loans")
+			.select("client_id, id, total_to_pay")
+			.eq("status", "active")
+			.is("deleted_at", null);
 
-	const loanMap = new Map(
-		(activeLoans ?? []).map((l) => [
-			l.client_id,
-			{ id: l.id, amount: l.total_to_pay },
-		]),
-	);
+		const loanMap = new Map(
+			(activeLoans ?? []).map((l) => [
+				l.client_id,
+				{ id: l.id, amount: l.total_to_pay },
+			]),
+		);
 
-	return (data ?? []).map((row) => ({
-		id: row.id,
-		full_name: row.full_name,
-		cedula: row.cedula,
-		phone: row.phone,
-		address: row.address,
-		is_active: row.is_active ?? true,
-		active_loan_amount: loanMap.get(row.id)?.amount ?? null,
-		active_loan_id: loanMap.get(row.id)?.id ?? null,
-	})) as Client[];
+		return (data ?? []).map((row) => ({
+			id: row.id,
+			full_name: row.full_name,
+			cedula: row.cedula,
+			phone: row.phone,
+			address: row.address,
+			route: row.route ?? null,
+			is_active: row.is_active ?? true,
+			active_loan_amount: loanMap.get(row.id)?.amount ?? null,
+			active_loan_id: loanMap.get(row.id)?.id ?? null,
+		})) as Client[];
+	} catch {
+		return [];
+	}
+}
+
+function mapClientsSimple(data: Record<string, unknown>[]): Client[] {
+	return data.map((row) => ({
+		id: row.id as string,
+		full_name: row.full_name as string,
+		cedula: row.cedula as string,
+		phone: row.phone as string,
+		address: row.address as string,
+		route: null,
+		is_active: (row.is_active as boolean) ?? true,
+		active_loan_amount: null,
+		active_loan_id: null,
+	}));
 }
 
 // ── Exported query configs (for loaders with ensureQueryData) ──
@@ -58,22 +84,42 @@ export function useAllClientsQuery() {
 	return useQuery(allClientsQuery);
 }
 
-export function useClientsInfiniteQuery() {
+export function useClientsInfiniteQuery(route?: string | null) {
 	return useInfiniteQuery({
-		queryKey: ["clients"],
+		queryKey: ["clients", "route", route ?? "all"],
 		queryFn: async ({ pageParam = 0 }) => {
 			const from = pageParam * PAGE_SIZE;
 			const to = from + PAGE_SIZE - 1;
 
-			const { data, count, error } = await supabase
+			let query = supabase
 				.from("clients")
-				.select("id, full_name, cedula, phone, address, is_active", {
+				.select("id, full_name, cedula, phone, address, route, is_active", {
 					count: "exact",
 				})
 				.order("full_name")
 				.range(from, to);
 
-			if (error) throw error;
+			if (route) {
+				query = query.eq("route", route);
+			}
+
+			const { data, count, error } = await query;
+
+			if (error) {
+				const fb = await supabase
+					.from("clients")
+					.select("id, full_name, cedula, phone, address, is_active", {
+						count: "exact",
+					})
+					.order("full_name")
+					.range(from, to);
+				if (fb.error) throw fb.error;
+				return {
+					clients: mapClientsSimple(fb.data ?? []),
+					total: fb.count ?? 0,
+					page: pageParam,
+				};
+			}
 
 			const clientIds = (data ?? []).map((c) => c.id);
 
@@ -100,6 +146,7 @@ export function useClientsInfiniteQuery() {
 				cedula: row.cedula,
 				phone: row.phone,
 				address: row.address,
+				route: row.route ?? null,
 				is_active: row.is_active ?? true,
 				active_loan_amount: loanMap.get(row.id)?.amount ?? null,
 				active_loan_id: loanMap.get(row.id)?.id ?? null,
@@ -123,14 +170,33 @@ export function useClientsSearchQuery(search: string) {
 
 			const { data, error } = await supabase
 				.from("clients")
-				.select("id, full_name, cedula, phone, address, is_active")
+				.select("id, full_name, cedula, phone, address, route, is_active")
 				.ilike("full_name", `%${search}%`)
 				.order("full_name")
 				.limit(20);
 
-			if (error) throw error;
+			if (error) {
+				const fb = await supabase
+					.from("clients")
+					.select("id, full_name, cedula, phone, address, is_active")
+					.ilike("full_name", `%${search}%`)
+					.order("full_name")
+					.limit(20);
+				if (fb.error) return [];
+				return mapClientsSimple(fb.data ?? []);
+			}
 
-			return (data ?? []) as Client[];
+			return (data ?? []).map((row) => ({
+				id: row.id,
+				full_name: row.full_name,
+				cedula: row.cedula,
+				phone: row.phone,
+				address: row.address,
+				route: row.route ?? null,
+				is_active: row.is_active ?? true,
+				active_loan_amount: null,
+				active_loan_id: null,
+			})) as Client[];
 		},
 		enabled: search.trim().length >= 2,
 		staleTime: 5000,
@@ -148,6 +214,7 @@ export function useCreateClient() {
 			cedula: string;
 			phone: string;
 			address: string;
+			route?: string | null;
 		}) => {
 			const {
 				data: { session },
@@ -163,7 +230,11 @@ export function useCreateClient() {
 			if (existing) throw new Error("Ya existe un cliente con esa cedula");
 
 			const { error } = await supabase.from("clients").insert({
-				...payload,
+				full_name: payload.full_name,
+				cedula: payload.cedula,
+				phone: payload.phone,
+				address: payload.address,
+				route: payload.route || null,
 				user_id: session.user.id,
 				is_active: true,
 			});

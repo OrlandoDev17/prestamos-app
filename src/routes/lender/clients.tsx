@@ -8,12 +8,15 @@ import { SkeletonCards } from "#/components/ui/skeleton-cards";
 import { useFab } from "#/hooks/useFab";
 import { currency } from "#/lib/format";
 import { useClientsInfiniteQuery } from "#/queries/clients.queries";
+import { useUserRoutesQuery } from "#/queries/routes.queries";
 
 export const Route = createFileRoute("/lender/clients")({
 	component: LenderClients,
 });
 
 function LenderClients() {
+	const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
+	const { data: routes = [] } = useUserRoutesQuery();
 	const {
 		data,
 		isLoading,
@@ -21,7 +24,7 @@ function LenderClients() {
 		fetchNextPage,
 		hasNextPage,
 		isFetchingNextPage,
-	} = useClientsInfiniteQuery();
+	} = useClientsInfiniteQuery(selectedRoute);
 	const [showCreateSheet, setShowCreateSheet] = useState(false);
 
 	useFab(() => setShowCreateSheet(true));
@@ -39,6 +42,38 @@ function LenderClients() {
 					</p>
 				</div>
 			</header>
+
+			{routes.length > 0 && (
+				<div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
+					<button
+						type="button"
+						onClick={() => setSelectedRoute(null)}
+						className={`shrink-0 px-4 py-2 text-sm font-medium rounded-full transition-all cursor-pointer ${
+							selectedRoute === null
+								? "bg-primary text-white"
+								: "bg-surface text-text-muted hover:bg-primary/10"
+						}`}
+					>
+						Todos
+					</button>
+					{routes.map((r) => (
+						<button
+							key={r.id}
+							type="button"
+							onClick={() =>
+								setSelectedRoute(selectedRoute === r.name ? null : r.name)
+							}
+							className={`shrink-0 px-4 py-2 text-sm font-medium rounded-full transition-all cursor-pointer ${
+								selectedRoute === r.name
+									? "bg-primary text-white"
+									: "bg-surface text-text-muted hover:bg-primary/10"
+							}`}
+						>
+							{r.name}
+						</button>
+					))}
+				</div>
+			)}
 
 			{isLoading && <SkeletonCards count={4} />}
 
@@ -72,6 +107,11 @@ function LenderClients() {
 								<p className="text-xs text-text-muted truncate">
 									{client.cedula} - {client.phone}
 								</p>
+								{client.route && (
+									<span className="inline-block mt-1 px-2 py-0.5 text-[10px] font-medium text-primary-dark bg-primary/10 rounded-full">
+										{client.route}
+									</span>
+								)}
 							</div>
 							<div className="text-right">
 								<p className="text-xs text-text-muted">Prestado</p>
