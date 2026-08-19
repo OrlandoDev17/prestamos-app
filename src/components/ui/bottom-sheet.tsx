@@ -67,7 +67,7 @@ export function BottomSheet({ isOpen, onClose, children }: BottomSheetProps) {
 								aria-hidden="true"
 							/>
 						</div>
-						<div className="flex flex-col gap-4 overflow-y-auto px-6 pb-24">
+						<div className="flex flex-col gap-4 overflow-y-auto px-6 pb-8">
 							{children}
 						</div>
 					</motion.div>

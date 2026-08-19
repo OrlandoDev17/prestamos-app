@@ -40,17 +40,24 @@ function LenderDashboard() {
 	const { data: upcomingPayments = [] } = useUpcomingPaymentsQuery();
 
 	const pendingToday = useMemo(
-		() => todayPayments.filter((p) => p.paid_amount === null),
+		() =>
+			todayPayments.filter(
+				(p) => p.paid_amount === null || p.paid_amount < p.amount,
+			),
 		[todayPayments],
 	);
 
 	const paidToday = useMemo(
-		() => todayPayments.filter((p) => p.paid_amount !== null),
+		() =>
+			todayPayments.filter(
+				(p) => p.paid_amount !== null && p.paid_amount >= p.amount,
+			),
 		[todayPayments],
 	);
 
 	const pendingTotal = useMemo(
-		() => pendingToday.reduce((s, p) => s + p.amount, 0),
+		() =>
+			pendingToday.reduce((s, p) => s + (p.amount - (p.paid_amount ?? 0)), 0),
 		[pendingToday],
 	);
 
@@ -60,7 +67,11 @@ function LenderDashboard() {
 	);
 
 	const upcomingTotal = useMemo(
-		() => upcomingPayments.reduce((s, p) => s + p.amount, 0),
+		() =>
+			upcomingPayments.reduce(
+				(s, p) => s + (p.amount - (p.paid_amount ?? 0)),
+				0,
+			),
 		[upcomingPayments],
 	);
 

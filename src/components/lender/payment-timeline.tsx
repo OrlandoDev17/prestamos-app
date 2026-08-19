@@ -18,19 +18,25 @@ export function PaymentTimeline({
 	const markPaid = useMarkPaymentPaid();
 	const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
 	const [showConfirmSheet, setShowConfirmSheet] = useState(false);
+	const [payAmount, setPayAmount] = useState("");
 
 	const handleMarkPaid = (payment: Payment) => {
 		setSelectedPayment(payment);
+		const pending = payment.amount - (payment.paid_amount ?? 0);
+		setPayAmount(pending.toFixed(2));
 		setShowConfirmSheet(true);
 	};
 
 	const confirmMarkPaid = async () => {
 		if (!selectedPayment) return;
 
+		const amount = Number.parseFloat(payAmount);
+		if (Number.isNaN(amount) || amount <= 0) return;
+
 		try {
 			await markPaid.mutateAsync({
 				paymentId: selectedPayment.id,
-				amount: selectedPayment.amount,
+				amount,
 			});
 			onPaymentUpdated();
 		} catch {
@@ -39,6 +45,7 @@ export function PaymentTimeline({
 
 		setShowConfirmSheet(false);
 		setSelectedPayment(null);
+		setPayAmount("");
 	};
 
 	const now = new Date();
@@ -46,7 +53,11 @@ export function PaymentTimeline({
 	return (
 		<div className="relative">
 			{payments.map((payment, index) => {
-				const isPaid = payment.paid_amount !== null;
+				const isPaid =
+					payment.paid_amount !== null && payment.paid_amount >= payment.amount;
+				const isPartial =
+					payment.paid_amount !== null && payment.paid_amount < payment.amount;
+				const pending = payment.amount - (payment.paid_amount ?? 0);
 				const dueDate = payment.due_date.includes("T")
 					? new Date(payment.due_date)
 					: new Date(`${payment.due_date}T23:59:59`);
@@ -107,6 +118,10 @@ export function PaymentTimeline({
 										<span className="text-xs font-medium text-success">
 											Pagada
 										</span>
+									) : isPartial ? (
+										<span className="text-xs font-medium text-warning">
+											Parcial
+										</span>
 									) : isOverdue ? (
 										<span className="text-xs font-medium text-danger">
 											Vencida
@@ -128,6 +143,13 @@ export function PaymentTimeline({
 									</span>
 								</div>
 
+								{isPartial && (
+									<p className="text-xs text-warning mb-1">
+										Pagado: {currency(payment.paid_amount ?? 0)} - Falta:{" "}
+										{currency(pending)}
+									</p>
+								)}
+
 								{isPaid && payment.paid_amount !== null && (
 									<p className="text-xs text-success">
 										Pagado: {currency(payment.paid_amount)} el{" "}
@@ -143,7 +165,7 @@ export function PaymentTimeline({
 										onClick={() => handleMarkPaid(payment)}
 										className="w-full mt-1 py-2 text-xs font-semibold text-primary-dark bg-primary/10 rounded-lg hover:bg-primary/20 active:scale-[0.98] transition-all cursor-pointer"
 									>
-										Marcar como pagada
+										Registrar pago
 									</button>
 								)}
 							</div>
@@ -156,26 +178,52 @@ export function PaymentTimeline({
 				isOpen={showConfirmSheet}
 				onClose={() => setShowConfirmSheet(false)}
 			>
-				<h3 className="text-lg font-bold mb-1">Confirmar Pago</h3>
+				<h3 className="text-lg font-bold mb-1">Registrar Pago</h3>
 				<p className="text-text-muted text-sm mb-4">
-					Marcar cuota #{selectedPayment?.installment_number} como pagada
+					Cuota #{selectedPayment?.installment_number}
 				</p>
 				{selectedPayment && (
-					<div className="bg-background rounded-xl p-4 mb-6">
+					<div className="bg-background rounded-xl p-4 mb-4">
 						<div className="flex justify-between text-sm mb-2">
-							<span className="text-text-muted">Monto a pagar:</span>
+							<span className="text-text-muted">Monto cuota:</span>
 							<span className="font-semibold">
 								{currency(selectedPayment.amount)}
 							</span>
 						</div>
-						<div className="flex justify-between text-sm">
-							<span className="text-text-muted">Vencimiento:</span>
+						<div className="flex justify-between text-sm mb-2">
+							<span className="text-text-muted">Ya pagado:</span>
 							<span className="font-semibold">
-								{formatDateShort(selectedPayment.due_date)}
+								{currency(selectedPayment.paid_amount ?? 0)}
+							</span>
+						</div>
+						<div className="flex justify-between text-sm">
+							<span className="text-text-muted">Saldo pendiente:</span>
+							<span className="font-semibold text-primary-dark">
+								{currency(
+									selectedPayment.amount - (selectedPayment.paid_amount ?? 0),
+								)}
 							</span>
 						</div>
 					</div>
 				)}
+				<div className="mb-4">
+					<label className="flex flex-col gap-1.5">
+						<span className="text-sm font-medium">Monto a pagar</span>
+						<input
+							type="number"
+							min="0.01"
+							max={
+								selectedPayment
+									? selectedPayment.amount - (selectedPayment.paid_amount ?? 0)
+									: undefined
+							}
+							step="0.01"
+							value={payAmount}
+							onChange={(e) => setPayAmount(e.target.value)}
+							className="w-full bg-background px-4 py-3 rounded-lg text-sm font-semibold tabular-nums placeholder:text-text-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all duration-200"
+						/>
+					</label>
+				</div>
 				<div className="flex gap-3">
 					<button
 						type="button"
@@ -187,7 +235,11 @@ export function PaymentTimeline({
 					<button
 						type="button"
 						onClick={confirmMarkPaid}
-						disabled={markPaid.isPending}
+						disabled={
+							markPaid.isPending ||
+							!payAmount ||
+							Number.parseFloat(payAmount) <= 0
+						}
 						className="flex-1 py-3 bg-success text-white font-semibold rounded-lg hover:bg-emerald-600 active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
 					>
 						{markPaid.isPending && (

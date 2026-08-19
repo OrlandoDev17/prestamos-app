@@ -203,23 +203,23 @@ export function useLoansInfiniteQuery(status?: "active" | "paid") {
 
 			if (error) throw error;
 
-		const loans: Loan[] = (data ?? []).map(
-			(row: Record<string, unknown>) => ({
-				id: row.id,
-				client_id: row.client_id,
-				client_name:
-					(row.clients as Record<string, string>)?.full_name ?? "Sin nombre",
-				amount_borrowed: row.amount_borrowed,
-				interest_rate: row.interest_rate,
-				total_to_pay: row.total_to_pay,
-				payment_frequency: row.payment_frequency,
-				installment_amount: row.installment_amount,
-				installment_count: row.installment_count,
-				status: row.status,
-				loan_date: row.loan_date,
-				created_at: row.created_at,
-			}),
-		);
+			const loans: Loan[] = (data ?? []).map(
+				(row: Record<string, unknown>) => ({
+					id: row.id,
+					client_id: row.client_id,
+					client_name:
+						(row.clients as Record<string, string>)?.full_name ?? "Sin nombre",
+					amount_borrowed: row.amount_borrowed,
+					interest_rate: row.interest_rate,
+					total_to_pay: row.total_to_pay,
+					payment_frequency: row.payment_frequency,
+					installment_amount: row.installment_amount,
+					installment_count: row.installment_count,
+					status: row.status,
+					loan_date: row.loan_date,
+					created_at: row.created_at,
+				}),
+			);
 
 			return { loans, total: count ?? 0, page: pageParam };
 		},
@@ -341,17 +341,77 @@ export function useMarkPaymentPaid() {
 			amount: number;
 			notes?: string;
 		}) => {
-			const { error } = await supabase
+			const { data: currentPayment, error: fetchError } = await supabase
 				.from("payments")
-				.update({
-					paid_amount: amount,
-					payment_date: new Date().toISOString(),
-					notes: notes || null,
-				})
-				.eq("id", paymentId);
+				.select("id, loan_id, installment_number, amount, paid_amount")
+				.eq("id", paymentId)
+				.single();
 
-			if (error) throw new Error(`Error al marcar pago: ${error.message}`);
-			return { success: true };
+			if (fetchError)
+				throw new Error(`Error al obtener cuota: ${fetchError.message}`);
+
+			const { data: allPayments, error: paymentsError } = await supabase
+				.from("payments")
+				.select("id, installment_number, amount, paid_amount")
+				.eq("loan_id", currentPayment.loan_id)
+				.order("installment_number");
+
+			if (paymentsError)
+				throw new Error(`Error al obtener cuotas: ${paymentsError.message}`);
+
+			const updates: { id: string; paid_amount: number; notes?: string }[] = [];
+			let remaining = amount;
+
+			for (const payment of allPayments ?? []) {
+				if (remaining <= 0) break;
+
+				if (payment.id === paymentId) {
+					const currentPaid = payment.paid_amount ?? 0;
+					const currentDue = payment.amount - currentPaid;
+					const toPay = Math.min(remaining, currentDue);
+					const newPaidAmount = currentPaid + toPay;
+
+					updates.push({
+						id: payment.id,
+						paid_amount: Math.round(newPaidAmount * 100) / 100,
+						...(payment.id === paymentId && notes ? { notes } : {}),
+					});
+					remaining -= toPay;
+				} else if (
+					payment.paid_amount === null ||
+					payment.paid_amount < payment.amount
+				) {
+					const currentPaid = payment.paid_amount ?? 0;
+					const currentDue = payment.amount - currentPaid;
+					const toPay = Math.min(remaining, currentDue);
+					if (toPay > 0) {
+						const newPaidAmount = currentPaid + toPay;
+						updates.push({
+							id: payment.id,
+							paid_amount: Math.round(newPaidAmount * 100) / 100,
+						});
+						remaining -= toPay;
+					}
+				}
+			}
+
+			const now = new Date().toISOString();
+
+			for (const update of updates) {
+				const { error } = await supabase
+					.from("payments")
+					.update({
+						paid_amount: update.paid_amount,
+						payment_date: now,
+						...(update.notes ? { notes: update.notes } : {}),
+					})
+					.eq("id", update.id);
+
+				if (error)
+					throw new Error(`Error al actualizar cuota: ${error.message}`);
+			}
+
+			return { success: true, remaining };
 		},
 		onSuccess: () => {
 			queryClient.invalidateQueries({ queryKey: ["payments"] });
