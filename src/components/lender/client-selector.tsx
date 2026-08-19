@@ -26,7 +26,14 @@ export function ClientSelector({
 	const { data: searchResults = [], isLoading: searching } =
 		useClientsSearchQuery(debouncedSearch);
 
-	const displayClients = debouncedSearch.length >= 2 ? searchResults : clients;
+	const displayClients =
+		debouncedSearch.length >= 2
+			? Array.isArray(searchResults)
+				? searchResults
+				: []
+			: Array.isArray(clients)
+				? clients
+				: [];
 
 	const filtered = displayClients.filter(
 		(c) =>
