@@ -254,3 +254,51 @@ export function useCreateClient() {
 		},
 	});
 }
+
+export function useUpdateClient() {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: async (payload: {
+			id: string;
+			full_name: string;
+			cedula: string;
+			phone: string;
+			address: string;
+			route?: string | null;
+			is_active?: boolean;
+		}) => {
+			const { data: existing } = await supabase
+				.from("clients")
+				.select("id")
+				.eq("cedula", payload.cedula)
+				.neq("id", payload.id)
+				.maybeSingle();
+
+			if (existing) throw new Error("Ya existe otro cliente con esa cedula");
+
+			const { error } = await supabase
+				.from("clients")
+				.update({
+					full_name: payload.full_name,
+					cedula: payload.cedula,
+					phone: payload.phone,
+					address: payload.address,
+					route: payload.route || null,
+					...(payload.is_active !== undefined
+						? { is_active: payload.is_active }
+						: {}),
+				})
+				.eq("id", payload.id);
+
+			if (error) {
+				if (error.code === "23505")
+					throw new Error("Ya existe otro cliente con esa cedula");
+				throw new Error(`Error al actualizar cliente: ${error.message}`);
+			}
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["clients"] });
+		},
+	});
+}
