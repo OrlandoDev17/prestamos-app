@@ -4,6 +4,7 @@ import {
 	useQuery,
 	useQueryClient,
 } from "@tanstack/react-query";
+import { buildSearchPatterns } from "#/lib/normalize";
 import { getLocalDate } from "#/lib/format";
 import { supabase } from "#/lib/supabase";
 import type { Loan, Payment, TodayPayment } from "#/stores/loansStore";
@@ -228,6 +229,70 @@ export function useLoansInfiniteQuery(status?: "active" | "paid") {
 			return lastPage.page + 1 < totalPages ? lastPage.page + 1 : undefined;
 		},
 		initialPageParam: 0,
+	});
+}
+
+export function useLoansSearchQuery(
+	search: string,
+	status?: "active" | "paid",
+) {
+	return useQuery({
+		queryKey: ["loans", "search", search, status],
+		queryFn: async () => {
+			const {
+				data: { session },
+			} = await supabase.auth.getSession();
+			if (!session) return [];
+
+			const patterns = buildSearchPatterns(search);
+			const orPatterns = patterns.map((p) => `full_name.ilike.%${p}%`);
+
+			const { data: matchingClients, error: clientError } = await supabase
+				.from("clients")
+				.select("id")
+				.or(orPatterns.join(","))
+				.limit(20);
+
+			if (clientError) throw clientError;
+
+			const clientIds = (matchingClients ?? []).map((c) => c.id);
+			if (clientIds.length === 0) return [];
+
+			let query = supabase
+				.from("loans")
+				.select(
+					"id, client_id, amount_borrowed, interest_rate, total_to_pay, payment_frequency, installment_amount, installment_count, status, loan_date, created_at, clients(full_name)",
+				)
+				.eq("user_id", session.user.id)
+				.is("deleted_at", null)
+				.in("client_id", clientIds)
+				.order("created_at", { ascending: false })
+				.limit(20);
+
+			if (status) query = query.eq("status", status);
+
+			const { data, error } = await query;
+
+			if (error) throw error;
+
+			return (data ?? []).map((row: Record<string, unknown>) => ({
+				id: row.id,
+				client_id: row.client_id,
+				client_name:
+					(row.clients as Record<string, string>)?.full_name ?? "Sin nombre",
+				amount_borrowed: row.amount_borrowed,
+				interest_rate: row.interest_rate,
+				total_to_pay: row.total_to_pay,
+				payment_frequency: row.payment_frequency,
+				installment_amount: row.installment_amount,
+				installment_count: row.installment_count,
+				status: row.status,
+				loan_date: row.loan_date,
+				created_at: row.created_at,
+			})) as Loan[];
+		},
+		enabled: search.trim().length >= 2,
+		staleTime: 5000,
 	});
 }
 

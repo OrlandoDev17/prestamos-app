@@ -1,13 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { UserPlus } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { CreateClientSheet } from "#/components/lender/create-client-sheet";
 import { Avatar } from "#/components/ui/avatar";
 import { EmptyState } from "#/components/ui/empty-state";
+import { SearchInput } from "#/components/ui/search-input";
 import { SkeletonCards } from "#/components/ui/skeleton-cards";
 import { useFab } from "#/hooks/useFab";
 import { currency } from "#/lib/format";
-import { useClientsInfiniteQuery } from "#/queries/clients.queries";
+import {
+	useClientsInfiniteQuery,
+	useClientsSearchQuery,
+} from "#/queries/clients.queries";
 import { useUserRoutesQuery } from "#/queries/routes.queries";
 
 export const Route = createFileRoute("/lender/clients")({
@@ -16,7 +20,17 @@ export const Route = createFileRoute("/lender/clients")({
 
 function LenderClients() {
 	const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
+	const [search, setSearch] = useState("");
 	const { data: routes = [] } = useUserRoutesQuery();
+
+	const isSearching = search.trim().length >= 2;
+
+	const {
+		data: searchData,
+		isLoading: searchLoading,
+		error: searchError,
+	} = useClientsSearchQuery(search);
+
 	const {
 		data,
 		isLoading,
@@ -25,12 +39,23 @@ function LenderClients() {
 		hasNextPage,
 		isFetchingNextPage,
 	} = useClientsInfiniteQuery(selectedRoute);
+
 	const [showCreateSheet, setShowCreateSheet] = useState(false);
 
 	useFab(() => setShowCreateSheet(true));
 
-	const clients = data?.pages.flatMap((p) => p.clients) ?? [];
-	const total = data?.pages[0]?.total ?? 0;
+	const clients = isSearching
+		? Array.isArray(searchData)
+			? searchData
+			: []
+		: (data?.pages.flatMap((p) => p.clients) ?? []);
+	const total = isSearching ? clients.length : (data?.pages[0]?.total ?? 0);
+	const displayLoading = isSearching ? searchLoading : isLoading;
+	const displayError = isSearching ? searchError : error;
+
+	const handleSearchChange = useCallback((value: string) => {
+		setSearch(value);
+	}, []);
 
 	return (
 		<main className="flex flex-col gap-4 pb-24 min-h-[calc(100dvh-5.5rem)]">
@@ -43,7 +68,13 @@ function LenderClients() {
 				</div>
 			</header>
 
-			{routes.length > 0 && (
+			<SearchInput
+				value={search}
+				onChange={handleSearchChange}
+				placeholder="Buscar por nombre..."
+			/>
+
+			{routes.length > 0 && !isSearching && (
 				<div className="flex gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-hide">
 					<button
 						type="button"
@@ -75,11 +106,13 @@ function LenderClients() {
 				</div>
 			)}
 
-			{isLoading && <SkeletonCards count={4} />}
+			{displayLoading && <SkeletonCards count={4} />}
 
-			{error && <p className="text-danger text-sm">{error.message}</p>}
+			{displayError && (
+				<p className="text-danger text-sm">{displayError.message}</p>
+			)}
 
-			{!isLoading && !error && clients.length === 0 && (
+			{!displayLoading && !displayError && clients.length === 0 && (
 				<EmptyState
 					icon={UserPlus}
 					title="No hay clientes"
@@ -92,7 +125,7 @@ function LenderClients() {
 				/>
 			)}
 
-			{!isLoading && !error && clients.length > 0 && (
+			{!displayLoading && !displayError && clients.length > 0 && (
 				<div className="flex flex-col gap-3">
 					{clients.map((client) => (
 						<article
@@ -122,7 +155,7 @@ function LenderClients() {
 						</article>
 					))}
 
-					{hasNextPage && (
+					{!isSearching && hasNextPage && (
 						<button
 							type="button"
 							onClick={() => fetchNextPage()}

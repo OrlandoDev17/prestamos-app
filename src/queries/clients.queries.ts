@@ -4,6 +4,7 @@ import {
 	useQuery,
 	useQueryClient,
 } from "@tanstack/react-query";
+import { buildSearchPatterns } from "#/lib/normalize";
 import { supabase } from "#/lib/supabase";
 import type { Client } from "#/stores/clientsStore";
 
@@ -168,10 +169,13 @@ export function useClientsSearchQuery(search: string) {
 		queryFn: async () => {
 			if (!search.trim()) return [];
 
+			const patterns = buildSearchPatterns(search);
+			const orPatterns = patterns.map((p) => `full_name.ilike.%${p}%`);
+
 			const { data, error } = await supabase
 				.from("clients")
 				.select("id, full_name, cedula, phone, address, route, is_active")
-				.ilike("full_name", `%${search}%`)
+				.or(orPatterns.join(","))
 				.order("full_name")
 				.limit(20);
 
@@ -179,7 +183,7 @@ export function useClientsSearchQuery(search: string) {
 				const fb = await supabase
 					.from("clients")
 					.select("id, full_name, cedula, phone, address, is_active")
-					.ilike("full_name", `%${search}%`)
+					.or(orPatterns.join(","))
 					.order("full_name")
 					.limit(20);
 				if (fb.error) return [];

@@ -1,13 +1,17 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Landmark } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { CreateLoanSheet } from "#/components/lender/create-loan-sheet";
 import { LoanCard } from "#/components/lender/loan-card";
 import { EmptyState } from "#/components/ui/empty-state";
+import { SearchInput } from "#/components/ui/search-input";
 import { SkeletonCards } from "#/components/ui/skeleton-cards";
 import { TabBar } from "#/components/ui/tab-bar";
 import { useFab } from "#/hooks/useFab";
-import { useLoansInfiniteQuery } from "#/queries/loans.queries";
+import {
+	useLoansInfiniteQuery,
+	useLoansSearchQuery,
+} from "#/queries/loans.queries";
 
 export const Route = createFileRoute("/lender/loans/")({
 	component: LenderLoans,
@@ -16,6 +20,16 @@ export const Route = createFileRoute("/lender/loans/")({
 function LenderLoans() {
 	const [showCreateSheet, setShowCreateSheet] = useState(false);
 	const [tab, setTab] = useState("active");
+	const [search, setSearch] = useState("");
+
+	const isSearching = search.trim().length >= 2;
+	const activeStatus = tab === "active" ? "active" : "paid";
+
+	const {
+		data: searchData,
+		isLoading: searchLoading,
+		error: searchError,
+	} = useLoansSearchQuery(search, activeStatus);
 
 	const {
 		data: activeData,
@@ -40,12 +54,34 @@ function LenderLoans() {
 	const activeTotal = activeData?.pages[0]?.total ?? 0;
 	const paidTotal = paidData?.pages[0]?.total ?? 0;
 
-	const displayLoans = tab === "active" ? activeLoans : paidLoans;
-	const isLoading = tab === "active" ? activeLoading : paidLoading;
-	const error = tab === "active" ? activeError : paidError;
-	const hasNext = tab === "active" ? hasNextActive : hasNextPaid;
+	const displayLoans = isSearching
+		? Array.isArray(searchData)
+			? searchData
+			: []
+		: tab === "active"
+			? activeLoans
+			: paidLoans;
+	const isLoading = isSearching
+		? searchLoading
+		: tab === "active"
+			? activeLoading
+			: paidLoading;
+	const error = isSearching
+		? searchError
+		: tab === "active"
+			? activeError
+			: paidError;
+	const hasNext = isSearching
+		? false
+		: tab === "active"
+			? hasNextActive
+			: hasNextPaid;
 	const fetchingNext = tab === "active" ? fetchingNextActive : fetchingNextPaid;
 	const fetchNext = tab === "active" ? fetchNextActive : fetchNextPaid;
+
+	const handleSearchChange = useCallback((value: string) => {
+		setSearch(value);
+	}, []);
 
 	useFab(
 		tab === "active" && activeLoans.length > 0
@@ -61,6 +97,12 @@ function LenderLoans() {
 					<p className="text-sm text-text-muted">{activeTotal} activos</p>
 				</div>
 			</header>
+
+			<SearchInput
+				value={search}
+				onChange={handleSearchChange}
+				placeholder="Buscar por nombre del cliente..."
+			/>
 
 			<TabBar
 				tabs={[
@@ -78,6 +120,7 @@ function LenderLoans() {
 			{!isLoading &&
 				!error &&
 				displayLoans.length === 0 &&
+				!isSearching &&
 				tab === "active" && (
 					<EmptyState
 						icon={Landmark}
@@ -90,81 +133,109 @@ function LenderLoans() {
 					/>
 				)}
 
-			{!isLoading && !error && displayLoans.length === 0 && tab === "paid" && (
+			{!isLoading &&
+				!error &&
+				displayLoans.length === 0 &&
+				!isSearching &&
+				tab === "paid" && (
+					<EmptyState
+						icon={Landmark}
+						title="Sin historial"
+						description="Aun no tienes prestamos totalmente pagados."
+					/>
+				)}
+
+			{!isLoading && !error && displayLoans.length === 0 && isSearching && (
 				<EmptyState
 					icon={Landmark}
-					title="Sin historial"
-					description="Aun no tienes prestamos totalmente pagados."
+					title="Sin resultados"
+					description="No se encontraron prestamos con ese nombre."
 				/>
 			)}
 
-			{!isLoading && !error && tab === "active" && activeLoans.length > 0 && (
+			{!isLoading && !error && isSearching && displayLoans.length > 0 && (
 				<div className="flex flex-col gap-3">
-					{activeLoans.map((loan) => (
+					{displayLoans.map((loan) => (
 						<LoanCard key={loan.id} loan={loan} />
 					))}
-					{hasNext && (
-						<button
-							type="button"
-							onClick={() => fetchNext()}
-							disabled={fetchingNext}
-							className="py-3 text-sm font-medium text-primary-dark bg-primary/10 rounded-xl hover:bg-primary/20 active:scale-[0.98] transition-all cursor-pointer disabled:opacity-50"
-						>
-							{fetchingNext ? "Cargando..." : "Cargar mas"}
-						</button>
-					)}
 				</div>
 			)}
 
-			{!isLoading && !error && tab === "paid" && paidLoans.length > 0 && (
-				<div className="flex flex-col gap-3">
-					{paidLoans.map((loan) => (
-						<Link
-							key={loan.id}
-							to="/lender/loans/$clientId/$loanId"
-							params={{
-								clientId: loan.client_id,
-								loanId: loan.id,
-							}}
-							className="flex flex-col gap-3 bg-surface p-4 rounded-xl shadow-sm opacity-80"
-						>
-							<div className="flex items-start justify-between">
-								<div className="flex items-center gap-3">
-									<span className="size-12 rounded-full flex items-center justify-center text-sm font-bold text-white bg-linear-to-br from-success to-emerald-700 ring-2 ring-offset-2 ring-offset-surface ring-success/30">
-										{loan.client_name
-											.split(" ")
-											.map((n) => n[0])
-											.slice(0, 2)
-											.join("")
-											.toUpperCase()}
-									</span>
-									<div className="flex flex-col">
-										<h3 className="font-semibold text-text-main leading-tight">
-											{loan.client_name}
-										</h3>
-										<p className="text-xs text-text-muted mt-0.5 capitalize">
-											{loan.payment_frequency}
-										</p>
+			{!isLoading &&
+				!error &&
+				!isSearching &&
+				tab === "active" &&
+				activeLoans.length > 0 && (
+					<div className="flex flex-col gap-3">
+						{activeLoans.map((loan) => (
+							<LoanCard key={loan.id} loan={loan} />
+						))}
+						{hasNext && (
+							<button
+								type="button"
+								onClick={() => fetchNext()}
+								disabled={fetchingNext}
+								className="py-3 text-sm font-medium text-primary-dark bg-primary/10 rounded-xl hover:bg-primary/20 active:scale-[0.98] transition-all cursor-pointer disabled:opacity-50"
+							>
+								{fetchingNext ? "Cargando..." : "Cargar mas"}
+							</button>
+						)}
+					</div>
+				)}
+
+			{!isLoading &&
+				!error &&
+				!isSearching &&
+				tab === "paid" &&
+				paidLoans.length > 0 && (
+					<div className="flex flex-col gap-3">
+						{paidLoans.map((loan) => (
+							<Link
+								key={loan.id}
+								to="/lender/loans/$clientId/$loanId"
+								params={{
+									clientId: loan.client_id,
+									loanId: loan.id,
+								}}
+								className="flex flex-col gap-3 bg-surface p-4 rounded-xl shadow-sm opacity-80"
+							>
+								<div className="flex items-start justify-between">
+									<div className="flex items-center gap-3">
+										<span className="size-12 rounded-full flex items-center justify-center text-sm font-bold text-white bg-linear-to-br from-success to-emerald-700 ring-2 ring-offset-2 ring-offset-surface ring-success/30">
+											{loan.client_name
+												.split(" ")
+												.map((n) => n[0])
+												.slice(0, 2)
+												.join("")
+												.toUpperCase()}
+										</span>
+										<div className="flex flex-col">
+											<h3 className="font-semibold text-text-main leading-tight">
+												{loan.client_name}
+											</h3>
+											<p className="text-xs text-text-muted mt-0.5 capitalize">
+												{loan.payment_frequency}
+											</p>
+										</div>
 									</div>
+									<span className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full text-success bg-success-bg">
+										Pagado
+									</span>
 								</div>
-								<span className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full text-success bg-success-bg">
-									Pagado
-								</span>
-							</div>
-						</Link>
-					))}
-					{hasNext && (
-						<button
-							type="button"
-							onClick={() => fetchNext()}
-							disabled={fetchingNext}
-							className="py-3 text-sm font-medium text-primary-dark bg-primary/10 rounded-xl hover:bg-primary/20 active:scale-[0.98] transition-all cursor-pointer disabled:opacity-50"
-						>
-							{fetchingNext ? "Cargando..." : "Cargar mas"}
-						</button>
-					)}
-				</div>
-			)}
+							</Link>
+						))}
+						{hasNext && (
+							<button
+								type="button"
+								onClick={() => fetchNext()}
+								disabled={fetchingNext}
+								className="py-3 text-sm font-medium text-primary-dark bg-primary/10 rounded-xl hover:bg-primary/20 active:scale-[0.98] transition-all cursor-pointer disabled:opacity-50"
+							>
+								{fetchingNext ? "Cargando..." : "Cargar mas"}
+							</button>
+						)}
+					</div>
+				)}
 
 			<CreateLoanSheet
 				isOpen={showCreateSheet}
