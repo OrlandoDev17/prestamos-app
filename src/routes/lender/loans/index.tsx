@@ -8,6 +8,7 @@ import { SearchInput } from "#/components/ui/search-input";
 import { SkeletonCards } from "#/components/ui/skeleton-cards";
 import { TabBar } from "#/components/ui/tab-bar";
 import { useFab } from "#/hooks/useFab";
+import { currency } from "#/lib/format";
 import {
 	useLoansInfiniteQuery,
 	useLoansSearchQuery,
@@ -23,7 +24,7 @@ function LenderLoans() {
 	const [search, setSearch] = useState("");
 
 	const isSearching = search.trim().length >= 2;
-	const activeStatus = tab === "active" ? "active" : "paid";
+	const activeStatus = tab === "active" ? "active" : tab === "paid" ? "paid" : "refinanced";
 
 	const {
 		data: searchData,
@@ -49,10 +50,21 @@ function LenderLoans() {
 		isFetchingNextPage: fetchingNextPaid,
 	} = useLoansInfiniteQuery("paid");
 
+	const {
+		data: refinancedData,
+		isLoading: refinancedLoading,
+		error: refinancedError,
+		fetchNextPage: fetchNextRefinanced,
+		hasNextPage: hasNextRefinanced,
+		isFetchingNextPage: fetchingNextRefinanced,
+	} = useLoansInfiniteQuery("refinanced");
+
 	const activeLoans = activeData?.pages.flatMap((p) => p.loans) ?? [];
 	const paidLoans = paidData?.pages.flatMap((p) => p.loans) ?? [];
+	const refinancedLoans = refinancedData?.pages.flatMap((p) => p.loans) ?? [];
 	const activeTotal = activeData?.pages[0]?.total ?? 0;
 	const paidTotal = paidData?.pages[0]?.total ?? 0;
+	const refinancedTotal = refinancedData?.pages[0]?.total ?? 0;
 
 	const displayLoans = isSearching
 		? Array.isArray(searchData)
@@ -60,24 +72,40 @@ function LenderLoans() {
 			: []
 		: tab === "active"
 			? activeLoans
-			: paidLoans;
+			: tab === "paid"
+				? paidLoans
+				: refinancedLoans;
 	const isLoading = isSearching
 		? searchLoading
 		: tab === "active"
 			? activeLoading
-			: paidLoading;
+			: tab === "paid"
+				? paidLoading
+				: refinancedLoading;
 	const error = isSearching
 		? searchError
 		: tab === "active"
 			? activeError
-			: paidError;
+			: tab === "paid"
+				? paidError
+				: refinancedError;
 	const hasNext = isSearching
 		? false
 		: tab === "active"
 			? hasNextActive
-			: hasNextPaid;
-	const fetchingNext = tab === "active" ? fetchingNextActive : fetchingNextPaid;
-	const fetchNext = tab === "active" ? fetchNextActive : fetchNextPaid;
+			: tab === "paid"
+				? hasNextPaid
+				: hasNextRefinanced;
+	const fetchingNext = tab === "active"
+		? fetchingNextActive
+		: tab === "paid"
+			? fetchingNextPaid
+			: fetchingNextRefinanced;
+	const fetchNext = tab === "active"
+		? fetchNextActive
+		: tab === "paid"
+			? fetchNextPaid
+			: fetchNextRefinanced;
 
 	const handleSearchChange = useCallback((value: string) => {
 		setSearch(value);
@@ -108,6 +136,7 @@ function LenderLoans() {
 				tabs={[
 					{ key: "active", label: "Activos", count: activeTotal },
 					{ key: "paid", label: "Pagados", count: paidTotal },
+					{ key: "refinanced", label: "Refinanciados", count: refinancedTotal },
 				]}
 				value={tab}
 				onChange={setTab}
@@ -142,6 +171,18 @@ function LenderLoans() {
 						icon={Landmark}
 						title="Sin historial"
 						description="Aun no tienes prestamos totalmente pagados."
+					/>
+				)}
+
+			{!isLoading &&
+				!error &&
+				displayLoans.length === 0 &&
+				!isSearching &&
+				tab === "refinanced" && (
+					<EmptyState
+						icon={Landmark}
+						title="Sin refinanciamientos"
+						description="Aun no tienes prestamos refinanciados."
 					/>
 				)}
 
@@ -223,6 +264,74 @@ function LenderLoans() {
 									</span>
 								</div>
 							</Link>
+						))}
+						{hasNext && (
+							<button
+								type="button"
+								onClick={() => fetchNext()}
+								disabled={fetchingNext}
+								className="py-3 text-sm font-medium text-primary-dark bg-primary/10 rounded-xl hover:bg-primary/20 active:scale-[0.98] transition-all cursor-pointer disabled:opacity-50"
+							>
+								{fetchingNext ? "Cargando..." : "Cargar mas"}
+							</button>
+						)}
+					</div>
+				)}
+
+			{!isLoading &&
+				!error &&
+				!isSearching &&
+				tab === "refinanced" &&
+				refinancedLoans.length > 0 && (
+					<div className="flex flex-col gap-3">
+						{refinancedLoans.map((loan) => (
+							<div
+								key={loan.id}
+								className="flex flex-col gap-3 bg-surface p-4 rounded-xl shadow-sm opacity-80"
+							>
+								<div className="flex items-start justify-between">
+									<div className="flex items-center gap-3">
+										<span className="size-12 rounded-full flex items-center justify-center text-sm font-bold text-white bg-linear-to-br from-amber-500 to-orange-600 ring-2 ring-offset-2 ring-offset-surface ring-amber-500/30">
+											{loan.client_name
+												.split(" ")
+												.map((n) => n[0])
+												.slice(0, 2)
+												.join("")
+												.toUpperCase()}
+										</span>
+										<div className="flex flex-col">
+											<h3 className="font-semibold text-text-main leading-tight">
+												{loan.client_name}
+											</h3>
+											<p className="text-xs text-text-muted mt-0.5 capitalize">
+												{loan.payment_frequency}
+											</p>
+										</div>
+									</div>
+									<span className="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full text-amber-700 bg-amber-100">
+										Refinanciado
+									</span>
+								</div>
+
+								<div className="grid grid-cols-2 gap-3 pt-2 border-t border-text-muted/10">
+									<div className="flex flex-col">
+										<span className="text-[10px] text-text-muted uppercase tracking-wider">
+											Prestado
+										</span>
+										<span className="text-sm font-semibold text-text-main">
+											{currency(loan.amount_borrowed)}
+										</span>
+									</div>
+									<div className="flex flex-col">
+										<span className="text-[10px] text-text-muted uppercase tracking-wider">
+											Total
+										</span>
+										<span className="text-sm font-semibold text-primary-dark">
+											{currency(loan.total_to_pay)}
+										</span>
+									</div>
+								</div>
+							</div>
 						))}
 						{hasNext && (
 							<button

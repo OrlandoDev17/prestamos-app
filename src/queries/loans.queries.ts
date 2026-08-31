@@ -174,7 +174,9 @@ export function useUpcomingPaymentsQuery() {
 	return useQuery(upcomingPaymentsQuery);
 }
 
-export function useLoansInfiniteQuery(status?: "active" | "paid") {
+export function useLoansInfiniteQuery(
+	status?: "active" | "paid" | "refinanced",
+) {
 	return useInfiniteQuery({
 		queryKey: ["loans", status],
 		queryFn: async ({ pageParam = 0 }) => {
@@ -233,7 +235,7 @@ export function useLoansInfiniteQuery(status?: "active" | "paid") {
 
 export function useLoansSearchQuery(
 	search: string,
-	status?: "active" | "paid",
+	status?: "active" | "paid" | "refinanced",
 ) {
 	return useQuery({
 		queryKey: ["loans", "search", search, status],
@@ -478,6 +480,216 @@ export function useMarkPaymentPaid() {
 			return { success: true, remaining };
 		},
 		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["payments"] });
+		},
+	});
+}
+
+export function useReversePayment() {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: async (paymentId: string) => {
+			const { data: payment, error: fetchError } = await supabase
+				.from("payments")
+				.select(
+					"id, loan_id, installment_number, amount, paid_amount, payment_date",
+				)
+				.eq("id", paymentId)
+				.single();
+
+			if (fetchError)
+				throw new Error(`Error al obtener cuota: ${fetchError.message}`);
+
+			if (payment.paid_amount === null)
+				throw new Error("Esta cuota no tiene pago registrado");
+
+			const { data: allPayments, error: paymentsError } = await supabase
+				.from("payments")
+				.select("id, installment_number, amount, paid_amount, payment_date")
+				.eq("loan_id", payment.loan_id)
+				.order("installment_number");
+
+			if (paymentsError)
+				throw new Error(`Error al obtener cuotas: ${paymentsError.message}`);
+
+			const updates: { id: string; paid_amount: null; payment_date: null }[] =
+				[];
+
+			updates.push({
+				id: payment.id,
+				paid_amount: null,
+				payment_date: null,
+			});
+
+			const excessPaid = payment.paid_amount - payment.amount;
+
+			if (excessPaid > 0) {
+				for (const p of allPayments ?? []) {
+					if (p.id === payment.id) continue;
+					if (excessPaid <= 0) break;
+
+					if (p.paid_amount !== null && p.paid_amount > 0) {
+						const removeAmount = Math.min(p.paid_amount, excessPaid);
+						const newPaid = p.paid_amount - removeAmount;
+
+						updates.push({
+							id: p.id,
+							paid_amount: newPaid > 0 ? newPaid : null,
+							payment_date: newPaid > 0 ? p.payment_date : null,
+						});
+					}
+				}
+			}
+
+			for (const update of updates) {
+				const { error } = await supabase
+					.from("payments")
+					.update({
+						paid_amount: update.paid_amount,
+						payment_date: update.payment_date,
+					})
+					.eq("id", update.id);
+
+				if (error) throw new Error(`Error al revertir cuota: ${error.message}`);
+			}
+
+			return { success: true };
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["payments"] });
+			queryClient.invalidateQueries({ queryKey: ["loans"] });
+		},
+	});
+}
+
+export function useRefinanceLoan() {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: async ({
+			oldLoanId,
+			newAmount,
+			interestRate,
+			installmentCount,
+			paymentFrequency,
+			loanDate,
+		}: {
+			oldLoanId: string;
+			newAmount: number;
+			interestRate: number;
+			installmentCount: number;
+			paymentFrequency: string;
+			loanDate: string;
+		}) => {
+			const {
+				data: { session },
+			} = await supabase.auth.getSession();
+			if (!session) throw new Error("No hay sesion activa");
+
+			const { data: oldLoan, error: oldLoanError } = await supabase
+				.from("loans")
+				.select("id, client_id, total_to_pay, status")
+				.eq("id", oldLoanId)
+				.single();
+
+			if (oldLoanError)
+				throw new Error(`Error al obtener prestamo: ${oldLoanError.message}`);
+			if (oldLoan.status !== "active")
+				throw new Error("Solo se pueden refinanciar prestamos activos");
+
+			const { data: oldPayments } = await supabase
+				.from("payments")
+				.select("paid_amount")
+				.eq("loan_id", oldLoanId);
+
+			const totalPaid = (oldPayments ?? []).reduce(
+				(sum, p) => sum + (p.paid_amount ?? 0),
+				0,
+			);
+			const remainingBalance = oldLoan.total_to_pay - totalPaid;
+
+			const totalToPay = newAmount + newAmount * (interestRate / 100);
+
+			const { data: newLoanData, error: newLoanError } = await supabase
+				.from("loans")
+				.insert({
+					user_id: session.user.id,
+					client_id: oldLoan.client_id,
+					amount_borrowed: newAmount + remainingBalance,
+					interest_rate: interestRate,
+					total_to_pay: totalToPay + remainingBalance,
+					payment_frequency: paymentFrequency,
+					installment_amount:
+						(totalToPay + remainingBalance) / installmentCount,
+					installment_count: installmentCount,
+					status: "active",
+					loan_date: loanDate,
+					refinanced_from: oldLoanId,
+				})
+				.select("id")
+				.single();
+
+			if (newLoanError)
+				throw new Error(`Error al crear prestamo: ${newLoanError.message}`);
+
+			const frequencyDays = getFrequencyDays(paymentFrequency);
+			const startDate = new Date(loanDate);
+
+			const payments = Array.from({ length: installmentCount }, (_, i) => ({
+				loan_id: newLoanData.id,
+				installment_number: i + 1,
+				amount: (totalToPay + remainingBalance) / installmentCount,
+				due_date: addDays(startDate, frequencyDays * (i + 1))
+					.toISOString()
+					.split("T")[0],
+			}));
+
+			const { error: paymentsError } = await supabase
+				.from("payments")
+				.insert(payments);
+
+			if (paymentsError) {
+				await supabase.from("loans").delete().eq("id", newLoanData.id);
+				throw new Error(`Error al crear cuotas: ${paymentsError.message}`);
+			}
+
+			const { error: updateError } = await supabase
+				.from("loans")
+				.update({ status: "refinanced" })
+				.eq("id", oldLoanId);
+
+			if (updateError)
+				throw new Error(
+					`Error al actualizar prestamo anterior: ${updateError.message}`,
+				);
+
+			return { newLoanId: newLoanData.id };
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["loans"] });
+			queryClient.invalidateQueries({ queryKey: ["payments"] });
+		},
+	});
+}
+
+export function useDeleteLoan() {
+	const queryClient = useQueryClient();
+
+	return useMutation({
+		mutationFn: async (loanId: string) => {
+			const { error } = await supabase
+				.from("loans")
+				.update({ deleted_at: new Date().toISOString() })
+				.eq("id", loanId);
+
+			if (error)
+				throw new Error(`Error al eliminar prestamo: ${error.message}`);
+
+			return { success: true };
+		},
+		onSuccess: () => {
+			queryClient.invalidateQueries({ queryKey: ["loans"] });
 			queryClient.invalidateQueries({ queryKey: ["payments"] });
 		},
 	});
