@@ -1,6 +1,6 @@
 {
-  "name": "PrestamosApp",
-  "short_name": "Prestamos",
+  "name": "TuPrestamo",
+  "short_name": "TuPrestamo",
   "description": "Gestiona prestamos, clientes y cobranzas de forma sencilla",
   "start_url": "/lender/dashboard",
   "display": "standalone",

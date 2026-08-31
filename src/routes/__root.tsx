@@ -27,7 +27,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 				name: "viewport",
 				content: "width=device-width, initial-scale=1, viewport-fit=cover",
 			},
-			{ title: "PrestamosApp" },
+			{ title: "TuPrestamo" },
 			{
 				name: "description",
 				content: "Gestiona prestamos, clientes y cobranzas de forma sencilla",
