@@ -1,9 +1,12 @@
-import { Check, Circle, Clock } from "lucide-react";
+import { Check, Circle, Clock, MoreVertical, Pencil, Undo2 } from "lucide-react";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { BottomSheet } from "#/components/ui/bottom-sheet";
 import { currency, formatDateShort } from "#/lib/format";
-import { useMarkPaymentPaid } from "#/queries/loans.queries";
+import {
+	useMarkPaymentPaid,
+	useReversePayment,
+} from "#/queries/loans.queries";
 import type { Payment } from "#/stores/loansStore";
 
 interface PaymentTimelineProps {
@@ -16,15 +19,46 @@ export function PaymentTimeline({
 	onPaymentUpdated,
 }: PaymentTimelineProps) {
 	const markPaid = useMarkPaymentPaid();
+	const reversePayment = useReversePayment();
 	const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
 	const [showConfirmSheet, setShowConfirmSheet] = useState(false);
+	const [showReverseSheet, setShowReverseSheet] = useState(false);
+	const [showEditSheet, setShowEditSheet] = useState(false);
 	const [payAmount, setPayAmount] = useState("");
+	const [editAmount, setEditAmount] = useState("");
+	const [menuOpenId, setMenuOpenId] = useState<string | null>(null);
+	const menuRef = useRef<HTMLDivElement>(null);
+
+	useEffect(() => {
+		const handleClickOutside = (e: MouseEvent) => {
+			if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
+				setMenuOpenId(null);
+			}
+		};
+		if (menuOpenId) {
+			document.addEventListener("mousedown", handleClickOutside);
+		}
+		return () => document.removeEventListener("mousedown", handleClickOutside);
+	}, [menuOpenId]);
 
 	const handleMarkPaid = (payment: Payment) => {
 		setSelectedPayment(payment);
 		const pending = payment.amount - (payment.paid_amount ?? 0);
 		setPayAmount(pending.toFixed(2));
 		setShowConfirmSheet(true);
+	};
+
+	const handleReverse = (payment: Payment) => {
+		setSelectedPayment(payment);
+		setShowReverseSheet(true);
+		setMenuOpenId(null);
+	};
+
+	const handleEdit = (payment: Payment) => {
+		setSelectedPayment(payment);
+		setEditAmount((payment.paid_amount ?? 0).toString());
+		setShowEditSheet(true);
+		setMenuOpenId(null);
 	};
 
 	const confirmMarkPaid = async () => {
@@ -46,6 +80,41 @@ export function PaymentTimeline({
 		setShowConfirmSheet(false);
 		setSelectedPayment(null);
 		setPayAmount("");
+	};
+
+	const confirmReverse = async () => {
+		if (!selectedPayment) return;
+
+		try {
+			await reversePayment.mutateAsync(selectedPayment.id);
+			onPaymentUpdated();
+		} catch {
+			// Error handled by mutation
+		}
+
+		setShowReverseSheet(false);
+		setSelectedPayment(null);
+	};
+
+	const confirmEdit = async () => {
+		if (!selectedPayment) return;
+
+		const amount = Number.parseFloat(editAmount);
+		if (Number.isNaN(amount) || amount < 0) return;
+
+		try {
+			await markPaid.mutateAsync({
+				paymentId: selectedPayment.id,
+				amount,
+			});
+			onPaymentUpdated();
+		} catch {
+			// Error handled by mutation
+		}
+
+		setShowEditSheet(false);
+		setSelectedPayment(null);
+		setEditAmount("");
 	};
 
 	const now = new Date();
@@ -114,23 +183,60 @@ export function PaymentTimeline({
 									<span className="text-sm font-semibold text-text-main">
 										Cuota #{payment.installment_number}
 									</span>
-									{isPaid ? (
-										<span className="text-xs font-medium text-success">
-											Pagada
-										</span>
-									) : isPartial ? (
-										<span className="text-xs font-medium text-warning">
-											Parcial
-										</span>
-									) : isOverdue ? (
-										<span className="text-xs font-medium text-danger">
-											Vencida
-										</span>
-									) : (
-										<span className="text-xs font-medium text-text-muted">
-											Pendiente
-										</span>
-									)}
+									<div className="flex items-center gap-2">
+										{isPaid ? (
+											<span className="text-xs font-medium text-success">
+												Pagada
+											</span>
+										) : isPartial ? (
+											<span className="text-xs font-medium text-warning">
+												Parcial
+											</span>
+										) : isOverdue ? (
+											<span className="text-xs font-medium text-danger">
+												Vencida
+											</span>
+										) : (
+											<span className="text-xs font-medium text-text-muted">
+												Pendiente
+											</span>
+										)}
+										{(isPaid || isPartial) && (
+											<div className="relative" ref={menuRef}>
+												<button
+													type="button"
+													onClick={() =>
+														setMenuOpenId(
+															menuOpenId === payment.id ? null : payment.id,
+														)
+													}
+													className="p-1 rounded hover:bg-text-muted/10 transition-colors cursor-pointer"
+												>
+													<MoreVertical size={14} className="text-text-muted" />
+												</button>
+												{menuOpenId === payment.id && (
+													<div className="absolute right-0 top-full mt-1 bg-surface border border-text-muted/15 rounded-xl shadow-lg z-50 min-w-[150px] py-1">
+														<button
+															type="button"
+															onClick={() => handleEdit(payment)}
+															className="w-full flex items-center gap-2 px-3 py-2 text-sm text-text-main hover:bg-background transition-colors cursor-pointer"
+														>
+															<Pencil size={13} className="text-text-muted" />
+															Corregir monto
+														</button>
+														<button
+															type="button"
+															onClick={() => handleReverse(payment)}
+															className="w-full flex items-center gap-2 px-3 py-2 text-sm text-danger hover:bg-background transition-colors cursor-pointer"
+														>
+															<Undo2 size={13} />
+															Revertir pago
+														</button>
+													</div>
+												)}
+											</div>
+										)}
+									</div>
 								</div>
 
 								<div className="flex items-center justify-between text-xs text-text-muted mb-2">
@@ -246,6 +352,122 @@ export function PaymentTimeline({
 							<span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
 						)}
 						{markPaid.isPending ? "Procesando..." : "Confirmar"}
+					</button>
+				</div>
+			</BottomSheet>
+
+			<BottomSheet
+				isOpen={showReverseSheet}
+				onClose={() => setShowReverseSheet(false)}
+			>
+				<h3 className="text-lg font-bold mb-1">Revertir Pago</h3>
+				<p className="text-text-muted text-sm mb-4">
+					Cuota #{selectedPayment?.installment_number}
+				</p>
+				{selectedPayment && (
+					<div className="bg-background rounded-xl p-4 mb-4">
+						<div className="flex justify-between text-sm mb-2">
+							<span className="text-text-muted">Monto pagado:</span>
+							<span className="font-semibold">
+								{currency(selectedPayment.paid_amount ?? 0)}
+							</span>
+						</div>
+						<div className="flex justify-between text-sm">
+							<span className="text-text-muted">Fecha de pago:</span>
+							<span className="font-semibold">
+								{selectedPayment.payment_date
+									? formatDateShort(selectedPayment.payment_date)
+									: "-"}
+							</span>
+						</div>
+					</div>
+				)}
+				<p className="text-sm text-text-muted mb-4">
+					Se eliminara el registro de pago de esta cuota. Si el excedente fue
+					distribuido a otras cuotas, tambien se revertiran.
+				</p>
+				<div className="flex gap-3">
+					<button
+						type="button"
+						onClick={() => setShowReverseSheet(false)}
+						className="flex-1 py-3 border border-text-muted/30 text-text-main font-semibold rounded-lg hover:bg-background transition-colors cursor-pointer"
+					>
+						Cancelar
+					</button>
+					<button
+						type="button"
+						onClick={confirmReverse}
+						disabled={reversePayment.isPending}
+						className="flex-1 py-3 bg-danger text-white font-semibold rounded-lg hover:bg-red-600 active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+					>
+						{reversePayment.isPending && (
+							<span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+						)}
+						{reversePayment.isPending ? "Procesando..." : "Revertir"}
+					</button>
+				</div>
+			</BottomSheet>
+
+			<BottomSheet
+				isOpen={showEditSheet}
+				onClose={() => setShowEditSheet(false)}
+			>
+				<h3 className="text-lg font-bold mb-1">Corregir Monto</h3>
+				<p className="text-text-muted text-sm mb-4">
+					Cuota #{selectedPayment?.installment_number}
+				</p>
+				{selectedPayment && (
+					<div className="bg-background rounded-xl p-4 mb-4">
+						<div className="flex justify-between text-sm mb-2">
+							<span className="text-text-muted">Monto cuota:</span>
+							<span className="font-semibold">
+								{currency(selectedPayment.amount)}
+							</span>
+						</div>
+						<div className="flex justify-between text-sm">
+							<span className="text-text-muted">Pagado actualmente:</span>
+							<span className="font-semibold">
+								{currency(selectedPayment.paid_amount ?? 0)}
+							</span>
+						</div>
+					</div>
+				)}
+				<div className="mb-4">
+					<label className="flex flex-col gap-1.5">
+						<span className="text-sm font-medium">Nuevo monto pagado</span>
+						<input
+							type="number"
+							min="0"
+							max={selectedPayment?.amount}
+							step="0.01"
+							value={editAmount}
+							onChange={(e) => setEditAmount(e.target.value)}
+							className="w-full bg-background px-4 py-3 rounded-lg text-sm font-semibold tabular-nums placeholder:text-text-muted/50 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all duration-200"
+						/>
+					</label>
+				</div>
+				<div className="flex gap-3">
+					<button
+						type="button"
+						onClick={() => setShowEditSheet(false)}
+						className="flex-1 py-3 border border-text-muted/30 text-text-main font-semibold rounded-lg hover:bg-background transition-colors cursor-pointer"
+					>
+						Cancelar
+					</button>
+					<button
+						type="button"
+						onClick={confirmEdit}
+						disabled={
+							markPaid.isPending ||
+							editAmount === "" ||
+							Number.parseFloat(editAmount) < 0
+						}
+						className="flex-1 py-3 bg-primary text-white font-semibold rounded-lg hover:bg-primary-hover active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
+					>
+						{markPaid.isPending && (
+							<span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+						)}
+						{markPaid.isPending ? "Procesando..." : "Guardar"}
 					</button>
 				</div>
 			</BottomSheet>
