@@ -97,8 +97,7 @@ async function fetchTodayPayments(): Promise<TodayPayment[]> {
 		.from("payments")
 		.select("*, loans!inner(user_id, clients!inner(full_name))")
 		.not("paid_amount", "is", null)
-		.gte("payment_date", `${today}T00:00:00`)
-		.lte("payment_date", `${today}T23:59:59`)
+		.eq("payment_date", today)
 		.order("installment_number");
 
 	if (err1) console.error("Error fetching due today:", err1.message);
@@ -460,7 +459,7 @@ export function useMarkPaymentPaid() {
 				}
 			}
 
-			const now = new Date().toISOString();
+			const now = getLocalDate();
 
 			for (const update of updates) {
 				const { error } = await supabase
