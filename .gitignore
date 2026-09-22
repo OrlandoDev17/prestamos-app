@@ -36,3 +36,6 @@ android/app/release/
 *.sw?
 DS_Store
 Thumbs.db
+
+# Playwright MCP artifacts
+.playwright-mcp/
