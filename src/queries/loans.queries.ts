@@ -4,8 +4,8 @@ import {
 	useQuery,
 	useQueryClient,
 } from "@tanstack/react-query";
-import { buildSearchPatterns } from "#/lib/normalize";
 import { getLocalDate } from "#/lib/format";
+import { buildSearchPatterns } from "#/lib/normalize";
 import { supabase } from "#/lib/supabase";
 import type { Loan, Payment, TodayPayment } from "#/stores/loansStore";
 
@@ -14,17 +14,11 @@ const PAGE_SIZE = 20;
 // ── Query functions (reusable in loaders) ──
 
 async function fetchAllLoans(): Promise<Loan[]> {
-	const {
-		data: { session },
-	} = await supabase.auth.getSession();
-	if (!session) return [];
-
 	const { data, error } = await supabase
 		.from("loans")
 		.select(
 			"id, client_id, amount_borrowed, interest_rate, total_to_pay, payment_frequency, installment_amount, installment_count, status, loan_date, created_at, clients(full_name)",
 		)
-		.eq("user_id", session.user.id)
 		.is("deleted_at", null)
 		.order("created_at", { ascending: false });
 
@@ -65,6 +59,7 @@ async function fetchLoanPayments(loanId: string): Promise<Payment[]> {
 		paid_amount: row.paid_amount,
 		payment_date: row.payment_date,
 		notes: row.notes,
+		registered_by: row.registered_by ?? null,
 	})) as Payment[];
 }
 
@@ -80,6 +75,7 @@ function mapPaymentRow(row: Record<string, unknown>): TodayPayment {
 		paid_amount: row.paid_amount,
 		payment_date: row.payment_date,
 		notes: row.notes,
+		registered_by: row.registered_by ?? null,
 		client_name: client?.full_name ?? "Sin nombre",
 	};
 }
@@ -180,18 +176,12 @@ export function useLoansInfiniteQuery(
 	return useInfiniteQuery({
 		queryKey: ["loans", status],
 		queryFn: async ({ pageParam = 0 }) => {
-			const {
-				data: { session },
-			} = await supabase.auth.getSession();
-			if (!session) return { loans: [], total: 0, page: 0 };
-
 			let query = supabase
 				.from("loans")
 				.select(
 					"id, client_id, amount_borrowed, interest_rate, total_to_pay, payment_frequency, installment_amount, installment_count, status, loan_date, created_at, clients(full_name)",
 					{ count: "exact" },
 				)
-				.eq("user_id", session.user.id)
 				.is("deleted_at", null);
 
 			if (status) query = query.eq("status", status);
@@ -240,11 +230,6 @@ export function useLoansSearchQuery(
 	return useQuery({
 		queryKey: ["loans", "search", search, status],
 		queryFn: async () => {
-			const {
-				data: { session },
-			} = await supabase.auth.getSession();
-			if (!session) return [];
-
 			const patterns = buildSearchPatterns(search);
 			const orPatterns = patterns.map((p) => `full_name.ilike.%${p}%`);
 
@@ -264,7 +249,6 @@ export function useLoansSearchQuery(
 				.select(
 					"id, client_id, amount_borrowed, interest_rate, total_to_pay, payment_frequency, installment_amount, installment_count, status, loan_date, created_at, clients(full_name)",
 				)
-				.eq("user_id", session.user.id)
 				.is("deleted_at", null)
 				.in("client_id", clientIds)
 				.order("created_at", { ascending: false })
@@ -407,9 +391,16 @@ export function useMarkPaymentPaid() {
 			amount: number;
 			notes?: string;
 		}) => {
+			const {
+				data: { session },
+			} = await supabase.auth.getSession();
+			if (!session) throw new Error("No hay sesion activa");
+
 			const { data: currentPayment, error: fetchError } = await supabase
 				.from("payments")
-				.select("id, loan_id, installment_number, amount, paid_amount")
+				.select(
+					"id, loan_id, installment_number, amount, paid_amount, registered_by",
+				)
 				.eq("id", paymentId)
 				.single();
 
@@ -418,18 +409,29 @@ export function useMarkPaymentPaid() {
 
 			const { data: allPayments, error: paymentsError } = await supabase
 				.from("payments")
-				.select("id, installment_number, amount, paid_amount")
+				.select("id, installment_number, amount, paid_amount, registered_by")
 				.eq("loan_id", currentPayment.loan_id)
 				.order("installment_number");
 
 			if (paymentsError)
 				throw new Error(`Error al obtener cuotas: ${paymentsError.message}`);
 
-			const updates: { id: string; paid_amount: number; notes?: string }[] = [];
+			const updates: {
+				id: string;
+				paid_amount: number;
+				notes?: string;
+				registered_by: string;
+			}[] = [];
 			let remaining = amount;
+			const actorId = session.user.id;
 
 			for (const payment of allPayments ?? []) {
 				if (remaining <= 0) break;
+
+				// Collector: saltar cuotas registradas por otro (solo puede tocar las suyas o impagas)
+				const isOwnOrUnpaid =
+					payment.registered_by === actorId || payment.registered_by === null;
+				if (!isOwnOrUnpaid) continue;
 
 				if (payment.id === paymentId) {
 					const currentPaid = payment.paid_amount ?? 0;
@@ -440,6 +442,7 @@ export function useMarkPaymentPaid() {
 					updates.push({
 						id: payment.id,
 						paid_amount: Math.round(newPaidAmount * 100) / 100,
+						registered_by: actorId,
 						...(payment.id === paymentId && notes ? { notes } : {}),
 					});
 					remaining -= toPay;
@@ -455,6 +458,7 @@ export function useMarkPaymentPaid() {
 						updates.push({
 							id: payment.id,
 							paid_amount: Math.round(newPaidAmount * 100) / 100,
+							registered_by: actorId,
 						});
 						remaining -= toPay;
 					}
@@ -469,6 +473,7 @@ export function useMarkPaymentPaid() {
 					.update({
 						paid_amount: update.paid_amount,
 						payment_date: now,
+						registered_by: update.registered_by,
 						...(update.notes ? { notes: update.notes } : {}),
 					})
 					.eq("id", update.id);
@@ -493,7 +498,7 @@ export function useReversePayment() {
 			const { data: payment, error: fetchError } = await supabase
 				.from("payments")
 				.select(
-					"id, loan_id, installment_number, amount, paid_amount, payment_date",
+					"id, loan_id, installment_number, amount, paid_amount, payment_date, registered_by",
 				)
 				.eq("id", paymentId)
 				.single();
@@ -506,20 +511,27 @@ export function useReversePayment() {
 
 			const { data: allPayments, error: paymentsError } = await supabase
 				.from("payments")
-				.select("id, installment_number, amount, paid_amount, payment_date")
+				.select(
+					"id, installment_number, amount, paid_amount, payment_date, registered_by",
+				)
 				.eq("loan_id", payment.loan_id)
 				.order("installment_number");
 
 			if (paymentsError)
 				throw new Error(`Error al obtener cuotas: ${paymentsError.message}`);
 
-			const updates: { id: string; paid_amount: null; payment_date: null }[] =
-				[];
+			const updates: {
+				id: string;
+				paid_amount: null;
+				payment_date: null;
+				registered_by: null;
+			}[] = [];
 
 			updates.push({
 				id: payment.id,
 				paid_amount: null,
 				payment_date: null,
+				registered_by: null,
 			});
 
 			const excessPaid = payment.paid_amount - payment.amount;
@@ -537,6 +549,7 @@ export function useReversePayment() {
 							id: p.id,
 							paid_amount: newPaid > 0 ? newPaid : null,
 							payment_date: newPaid > 0 ? p.payment_date : null,
+							registered_by: newPaid > 0 ? p.registered_by : null,
 						});
 					}
 				}
@@ -548,6 +561,7 @@ export function useReversePayment() {
 					.update({
 						paid_amount: update.paid_amount,
 						payment_date: update.payment_date,
+						registered_by: update.registered_by,
 					})
 					.eq("id", update.id);
 
