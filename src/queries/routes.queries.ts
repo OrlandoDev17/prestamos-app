@@ -12,15 +12,9 @@ export interface Route {
 
 async function fetchUserRoutes(): Promise<Route[]> {
 	try {
-		const {
-			data: { session },
-		} = await supabase.auth.getSession();
-		if (!session) return [];
-
 		const { data, error } = await supabase
 			.from("routes")
 			.select("*")
-			.eq("user_id", session.user.id)
 			.order("name");
 
 		if (error) {

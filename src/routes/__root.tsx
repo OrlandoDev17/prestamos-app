@@ -60,18 +60,19 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 			throw redirect({ to: "/auth" });
 		}
 
+		const getDashboardPath = (role: string) => {
+			if (role === "superadmin") return "/admin/lenders";
+			return "/lender/dashboard";
+		};
+
 		// Con sesión y en /auth → redirigir al dashboard
 		if (user && isPublic) {
-			throw redirect({
-				to: user.role === "superadmin" ? "/admin/lenders" : "/lender/dashboard",
-			});
+			throw redirect({ to: getDashboardPath(user.role) });
 		}
 
 		// Con sesión en "/" → redirigir al dashboard por rol
 		if (user && location.pathname === "/") {
-			throw redirect({
-				to: user.role === "superadmin" ? "/admin/lenders" : "/lender/dashboard",
-			});
+			throw redirect({ to: getDashboardPath(user.role) });
 		}
 
 		return { user };

@@ -8,6 +8,7 @@ import { Avatar } from "#/components/ui/avatar";
 import { EmptyState } from "#/components/ui/empty-state";
 import { SearchInput } from "#/components/ui/search-input";
 import { SkeletonCards } from "#/components/ui/skeleton-cards";
+import { usePermissions } from "#/hooks/use-permissions";
 import { useFab } from "#/hooks/useFab";
 import { currency } from "#/lib/format";
 import {
@@ -22,6 +23,7 @@ export const Route = createFileRoute("/lender/clients")({
 });
 
 function LenderClients() {
+	const { canManageClients } = usePermissions();
 	const [selectedRoute, setSelectedRoute] = useState<string | null>(null);
 	const [search, setSearch] = useState("");
 	const { data: routes = [] } = useUserRoutesQuery();
@@ -46,7 +48,7 @@ function LenderClients() {
 	const [showCreateSheet, setShowCreateSheet] = useState(false);
 	const [editingClient, setEditingClient] = useState<Client | null>(null);
 
-	useFab(() => setShowCreateSheet(true));
+	useFab(canManageClients ? () => setShowCreateSheet(true) : null);
 
 	const clients = isSearching
 		? Array.isArray(searchData)
@@ -121,11 +123,15 @@ function LenderClients() {
 					icon={UserPlus}
 					title="No hay clientes"
 					description="Agrega tu primer cliente para comenzar a registrar prestamos."
-					action={{
-						label: "Agregar cliente",
-						onClick: () => setShowCreateSheet(true),
-						icon: UserPlus,
-					}}
+					action={
+						canManageClients
+							? {
+									label: "Agregar cliente",
+									onClick: () => setShowCreateSheet(true),
+									icon: UserPlus,
+								}
+							: undefined
+					}
 				/>
 			)}
 
@@ -156,10 +162,12 @@ function LenderClients() {
 									{currency(client.active_loan_amount ?? 0)}
 								</p>
 							</div>
-							<ClientCardMenu
-								client={client}
-								onEdit={() => setEditingClient(client)}
-							/>
+							{canManageClients && (
+								<ClientCardMenu
+									client={client}
+									onEdit={() => setEditingClient(client)}
+								/>
+							)}
 						</article>
 					))}
 
@@ -176,16 +184,20 @@ function LenderClients() {
 				</div>
 			)}
 
-			<CreateClientSheet
-				isOpen={showCreateSheet}
-				onClose={() => setShowCreateSheet(false)}
-			/>
+			{canManageClients && (
+				<>
+					<CreateClientSheet
+						isOpen={showCreateSheet}
+						onClose={() => setShowCreateSheet(false)}
+					/>
 
-			<EditClientSheet
-				isOpen={editingClient !== null}
-				onClose={() => setEditingClient(null)}
-				client={editingClient}
-			/>
+					<EditClientSheet
+						isOpen={editingClient !== null}
+						onClose={() => setEditingClient(null)}
+						client={editingClient}
+					/>
+				</>
+			)}
 		</main>
 	);
 }

@@ -1,12 +1,4 @@
-import {
-	CreditCard,
-	MapPin,
-	Phone,
-	Route,
-	Save,
-	User,
-	X,
-} from "lucide-react";
+import { CreditCard, MapPin, Phone, Route, Save, User, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { BottomSheet } from "#/components/ui/bottom-sheet";
 import { useUpdateClient } from "#/queries/clients.queries";

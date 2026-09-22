@@ -1,10 +1,13 @@
 import { create } from "zustand";
 import { supabase } from "#/lib/supabase";
 
+export type UserRole = "superadmin" | "lender" | "collector";
+
 export interface UserProfile {
 	id: string;
 	full_name: string;
-	role: "superadmin" | "lender";
+	role: UserRole;
+	owner_id: string | null;
 }
 
 interface AuthState {
@@ -70,46 +73,55 @@ export const useAuthStore = create<AuthState>((set) => ({
 
 	getStoreSession: async () => {
 		try {
-			// 1. Verificar si Supabase tiene una sesión activa
 			const {
 				data: { session },
 			} = await supabase.auth.getSession();
 
 			if (!session?.user) {
 				set({ user: null, isAuthenticated: false });
+				await storage.remove(AUTH_KEY);
 				return null;
 			}
 
-			// 2. Intentar cargar el perfil de storage (cache offline)
-			const cached = await storage.get(AUTH_KEY);
-			if (cached) {
-				const userProfile: UserProfile = JSON.parse(cached);
-				// Verificar que el cache pertenece al mismo usuario
-				if (userProfile.id === session.user.id) {
-					set({ user: userProfile, isAuthenticated: true });
-					return userProfile;
-				}
-			}
-
-			// 3. Si no hay cache o no coincide, cargar desde Supabase
+			// Siempre consultar perfil fresco (is_active, role, owner_id)
 			const { data: profileData } = await supabase
 				.from("profiles")
-				.select("id, full_name, role")
+				.select("id, full_name, role, owner_id, is_active")
 				.eq("id", session.user.id)
 				.single();
 
-			if (profileData) {
-				const userProfile: UserProfile = {
-					id: profileData.id,
-					full_name: profileData.full_name,
-					role: profileData.role,
-				};
-				// Guardar en cache para offline
-				await storage.set(AUTH_KEY, JSON.stringify(userProfile));
+			if (!profileData) {
+				set({ user: null, isAuthenticated: false });
+				await storage.remove(AUTH_KEY);
+				return null;
+			}
+
+			// Cuenta desactivada → cerrar sesión
+			if (profileData.is_active === false) {
+				await supabase.auth.signOut();
+				set({ user: null, isAuthenticated: false });
+				await storage.remove(AUTH_KEY);
+				return null;
+			}
+
+			const userProfile: UserProfile = {
+				id: profileData.id,
+				full_name: profileData.full_name,
+				role: profileData.role,
+				owner_id: profileData.owner_id ?? null,
+			};
+
+			await storage.set(AUTH_KEY, JSON.stringify(userProfile));
+			set({ user: userProfile, isAuthenticated: true });
+			return userProfile;
+		} catch {
+			// Fallback offline: usar cache
+			const cached = await storage.get(AUTH_KEY);
+			if (cached) {
+				const userProfile: UserProfile = JSON.parse(cached);
 				set({ user: userProfile, isAuthenticated: true });
 				return userProfile;
 			}
-		} catch {
 			set({ user: null, isAuthenticated: false });
 		}
 		return null;

@@ -1,5 +1,5 @@
-import { useEffect } from "react";
 import type { LucideIcon } from "lucide-react";
+import { useEffect } from "react";
 import { useFabStore } from "#/stores/fabStore";
 
 export function useFab(onClick: (() => void) | null, icon?: LucideIcon) {

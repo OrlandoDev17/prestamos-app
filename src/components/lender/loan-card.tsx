@@ -2,8 +2,9 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { Calendar, Landmark, MoreVertical, Trash2, Users } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { BottomSheet } from "#/components/ui/bottom-sheet";
 import { Avatar } from "#/components/ui/avatar";
+import { BottomSheet } from "#/components/ui/bottom-sheet";
+import { usePermissions } from "#/hooks/use-permissions";
 import { currency, formatDateShort } from "#/lib/format";
 import { useDeleteLoan } from "#/queries/loans.queries";
 import type { Loan } from "#/stores/loansStore";
@@ -32,6 +33,7 @@ const statusConfig = {
 
 export function LoanCard({ loan }: LoanCardProps) {
 	const navigate = useNavigate();
+	const { canManageLoans } = usePermissions();
 	const deleteLoan = useDeleteLoan();
 	const [menuOpen, setMenuOpen] = useState(false);
 	const [showDeleteSheet, setShowDeleteSheet] = useState(false);
@@ -98,18 +100,20 @@ export function LoanCard({ loan }: LoanCardProps) {
 								<span className={`size-1.5 rounded-full ${status.dotClass}`} />
 								{status.label}
 							</span>
-							<button
-								ref={buttonRef}
-								type="button"
-								onClick={(e) => {
-									e.preventDefault();
-									e.stopPropagation();
-									setMenuOpen(!menuOpen);
-								}}
-								className="p-1.5 rounded-lg hover:bg-text-muted/10 transition-colors cursor-pointer"
-							>
-								<MoreVertical size={16} className="text-text-muted" />
-							</button>
+							{canManageLoans && (
+								<button
+									ref={buttonRef}
+									type="button"
+									onClick={(e) => {
+										e.preventDefault();
+										e.stopPropagation();
+										setMenuOpen(!menuOpen);
+									}}
+									className="p-1.5 rounded-lg hover:bg-text-muted/10 transition-colors cursor-pointer"
+								>
+									<MoreVertical size={16} className="text-text-muted" />
+								</button>
+							)}
 						</div>
 					</div>
 

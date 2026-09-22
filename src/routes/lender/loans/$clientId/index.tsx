@@ -6,6 +6,7 @@ import { LoanCard } from "#/components/lender/loan-card";
 import { EmptyState } from "#/components/ui/empty-state";
 import { PageHeader } from "#/components/ui/page-header";
 import { SkeletonCards } from "#/components/ui/skeleton-cards";
+import { usePermissions } from "#/hooks/use-permissions";
 import { useFab } from "#/hooks/useFab";
 import { allClientsQuery, useAllClientsQuery } from "#/queries/clients.queries";
 import { allLoansQuery, useAllLoansQuery } from "#/queries/loans.queries";
@@ -22,6 +23,7 @@ export const Route = createFileRoute("/lender/loans/$clientId/")({
 });
 
 function ClientLoans() {
+	const { canManageLoans } = usePermissions();
 	const { clientId } = Route.useParams();
 	const { data: loans = [], isLoading, error } = useAllLoansQuery();
 	const { data: clients = [] } = useAllClientsQuery();
@@ -38,7 +40,9 @@ function ClientLoans() {
 	);
 
 	useFab(
-		clientLoans.length > 0 ? () => setShowCreateSheet(true) : null,
+		canManageLoans && clientLoans.length > 0
+			? () => setShowCreateSheet(true)
+			: null,
 	);
 
 	return (
@@ -58,10 +62,14 @@ function ClientLoans() {
 					icon={Plus}
 					title="Sin prestamos"
 					description="Este cliente no tiene prestamos registrados."
-					action={{
-						label: "Nuevo prestamo",
-						onClick: () => setShowCreateSheet(true),
-					}}
+					action={
+						canManageLoans
+							? {
+									label: "Nuevo prestamo",
+									onClick: () => setShowCreateSheet(true),
+								}
+							: undefined
+					}
 				/>
 			)}
 
@@ -73,11 +81,13 @@ function ClientLoans() {
 				</div>
 			)}
 
-			<CreateLoanSheet
-				isOpen={showCreateSheet}
-				onClose={() => setShowCreateSheet(false)}
-				preselectedClientId={clientId}
-			/>
+			{canManageLoans && (
+				<CreateLoanSheet
+					isOpen={showCreateSheet}
+					onClose={() => setShowCreateSheet(false)}
+					preselectedClientId={clientId}
+				/>
+			)}
 		</main>
 	);
 }

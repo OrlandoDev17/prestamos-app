@@ -27,7 +27,7 @@ export function useAuthActions() {
 			// 2. Cargar el perfil desde profiles usando el ID del usuario autenticado
 			const { data: profileData, error: profileError } = await supabase
 				.from("profiles")
-				.select("id, full_name, role")
+				.select("id, full_name, role, owner_id, is_active")
 				.eq("id", authData.user.id)
 				.single();
 
@@ -43,19 +43,18 @@ export function useAuthActions() {
 				);
 			}
 
-			// 3. Guardar el perfil en Supabase user metadata (disponible en el JWT)
-			await supabase.auth.updateUser({
-				data: {
-					full_name: profileData.full_name,
-					role: profileData.role,
-				},
-			});
+			if (profileData.is_active === false) {
+				throw new Error(
+					"Tu cuenta ha sido desactivada. Contacta al administrador.",
+				);
+			}
 
-			// 4. Guardar en el store local para sesión Offline
+			// 3. Guardar en el store local para sesión Offline
 			await setUser({
 				id: profileData.id,
 				full_name: profileData.full_name,
 				role: profileData.role,
+				owner_id: profileData.owner_id ?? null,
 			});
 
 			return { success: true };

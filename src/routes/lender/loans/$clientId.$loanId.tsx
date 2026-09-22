@@ -6,6 +6,7 @@ import { Avatar } from "#/components/ui/avatar";
 import { BottomSheet } from "#/components/ui/bottom-sheet";
 import { PageHeader } from "#/components/ui/page-header";
 import { SkeletonCards } from "#/components/ui/skeleton-cards";
+import { usePermissions } from "#/hooks/use-permissions";
 import { currency, formatDateFull, getLocalDate } from "#/lib/format";
 import {
 	allLoansQuery,
@@ -29,6 +30,7 @@ export const Route = createFileRoute("/lender/loans/$clientId/$loanId")({
 function LoanDetail() {
 	const { clientId, loanId } = Route.useParams();
 	const navigate = useNavigate();
+	const { canRefinanceLoans } = usePermissions();
 	const { data: loans = [], isLoading: loansLoading } = useAllLoansQuery();
 	const {
 		data: payments = [],
@@ -185,25 +187,27 @@ function LoanDetail() {
 					</span>
 				</div>
 
-				{loan.status === "active" && remainingBalance > 0 && (
-					<button
-						type="button"
-						onClick={() => {
-							setNewAmount("");
-							setInterestRate("0");
-							setInstallmentCount("4");
-							setPaymentFrequency("mensual");
-							setLoanDate(getLocalDate());
-							setErrorMsg(null);
-							setRefinanceStep(1);
-							setShowRefinanceSheet(true);
-						}}
-						className="w-full mt-4 py-2.5 flex items-center justify-center gap-2 text-sm font-semibold text-primary-dark bg-primary/10 rounded-lg hover:bg-primary/20 active:scale-[0.98] transition-all cursor-pointer"
-					>
-						<RefreshCw size={15} />
-						Refinanciar
-					</button>
-				)}
+				{canRefinanceLoans &&
+					loan.status === "active" &&
+					remainingBalance > 0 && (
+						<button
+							type="button"
+							onClick={() => {
+								setNewAmount("");
+								setInterestRate("0");
+								setInstallmentCount("4");
+								setPaymentFrequency("mensual");
+								setLoanDate(getLocalDate());
+								setErrorMsg(null);
+								setRefinanceStep(1);
+								setShowRefinanceSheet(true);
+							}}
+							className="w-full mt-4 py-2.5 flex items-center justify-center gap-2 text-sm font-semibold text-primary-dark bg-primary/10 rounded-lg hover:bg-primary/20 active:scale-[0.98] transition-all cursor-pointer"
+						>
+							<RefreshCw size={15} />
+							Refinanciar
+						</button>
+					)}
 			</div>
 
 			<div>

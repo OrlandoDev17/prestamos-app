@@ -1,8 +1,8 @@
 import { useNavigate } from "@tanstack/react-router";
 import type { ReactNode } from "react";
+import { FAB } from "#/components/ui/fab";
 import { useAuthStore } from "#/stores/authStore";
 import { useFabStore } from "#/stores/fabStore";
-import { FAB } from "#/components/ui/fab";
 import { BottomNav } from "./bottom-nav";
 import { Header } from "./header";
 
@@ -28,9 +28,7 @@ export function AppLayout({ children }: AppLayoutProps) {
 			<div className="flex-1 overflow-y-auto px-4 py-4">{children}</div>
 			<BottomNav />
 
-			{fab.show && fab.onClick && (
-				<FAB onClick={fab.onClick} icon={fab.icon} />
-			)}
+			{fab.show && fab.onClick && <FAB onClick={fab.onClick} icon={fab.icon} />}
 		</div>
 	);
 }

@@ -5,6 +5,7 @@ import {
 	LayoutDashboard,
 	type LucideIcon,
 	Users,
+	UsersRound,
 } from "lucide-react";
 import { motion } from "motion/react";
 import { useAuthStore } from "#/stores/authStore";
@@ -16,6 +17,34 @@ interface NavItem {
 }
 
 const lenderLinks: NavItem[] = [
+	{
+		icon: LayoutDashboard,
+		href: "/lender/dashboard",
+		label: "Dashboard",
+	},
+	{
+		icon: Users,
+		href: "/lender/clients",
+		label: "Clientes",
+	},
+	{
+		icon: Banknote,
+		href: "/lender/loans",
+		label: "Prestamos",
+	},
+	{
+		icon: BarChart3,
+		href: "/lender/reports",
+		label: "Reportes",
+	},
+	{
+		icon: UsersRound,
+		href: "/lender/team",
+		label: "Equipo",
+	},
+];
+
+const collectorLinks: NavItem[] = [
 	{
 		icon: LayoutDashboard,
 		href: "/lender/dashboard",
@@ -48,7 +77,12 @@ const adminLinks: NavItem[] = [
 
 export function BottomNav() {
 	const role = useAuthStore((s) => s.user?.role);
-	const links = role === "superadmin" ? adminLinks : lenderLinks;
+	const links =
+		role === "superadmin"
+			? adminLinks
+			: role === "collector"
+				? collectorLinks
+				: lenderLinks;
 
 	return (
 		<nav

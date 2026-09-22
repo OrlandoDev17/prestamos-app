@@ -25,6 +25,7 @@ export interface Payment {
 	paid_amount: number | null;
 	payment_date: string | null;
 	notes: string | null;
+	registered_by: string | null;
 }
 
 export interface TodayPayment {
@@ -36,6 +37,7 @@ export interface TodayPayment {
 	paid_amount: number | null;
 	payment_date: string | null;
 	notes: string | null;
+	registered_by: string | null;
 	client_name: string;
 }
 

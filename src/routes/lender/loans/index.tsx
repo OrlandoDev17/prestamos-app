@@ -7,6 +7,7 @@ import { EmptyState } from "#/components/ui/empty-state";
 import { SearchInput } from "#/components/ui/search-input";
 import { SkeletonCards } from "#/components/ui/skeleton-cards";
 import { TabBar } from "#/components/ui/tab-bar";
+import { usePermissions } from "#/hooks/use-permissions";
 import { useFab } from "#/hooks/useFab";
 import { currency } from "#/lib/format";
 import {
@@ -19,12 +20,14 @@ export const Route = createFileRoute("/lender/loans/")({
 });
 
 function LenderLoans() {
+	const { canManageLoans } = usePermissions();
 	const [showCreateSheet, setShowCreateSheet] = useState(false);
 	const [tab, setTab] = useState("active");
 	const [search, setSearch] = useState("");
 
 	const isSearching = search.trim().length >= 2;
-	const activeStatus = tab === "active" ? "active" : tab === "paid" ? "paid" : "refinanced";
+	const activeStatus =
+		tab === "active" ? "active" : tab === "paid" ? "paid" : "refinanced";
 
 	const {
 		data: searchData,
@@ -96,23 +99,25 @@ function LenderLoans() {
 			: tab === "paid"
 				? hasNextPaid
 				: hasNextRefinanced;
-	const fetchingNext = tab === "active"
-		? fetchingNextActive
-		: tab === "paid"
-			? fetchingNextPaid
-			: fetchingNextRefinanced;
-	const fetchNext = tab === "active"
-		? fetchNextActive
-		: tab === "paid"
-			? fetchNextPaid
-			: fetchNextRefinanced;
+	const fetchingNext =
+		tab === "active"
+			? fetchingNextActive
+			: tab === "paid"
+				? fetchingNextPaid
+				: fetchingNextRefinanced;
+	const fetchNext =
+		tab === "active"
+			? fetchNextActive
+			: tab === "paid"
+				? fetchNextPaid
+				: fetchNextRefinanced;
 
 	const handleSearchChange = useCallback((value: string) => {
 		setSearch(value);
 	}, []);
 
 	useFab(
-		tab === "active" && activeLoans.length > 0
+		canManageLoans && tab === "active" && activeLoans.length > 0
 			? () => setShowCreateSheet(true)
 			: null,
 	);
@@ -155,10 +160,14 @@ function LenderLoans() {
 						icon={Landmark}
 						title="No hay prestamos activos"
 						description="Crea un prestamo para comenzar a gestionar las cuotas de tus clientes."
-						action={{
-							label: "Nuevo prestamo",
-							onClick: () => setShowCreateSheet(true),
-						}}
+						action={
+							canManageLoans
+								? {
+										label: "Nuevo prestamo",
+										onClick: () => setShowCreateSheet(true),
+									}
+								: undefined
+						}
 					/>
 				)}
 
@@ -346,10 +355,12 @@ function LenderLoans() {
 					</div>
 				)}
 
-			<CreateLoanSheet
-				isOpen={showCreateSheet}
-				onClose={() => setShowCreateSheet(false)}
-			/>
+			{canManageLoans && (
+				<CreateLoanSheet
+					isOpen={showCreateSheet}
+					onClose={() => setShowCreateSheet(false)}
+				/>
+			)}
 		</main>
 	);
 }

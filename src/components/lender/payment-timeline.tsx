@@ -1,12 +1,18 @@
-import { Check, Circle, Clock, MoreVertical, Pencil, Undo2 } from "lucide-react";
+import {
+	Check,
+	Circle,
+	Clock,
+	MoreVertical,
+	Pencil,
+	Undo2,
+} from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useRef, useState } from "react";
 import { BottomSheet } from "#/components/ui/bottom-sheet";
+import { usePermissions } from "#/hooks/use-permissions";
 import { currency, formatDateShort } from "#/lib/format";
-import {
-	useMarkPaymentPaid,
-	useReversePayment,
-} from "#/queries/loans.queries";
+import { useMarkPaymentPaid, useReversePayment } from "#/queries/loans.queries";
+import { useAuthStore } from "#/stores/authStore";
 import type { Payment } from "#/stores/loansStore";
 
 interface PaymentTimelineProps {
@@ -20,6 +26,8 @@ export function PaymentTimeline({
 }: PaymentTimelineProps) {
 	const markPaid = useMarkPaymentPaid();
 	const reversePayment = useReversePayment();
+	const { role } = usePermissions();
+	const userId = useAuthStore((s) => s.user?.id);
 	const [selectedPayment, setSelectedPayment] = useState<Payment | null>(null);
 	const [showConfirmSheet, setShowConfirmSheet] = useState(false);
 	const [showReverseSheet, setShowReverseSheet] = useState(false);
@@ -201,41 +209,46 @@ export function PaymentTimeline({
 												Pendiente
 											</span>
 										)}
-										{(isPaid || isPartial) && (
-											<div className="relative" ref={menuRef}>
-												<button
-													type="button"
-													onClick={() =>
-														setMenuOpenId(
-															menuOpenId === payment.id ? null : payment.id,
-														)
-													}
-													className="p-1 rounded hover:bg-text-muted/10 transition-colors cursor-pointer"
-												>
-													<MoreVertical size={14} className="text-text-muted" />
-												</button>
-												{menuOpenId === payment.id && (
-													<div className="absolute right-0 top-full mt-1 bg-surface border border-text-muted/15 rounded-xl shadow-lg z-50 min-w-[150px] py-1">
-														<button
-															type="button"
-															onClick={() => handleEdit(payment)}
-															className="w-full flex items-center gap-2 px-3 py-2 text-sm text-text-main hover:bg-background transition-colors cursor-pointer"
-														>
-															<Pencil size={13} className="text-text-muted" />
-															Corregir monto
-														</button>
-														<button
-															type="button"
-															onClick={() => handleReverse(payment)}
-															className="w-full flex items-center gap-2 px-3 py-2 text-sm text-danger hover:bg-background transition-colors cursor-pointer"
-														>
-															<Undo2 size={13} />
-															Revertir pago
-														</button>
-													</div>
-												)}
-											</div>
-										)}
+										{(isPaid || isPartial) &&
+											(role !== "collector" ||
+												payment.registered_by === userId) && (
+												<div className="relative" ref={menuRef}>
+													<button
+														type="button"
+														onClick={() =>
+															setMenuOpenId(
+																menuOpenId === payment.id ? null : payment.id,
+															)
+														}
+														className="p-1 rounded hover:bg-text-muted/10 transition-colors cursor-pointer"
+													>
+														<MoreVertical
+															size={14}
+															className="text-text-muted"
+														/>
+													</button>
+													{menuOpenId === payment.id && (
+														<div className="absolute right-0 top-full mt-1 bg-surface border border-text-muted/15 rounded-xl shadow-lg z-50 min-w-[150px] py-1">
+															<button
+																type="button"
+																onClick={() => handleEdit(payment)}
+																className="w-full flex items-center gap-2 px-3 py-2 text-sm text-text-main hover:bg-background transition-colors cursor-pointer"
+															>
+																<Pencil size={13} className="text-text-muted" />
+																Corregir monto
+															</button>
+															<button
+																type="button"
+																onClick={() => handleReverse(payment)}
+																className="w-full flex items-center gap-2 px-3 py-2 text-sm text-danger hover:bg-background transition-colors cursor-pointer"
+															>
+																<Undo2 size={13} />
+																Revertir pago
+															</button>
+														</div>
+													)}
+												</div>
+											)}
 									</div>
 								</div>
 

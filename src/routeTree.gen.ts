@@ -16,6 +16,7 @@ import { Route as LenderClientsRouteImport } from './routes/lender/clients'
 import { Route as LenderDashboardRouteImport } from './routes/lender/dashboard'
 import { Route as LenderLoansRouteImport } from './routes/lender/loans'
 import { Route as LenderReportsRouteImport } from './routes/lender/reports'
+import { Route as LenderTeamRouteImport } from './routes/lender/team'
 import { Route as LenderLoansIndexRouteImport } from './routes/lender/loans/index'
 import { Route as LenderLoansClientIdRouteImport } from './routes/lender/loans/$clientId'
 import { Route as LenderLoansPendingTodayRouteImport } from './routes/lender/loans/pending-today'
@@ -57,6 +58,11 @@ const LenderReportsRoute = LenderReportsRouteImport.update({
   path: '/lender/reports',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LenderTeamRoute = LenderTeamRouteImport.update({
+  id: '/lender/team',
+  path: '/lender/team',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LenderLoansIndexRoute = LenderLoansIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -93,6 +99,7 @@ export interface FileRoutesByFullPath {
   '/lender/dashboard': typeof LenderDashboardRoute
   '/lender/loans': typeof LenderLoansRouteWithChildren
   '/lender/reports': typeof LenderReportsRoute
+  '/lender/team': typeof LenderTeamRoute
   '/lender/loans/$clientId': typeof LenderLoansClientIdRouteWithChildren
   '/lender/loans/pending-today': typeof LenderLoansPendingTodayRoute
   '/lender/loans/': typeof LenderLoansIndexRoute
@@ -106,6 +113,7 @@ export interface FileRoutesByTo {
   '/lender/clients': typeof LenderClientsRoute
   '/lender/dashboard': typeof LenderDashboardRoute
   '/lender/reports': typeof LenderReportsRoute
+  '/lender/team': typeof LenderTeamRoute
   '/lender/loans/pending-today': typeof LenderLoansPendingTodayRoute
   '/lender/loans': typeof LenderLoansIndexRoute
   '/lender/loans/$clientId/$loanId': typeof LenderLoansClientIdLoanIdRoute
@@ -120,6 +128,7 @@ export interface FileRoutesById {
   '/lender/dashboard': typeof LenderDashboardRoute
   '/lender/loans': typeof LenderLoansRouteWithChildren
   '/lender/reports': typeof LenderReportsRoute
+  '/lender/team': typeof LenderTeamRoute
   '/lender/loans/$clientId': typeof LenderLoansClientIdRouteWithChildren
   '/lender/loans/pending-today': typeof LenderLoansPendingTodayRoute
   '/lender/loans/': typeof LenderLoansIndexRoute
@@ -136,6 +145,7 @@ export interface FileRouteTypes {
     | '/lender/dashboard'
     | '/lender/loans'
     | '/lender/reports'
+    | '/lender/team'
     | '/lender/loans/$clientId'
     | '/lender/loans/pending-today'
     | '/lender/loans/'
@@ -149,6 +159,7 @@ export interface FileRouteTypes {
     | '/lender/clients'
     | '/lender/dashboard'
     | '/lender/reports'
+    | '/lender/team'
     | '/lender/loans/pending-today'
     | '/lender/loans'
     | '/lender/loans/$clientId/$loanId'
@@ -162,6 +173,7 @@ export interface FileRouteTypes {
     | '/lender/dashboard'
     | '/lender/loans'
     | '/lender/reports'
+    | '/lender/team'
     | '/lender/loans/$clientId'
     | '/lender/loans/pending-today'
     | '/lender/loans/'
@@ -177,6 +189,7 @@ export interface RootRouteChildren {
   LenderDashboardRoute: typeof LenderDashboardRoute
   LenderLoansRoute: typeof LenderLoansRouteWithChildren
   LenderReportsRoute: typeof LenderReportsRoute
+  LenderTeamRoute: typeof LenderTeamRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -228,6 +241,13 @@ declare module '@tanstack/react-router' {
       path: '/lender/reports'
       fullPath: '/lender/reports'
       preLoaderRoute: typeof LenderReportsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/lender/team': {
+      id: '/lender/team'
+      path: '/lender/team'
+      fullPath: '/lender/team'
+      preLoaderRoute: typeof LenderTeamRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/lender/loans/': {
@@ -305,6 +325,7 @@ const rootRouteChildren: RootRouteChildren = {
   LenderDashboardRoute: LenderDashboardRoute,
   LenderLoansRoute: LenderLoansRouteWithChildren,
   LenderReportsRoute: LenderReportsRoute,
+  LenderTeamRoute: LenderTeamRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
