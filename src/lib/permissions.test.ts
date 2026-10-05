@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { can, type AppAction } from "#/lib/permissions";
+import { describe, expect, it } from "vitest";
+import { type AppAction, can } from "#/lib/permissions";
 import type { UserRole } from "#/stores/authStore";
 
 describe("permissions", () => {
@@ -13,6 +13,7 @@ describe("permissions", () => {
 				"manage-loans",
 				"refinance-loans",
 				"register-payments",
+				"edit-payments",
 				"view-admin",
 			];
 			for (const action of actions) {
@@ -30,6 +31,7 @@ describe("permissions", () => {
 			expect(can(role, "manage-loans")).toBe(true);
 			expect(can(role, "refinance-loans")).toBe(true);
 			expect(can(role, "register-payments")).toBe(true);
+			expect(can(role, "edit-payments")).toBe(true);
 			expect(can(role, "view-admin")).toBe(true);
 		});
 	});
@@ -39,6 +41,10 @@ describe("permissions", () => {
 
 		it("can only register payments", () => {
 			expect(can(role, "register-payments")).toBe(true);
+		});
+
+		it("cannot edit or reverse payments", () => {
+			expect(can(role, "edit-payments")).toBe(false);
 		});
 
 		it("cannot manage team", () => {
