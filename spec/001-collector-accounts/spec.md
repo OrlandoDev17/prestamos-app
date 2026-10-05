@@ -4,14 +4,14 @@
 
 El MVP actual soporta dos roles: `superadmin` y `lender`. Cada prestamista gestiona de forma aislada sus clientes, préstamos y pagos (los `loans` se filtran por `user_id = session.user.id` y el aislamiento de `clients`/`payments` depende de RLS).
 
-El cliente necesita delegar la cobranza en calle: con su propia cuenta (`lender`) quiere crear una o varias cuentas subordinadas para que otra persona cobre. Esa cuenta debe tener un **rol menor (`collector`)** que pueda **visualizar todo** lo del prestamista dueño, pero que **no pueda crear, editar ni eliminar clientes, préstamos ni refinanciarlos**. Su única acción de escritura permitida es **registrar pagos de préstamos y editarlos** (corregir monto y revertir), igual que lo hace hoy el dueño.
+El cliente necesita delegar la cobranza en calle: con su propia cuenta (`lender`) quiere crear una o varias cuentas subordinadas para que otra persona cobre. Esa cuenta debe tener un **rol menor (`collector`)** que pueda **visualizar todo** lo del prestamista dueño, pero que **no pueda crear, editar ni eliminar clientes, préstamos ni refinanciarlos**. Su única acción de escritura permitida es **registrar pagos de préstamos** (insertar el registro de cobro). La **corrección de montos y la reversión de pagos quedan reservadas al `lender`/`superadmin`**: el cobrador no las puede ejecutar.
 
-Objetivo: incorporar un tercer rol `collector` con aislamiento por dueño (`owner_id`), permisos de solo-lectura sobre la operación del dueño y escritura limitada al módulo de pagos, respaldado por RLS en base de datos (no solo por ocultamiento en UI).
+Objetivo: incorporar un tercer rol `collector` con aislamiento por dueño (`owner_id`), permisos de solo-lectura sobre la operación del dueño y escritura limitada al **registro de pagos** —sin corrección ni reversión—, respaldado por RLS en base de datos (no solo por ocultamiento en UI).
 
 ## Usuarios / actores
 
 - **Prestamista dueño (`lender`)**: crea, lista, activa/desactiva y elimina sus cuentas de cobrador. Conserva todos los permisos actuales.
-- **Cobrador (`collector`)**: cuenta subordinada creada por un prestamista. Ve todos los clientes, préstamos y pagos de su dueño; solo registra/corrige/revierte pagos.
+- **Cobrador (`collector`)**: cuenta subordinada creada por un prestamista. Ve todos los clientes, préstamos y pagos de su dueño; **solo registra pagos** (no puede corregir ni revertir).
 - **Superadmin**: fuera de alcance de esta feature (no crea ni administra cobradores en esta iteración).
 
 ## Historias de usuario
@@ -19,7 +19,7 @@ Objetivo: incorporar un tercer rol `collector` con aislamiento por dueño (`owne
 - **HU-1** — Como prestamista, quiero crear una cuenta de cobrador con nombre, correo y contraseña, para que mi personal cobre en la calle sin poder modificar mis datos.
 - **HU-2** — Como prestamista, quiero ver y gestionar (activar/desactivar/eliminar) mis cobradores desde la app.
 - **HU-3** — Como prestamista, quiero que mis cobradores solo vean y cobren MIS clientes y préstamos, nunca los de otros prestamistas.
-- **HU-4** — Como cobrador, quiero consultar clientes y préstamos y registrar/corregir/revertir pagos desde mi dispositivo, sin opciones para editar la estructura del negocio.
+- **HU-4** — Como cobrador, quiero consultar clientes y préstamos y registrar pagos desde mi dispositivo, sin opciones para editar la estructura del negocio ni para corregir/revertir pagos.
 - **HU-5** — Como prestamista, quiero que si desactivo o elimino a un cobrador, este pierda el acceso de inmediato.
 
 ## Requisitos funcionales (EARS)
@@ -33,12 +33,12 @@ Objetivo: incorporar un tercer rol `collector` con aislamiento por dueño (`owne
 - **RF-7** — CUANDO el prestamista elimina a un cobrador, EL SISTEMA DEBE eliminar la cuenta de Auth (vía Edge Function `delete-user`) y su perfil, sin afectar clientes, préstamos ni pagos del prestamista.
 - **RF-8** — MIENTRAS un usuario tiene rol `collector` con sesión activa, EL SISTEMA DEBE permitirle leer todos los clientes, préstamos y pagos pertenecientes a su dueño (`owner_id`), y únicamente esos.
 - **RF-9** — CUANDO un cobrador registra un pago sobre una cuota de un préstamo del dueño, EL SISTEMA DEBE aplicarlo con las mismas reglas de distribución y abono que el dueño.
-- **RF-10** — CUANDO un cobrador corrige el monto de un pago o lo revierte, EL SISTEMA DEBE permitirlo sobre cuotas de préstamos del dueño, con las mismas reglas vigentes.
+- **RF-10** — SI un cobrador intenta corregir el monto de un pago o revertirlo, ENTONCES EL SISTEMA DEBE rechazar la operación en la UI y en la base de datos. La corrección y la reversión son exclusivas de `lender`/`superadmin`. A nivel RLS, el rol `collector` solo puede `INSERT` en `payments`; se le deniegan `UPDATE` y `DELETE`.
 - **RF-11** — SI un cobrador intenta crear, editar o eliminar un cliente, ENTONCES EL SISTEMA DEBE rechazar la operación en la UI y en la base de datos (RLS).
 - **RF-12** — SI un cobrador intenta crear, editar o eliminar un préstamo, o refinanciarlo, ENTONCES EL SISTEMA DEBE rechazar la operación en la UI y en la base de datos (RLS).
 - **RF-13** — SI un cobrador intenta gestionar cobradores (crear/editar/eliminar) o modificar su propio rol/perfil, ENTONCES EL SISTEMA DEBE rechazar la operación en UI y en base de datos.
 - **RF-14** — SI un cobrador intenta acceder por URL/API a una ruta o acción no permitida (ej. `/admin/*`, mutations de clientes/préstamos), ENTONCES EL SISTEMA DEBE bloquearlo con el guard de ruta y la capa RLS debe denegar la escritura aunque la UI sea evadida.
-- **RF-15** — MIENTRAS el usuario tenga rol `collector`, EL SISTEMA DEBE ocultar en la UI las acciones no permitidas: crear/editar/eliminar cliente, crear/eliminar/refinanciar préstamo, gestionar equipo y gestión de prestamistas.
+- **RF-15** — MIENTRAS el usuario tenga rol `collector`, EL SISTEMA DEBE ocultar en la UI las acciones no permitidas: crear/editar/eliminar cliente, crear/eliminar/refinanciar préstamo, gestionar equipo, gestión de prestamistas y corregir/revertir pago.
 - **RF-16** — CUANDO el cobrador inicia sesión por primera vez, EL SISTEMA DEBE redirigirlo a un destino válido para su rol (dashboard del dueño en modo solo-lectura + pagos), sin exponer rutas administrativas.
 - **RF-17** — CUANDO el dueño desactiva o elimina a un cobrador con sesión activa, EL SISTEMA DEBE invalidar su acceso en la siguiente verificación de sesión (`getStoreSession` / `beforeLoad`) y cerrar su sesión.
 
@@ -55,7 +55,7 @@ Objetivo: incorporar un tercer rol `collector` con aislamiento por dueño (`owne
 ## Casos límite y Clarificaciones
 
 1. **Forzar acción vía URL/API directa** — Un `collector` escribe la URL de una ruta restringida o invoca directamente una mutation de clientes/préstamos. *Resolución:* guard de ruta por rol (`beforeLoad`) + políticas RLS que denieguen `INSERT/UPDATE/DELETE` de `clients` y `loans` cuando el rol es `collector`. La UI se oculta, pero la base de datos es la garantía.
-2. **Edición concurrente dueño/cobrador** — El dueño y el cobrador corrigen/registran el mismo pago casi al mismo tiempo. *Resolución:* política de último-escritura-gana, expuesta de forma explícita; invalidar queries (`["payments"]`) al confirmar y advertir si el saldo cambió durante la operación. *Clarificación:* ¿se requiere bloqueo optimista por `updated_at`?
+2. **Edición concurrente dueño/cobrador** — El dueño corrige un pago mientras el cobrador registra otro pago sobre la misma cuota casi al mismo tiempo. *Resolución:* el cobrador solo puede insertar registros de pago; la corrección/reversión es exclusiva del dueño. Aplicar política de último-escritura-gana para la inserción, expuesta de forma explícita; invalidar queries (`["payments"]`) al confirmar y advertir si el saldo cambió durante la operación. *Clarificación (resuelta):* el cobrador no corrige ni revierte, por lo que no compite por `UPDATE`; el bloqueo optimista por `updated_at` solo aplica a las acciones del dueño.
 3. **Pérdida de red al registrar pago** — Se corta la conexión a mitad del registro o la respuesta no llega. *Resolución:* bloquear el botón mientras la mutation está `pending`, no reintentar automáticamente sin confirmar, y revalidar la cuota antes de reintentar para evitar duplicados.
 4. **Desactivar/eliminar cobrador con sesión activa** — El cobrador está logueado o a mitad de un cobro cuando el dueño lo desactiva/elimina. *Resolución:* `getStoreSession`/`beforeLoad` consultan `is_active` del perfil; si está inactivo o no existe, limpiar store + Preferences y redirigir a `/auth`. *Clarificación:* ¿forzar cierre inmediato con `signOut` en tiempo real (realtime) o basta en la siguiente navegación?
 5. **Doble registro de pago** — El cobrador toca "Confirmar" dos veces o reintenta tras un timeout percibido. *Resolución:* deshabilitar durante `isPending`, recalcular el saldo pendiente antes de aplicar y validar el estado de la cuota. *Clarificación:* ¿se admite `paid_amount` > `amount` como sobrepago (comportamiento actual reparte excedente) o se debe bloquear?
@@ -73,11 +73,11 @@ Objetivo: incorporar un tercer rol `collector` con aislamiento por dueño (`owne
 ## Criterios de finalización
 
 - Rol `collector` operativo en `profiles.role` y en el tipo `UserRole`, con `owner_id` asociado.
-- Migración SQL con nuevas políticas RLS aplicada y verificada: el cobrador solo lee datos de su dueño y solo escribe en `payments`.
+- Migración SQL con nuevas políticas RLS aplicada y verificada: el cobrador solo lee datos de su dueño y solo puede `INSERT` en `payments` (sin `UPDATE`/`DELETE`).
 - Alta de cobrador por parte del `lender` (Auth + perfil + rollback si falla el perfil), listado, activación/desactivación y baja.
 - Login de `collector` funcional con redirección correcta y sesión persistida (Zustand + Preferences).
 - Bloqueo efectivo (UI + RLS) de crear/editar/eliminar clientes, crear/eliminar/refinanciar préstamos, gestionar equipo y editar rol/perfil.
-- Registro, corrección y reversión de pagos funcional para el cobrador sobre préstamos del dueño.
+- Registro de pagos funcional para el cobrador sobre préstamos del dueño; la corrección y la reversión son exclusivas de `lender`/`superadmin`.
 - Casos límite 1–6 cubiertos con pruebas manuales documentadas.
 - `pnpm check` sin errores; sin regresiones para `lender`/`superadmin`.
 
@@ -88,7 +88,7 @@ Objetivo: incorporar un tercer rol `collector` con aislamiento por dueño (`owne
 3. ¿La corrección de pago debe permitir cambiar la **fecha** del pago o solo el monto?
 4. ¿Debe existir un límite de cobradores por prestamista?
 5. ¿La desactivación/eliminación de un cobrador debe forzar `signOut` inmediato (tiempo real) o basta en la próxima verificación de sesión?
-6. ¿El cobrador puede revertir un pago ya conciliado por el dueño, o solo pagos registrados por él mismo?
+6. ¿El cobrador puede revertir un pago ya conciliado por el dueño, o solo pagos registrados por él mismo? *Resuelta:* el cobrador no corrige ni revierte ningún pago; solo registra. La corrección/reversión es exclusiva de `lender`/`superadmin`.
 
 ## Notas de implementación (alto nivel)
 
@@ -97,3 +97,4 @@ Objetivo: incorporar un tercer rol `collector` con aislamiento por dueño (`owne
 - **Reutilización:** el flujo de alta es análogo a `usersStore.createLender` (signUp + setSession de restauración + upsert de perfil + rollback con `delete-user`). El borrado reutiliza la Edge Function `delete-user`.
 - **Guards:** extender el mapeo por rol en `__root.tsx` y `bottom-nav.tsx`; agregar un helper de permisos (`can(role, action)`) para gating uniforme.
 - **UI:** nueva pantalla/sección "Equipo"/"Cobradores" en el área `lender`, reutilizando `BottomSheet`, `PageHeader` y tarjetas existentes.
+- **RLS de `payments`:** el `collector` solo tiene política de `INSERT` (registro de cobro) sobre pagos de préstamos del dueño; se deniegan `UPDATE`/`DELETE`. La corrección y la reversión las ejecuta únicamente `lender`/`superadmin`. En el cliente, el gating se centraliza en `can(role, "edit-payments")` (`canEditPayments`).

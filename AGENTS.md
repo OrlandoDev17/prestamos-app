@@ -92,10 +92,11 @@ src/
 
 ### Roles
 ```ts
-type UserRole = "superadmin" | "lender";
+type UserRole = "superadmin" | "lender" | "collector";
 ```
 - **superadmin**: Panel para crear/gestionar lenders
-- **lender**: Dashboard con funciones básicas de cobranza
+- **lender**: Dashboard con funciones básicas de cobranza; registra, corrige y revierte pagos
+- **collector**: Cuenta subordinada de un lender. Solo **registra pagos** (INSERT); no corrige, revierte ni edita nada más
 
 ### Tabla `profiles` en Supabase
 Columnas requeridas: `id`, `username`, `email`, `full_name`, `role`

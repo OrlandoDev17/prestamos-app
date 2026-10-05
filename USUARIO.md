@@ -303,11 +303,11 @@ Si tu cuenta es de tipo **cobrador**, tu experiencia es diferente:
 
 - **Ver** todos los clientes, prestamos y pagos de tu prestamista dueño
 - **Registrar pagos** en cuotas de prestamos activos
-- **Corregir montos** de pagos que tu registraste
-- **Revertir pagos** que tu registraste
 
 ### 7.2. Que NO puedes hacer
 
+- Corregir montos de pagos (solo el prestamista)
+- Revertir pagos (solo el prestamista)
 - Crear, editar o eliminar clientes
 - Crear o eliminar prestamos
 - Refinanciar prestamos
@@ -317,7 +317,7 @@ Si tu cuenta es de tipo **cobrador**, tu experiencia es diferente:
 ### 7.3. Restricciones de pago
 
 - Solo puedes registrar pagos en prestamos activos
-- Si una cuota ya fue registrada por otro cobrador, no puedes modificarla
+- No puedes modificar ni revertir pagos ya registrados; eso solo lo hace el prestamista
 - El excedente de un pago se distribuye automaticamente a cuotas siguientes
 
 ### 7.4. Navegacion
@@ -416,7 +416,7 @@ La aplicacion guarda tu sesion localmente. Cuando vuelvas a conectarte, los dato
 No, los prestamos no se pueden editar una vez creados. Si necesitas hacer cambios, puedes refinanciarlo o eliminarlo y crear uno nuevo.
 
 **Que pasa si un cobraitor registra un pago de mas?**
-El excedente se distribuye automaticamente a las cuotas siguientes. Si necesitas corregir, usa la opcion **Corregir monto**.
+El excedente se distribuye automaticamente a las cuotas siguientes. Si necesitas corregir, el unico que puede usar la opcion **Corregir monto** es el prestamista dueño.
 
 **Puedo crear un prestamo con fecha de inicio en el pasado?**
 Si, puedes seleccionar cualquier fecha en el calendario.

@@ -107,7 +107,7 @@ src/
 | -------------- | ------------------------------------------------------------------- |
 | **superadmin** | Gestiona prestamistas (crear, editar, activar/desactivar, eliminar) |
 | **lender**     | Panel completo: clientes, prestamos, pagos, reportes, equipo        |
-| **collector**  | Solo registra/corrige/revuelve pagos. Sin crear/editar nada mas    |
+| **collector**  | Solo registra pagos. No puede corregir, revertir ni crear/editar nada mas |
 
 ### Permisos por rol
 
@@ -117,7 +117,8 @@ src/
 | Gestionar clientes        |     ✅     |   ✅   |    ❌     |
 | Crear/eliminar prestamos  |     ✅     |   ✅   |    ❌     |
 | Refinanciar prestamos     |     ✅     |   ✅   |    ❌     |
-| Registrar/corregir pagos  |     ✅     |   ✅   |    ✅     |
+| Registrar pagos           |     ✅     |   ✅   |    ✅     |
+| Corregir/revertir pagos   |     ✅     |   ✅   |    ❌     |
 | Gestionar equipo/cobradores |   ✅     |   ✅   |    ❌     |
 
 ## Base de datos (Supabase)
@@ -149,7 +150,7 @@ pnpm test
 
 | Archivo | Que prueba |
 |---------|------------|
-| `src/lib/permissions.test.ts` | RBAC: permisos de cada rol |
+| `src/lib/permissions.test.ts` | RBAC: permisos de cada rol (registrar vs. corregir/revertir pagos) |
 | `src/stores/authStore.test.ts` | Store de autenticacion: setUser, logout, persistencia |
 | `src/stores/collectorsStore.test.ts` | Store de cobradores: fetch, toggle active |
 | `src/queries/loans.integration.test.tsx` | Crear prestamo, registrar pagos, distribuir sobrepago, refinanciar |
