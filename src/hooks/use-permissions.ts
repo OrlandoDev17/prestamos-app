@@ -13,6 +13,7 @@ export function usePermissions() {
 		() => can(role, "register-payments"),
 		[role],
 	);
+	const canEditPayments = useMemo(() => can(role, "edit-payments"), [role]);
 	const canViewAdmin = useMemo(() => can(role, "view-admin"), [role]);
 
 	const canDo = useMemo(() => (action: AppAction) => can(role, action), [role]);
@@ -24,6 +25,7 @@ export function usePermissions() {
 		canManageLoans,
 		canRefinanceLoans,
 		canRegisterPayments,
+		canEditPayments,
 		canViewAdmin,
 		canDo,
 	};

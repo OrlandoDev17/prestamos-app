@@ -6,6 +6,7 @@ export type AppAction =
 	| "manage-loans"
 	| "refinance-loans"
 	| "register-payments"
+	| "edit-payments"
 	| "view-admin";
 
 const permissions: Record<UserRole, AppAction[]> = {
@@ -15,6 +16,7 @@ const permissions: Record<UserRole, AppAction[]> = {
 		"manage-loans",
 		"refinance-loans",
 		"register-payments",
+		"edit-payments",
 		"view-admin",
 	],
 	lender: [
@@ -23,6 +25,7 @@ const permissions: Record<UserRole, AppAction[]> = {
 		"manage-loans",
 		"refinance-loans",
 		"register-payments",
+		"edit-payments",
 		"view-admin",
 	],
 	collector: ["register-payments"],
