@@ -1,0 +1,94 @@
+<!doctype html>
+<!-- Escena 3 · REVEAL (10.2–12.0s): flood mint, slam del nombre, entra el teléfono grande -->
+<html lang="es" data-composition-id="reveal">
+  <head><meta charset="UTF-8" /><title>Reveal</title></head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          font-family: var(--font-display, sans-serif);
+          color: var(--ink, #1e293b);
+        }
+        #reveal-flood {
+          position: absolute;
+          inset: 0;
+          background: var(--ground, #f8f9fa);
+        }
+        .reveal-name {
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 380px;
+          text-align: center;
+          font-weight: 900;
+          font-size: 132px;
+          letter-spacing: -0.03em;
+          line-height: 1;
+        }
+        .reveal-name .dot {
+          color: var(--mint-ink, #28a376);
+        }
+      </style>
+
+      <div id="root" data-composition-id="reveal" data-width="1080" data-height="1920">
+        <div
+          id="reveal-clip"
+          class="clip"
+          data-start="0"
+          data-duration="1.8"
+          data-track-index="0"
+        >
+          <div id="reveal-flood"></div>
+          <div class="reveal-name" id="reveal-name">TuPrestamo<span class="dot">.</span></div>
+
+          <!-- Teléfono: geometría grande, centrada -->
+          <div id="reveal-phone" style="position: absolute; left: 180px; top: 180px; width: 720px; height: 1560px; background: #0f172a; border-radius: 76px; box-shadow: 0 30px 60px rgba(30, 41, 59, 0.18), 0 2px 0 rgba(255,255,255,0.06) inset">
+            <div style="position: absolute; inset: 18px; border-radius: 58px; background: var(--ground, #f8f9fa); overflow: hidden">
+              <div style="position: absolute; left: 50%; top: 14px; width: 140px; height: 28px; margin-left: -70px; border-radius: 999px; background: #0f172a"></div>
+              <div style="position: absolute; left: 40px; right: 40px; top: 80px">
+                <div style="font-weight: 800; font-size: 52px; letter-spacing: -0.02em">Dashboard</div>
+                <div data-layout-ignore style="font-weight: 500; font-size: 36px; color: var(--muted, #64748b); margin-top: 6px">Resumen de cobranzas</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          "use strict";
+          var tl = gsap.timeline({ paused: true });
+
+          tl.fromTo(
+            "#reveal-flood",
+            { backgroundColor: "#f8f9fa" },
+            { backgroundColor: "#47d7a4", duration: 0.4, ease: "power2.inOut" },
+            0,
+          );
+          tl.fromTo(
+            "#reveal-name",
+            { scale: 1.6, opacity: 0, transformOrigin: "50% 50%" },
+            { scale: 1, opacity: 1, duration: 0.5, ease: "expo.out" },
+            0.25,
+          );
+          tl.to("#reveal-name", { y: -140, opacity: 0, filter: "blur(8px)", duration: 0.3, ease: "power3.in" }, 0.75);
+
+          // Teléfono entra por abajo
+          tl.fromTo(
+            "#reveal-phone",
+            { y: 1900 },
+            { y: -26, duration: 0.52, ease: "power3.out" },
+            0.95,
+          );
+          tl.to("#reveal-phone", { y: 0, duration: 0.3, ease: "power2.inOut" }, 1.47);
+
+          tl.seek(0);
+          window.__timelines = window.__timelines || {};
+          window.__timelines["reveal"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

@@ -1,0 +1,168 @@
+<!doctype html>
+<!-- Escena 1 · EL GANCHO (0–3.2s): pregunta gigante centrada en frame 0, slam de "COBRAS A OJO?" al 1.55s -->
+<html
+  lang="es"
+  data-composition-id="hook"
+  data-composition-variables='[
+    { "id": "headline1", "type": "string", "role": "content", "label": "Línea 1", "default": "¿CUÁNTO TE DEBEN HOY?" },
+    { "id": "headline2", "type": "string", "role": "content", "label": "Línea 2", "default": "COBRAS A OJO?" }
+  ]'
+>
+  <head><meta charset="UTF-8" /><title>Gancho</title></head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          background: var(--ground, #f8f9fa);
+          font-family: var(--font-display, sans-serif);
+          color: var(--ink, #1e293b);
+        }
+        .hook-stage {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 56px;
+          padding: 0 70px;
+        }
+        .hook-line {
+          font-weight: 900;
+          font-size: 136px;
+          line-height: 1.02;
+          letter-spacing: -0.02em;
+          text-align: center;
+          text-wrap: balance;
+          max-width: 960px;
+        }
+        .hook-line-2 {
+          font-size: 170px;
+        }
+        .hook-line .accent {
+          color: var(--mint-ink, #28a376);
+        }
+        .hook-underline {
+          height: 16px;
+          width: 0;
+          background: var(--brand, #47d7a4);
+          border-radius: 999px;
+          margin-top: 22px;
+          align-self: center;
+        }
+      </style>
+
+      <div id="root" data-composition-id="hook" data-width="1080" data-height="1920">
+        <div
+          id="hook-clip"
+          class="clip"
+          data-start="0"
+          data-duration="3.2"
+          data-track-index="0"
+        >
+          <div class="hook-stage" id="hook-stage">
+            <h1 class="hook-line" id="hook-line1"></h1>
+            <div id="hook-line2-wrap">
+              <h1 class="hook-line hook-line-2" id="hook-line2"></h1>
+              <div class="hook-underline" id="hook-underline"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          "use strict";
+          var vars =
+            window.__hyperframes && window.__hyperframes.getVariables
+              ? window.__hyperframes.getVariables()
+              : {};
+
+          function wordsInto(el, text, accentWord) {
+            el.textContent = "";
+            var words = String(text).split(/\s+/);
+            var strip = function (s) {
+              return s.replace(/[¿?¡!.,;:…]/g, "").toUpperCase();
+            };
+            words.forEach(function (w, i) {
+              var span = document.createElement("span");
+              span.className = "hook-word";
+              span.style.display = "inline-block";
+              span.textContent = w;
+              if (accentWord && strip(w) === strip(accentWord)) {
+                var inner = document.createElement("span");
+                inner.className = "accent";
+                inner.textContent = w;
+                span.textContent = "";
+                span.appendChild(inner);
+              }
+              el.appendChild(span);
+              if (i < words.length - 1) el.appendChild(document.createTextNode(" "));
+            });
+            return Array.prototype.slice.call(el.querySelectorAll(".hook-word"));
+          }
+
+          var line1 = document.getElementById("hook-line1");
+          var line2 = document.getElementById("hook-line2");
+          var stage = document.getElementById("hook-stage");
+          var underline = document.getElementById("hook-underline");
+
+          var words1 = wordsInto(line1, vars.headline1 || "¿CUÁNTO TE DEBEN HOY?", "HOY?");
+          var words2 = wordsInto(line2, vars.headline2 || "COBRAS A OJO?", "OJO?");
+
+          var tl = gsap.timeline({ paused: true });
+
+          tl.fromTo(
+            words1,
+            { opacity: 0.92, y: 6, filter: "blur(2px)" },
+            { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.18, ease: "power2.out" },
+            0,
+          );
+
+          gsap.set(words2, { opacity: 0 });
+          tl.fromTo(
+            line2,
+            { scale: 1.6, opacity: 0, transformOrigin: "50% 50%" },
+            { scale: 1, opacity: 1, duration: 0.55, ease: "expo.out" },
+            1.55,
+          );
+          tl.fromTo(
+            words2,
+            { opacity: 0, filter: "blur(6px)" },
+            {
+              opacity: 1,
+              filter: "blur(0px)",
+              duration: 0.13,
+              stagger: 0.07,
+              ease: "power2.out",
+            },
+            1.6,
+          );
+          tl.to(stage, { x: 6, y: -4, duration: 1 / 30, ease: "power2.out" }, 2.1);
+          tl.to(stage, { x: -4, y: 3, duration: 1 / 30, ease: "power2.out" });
+          tl.to(stage, { x: 0, y: 0, duration: 1 / 30, ease: "power2.out" });
+          tl.fromTo(
+            underline,
+            { width: 0 },
+            { width: 620, duration: 0.3, ease: "power4.out" },
+            2.2,
+          );
+
+          tl.to(words1, { opacity: 0, filter: "blur(6px)", y: -30, duration: 0.22, stagger: 0.05, ease: "power3.in" }, 2.78);
+          tl.to(
+            "#hook-line2-wrap",
+            { opacity: 0, y: -60, filter: "blur(8px)", duration: 0.28, ease: "power3.in" },
+            2.9,
+          );
+          tl.to("#hook-underline", { opacity: 0, duration: 0.18 }, 2.98);
+
+          tl.seek(0);
+          window.__timelines = window.__timelines || {};
+          window.__timelines["hook"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

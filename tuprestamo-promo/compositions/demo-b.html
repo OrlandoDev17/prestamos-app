@@ -1,0 +1,410 @@
+<!doctype html>
+<!-- Escena 4b · DEMO Cobro (14.8–18.8s): bottom sheet grande con spring real, tap Confirmar -->
+<html lang="es" data-composition-id="demo-b">
+  <head><meta charset="UTF-8" /><title>Demo B</title></head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          background: var(--ground, #f8f9fa);
+          font-family: var(--font-body, sans-serif);
+          color: var(--ink, #1e293b);
+        }
+        .db-app {
+          position: absolute;
+          left: 40px;
+          right: 40px;
+          top: 88px;
+        }
+        .db-kpis {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 14px;
+          margin-top: 26px;
+        }
+        .db-kpi {
+          background: var(--surface, #fff);
+          border-radius: 16px;
+          padding: 22px;
+          box-shadow: 0 1px 3px rgba(30, 41, 59, 0.06);
+        }
+        .db-kpi-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+        }
+        .db-kpi-label {
+          font-size: 36px;
+          font-weight: 500;
+          opacity: 0.85;
+        }
+        .db-kpi-icon {
+          width: 56px;
+          height: 56px;
+          border-radius: 999px;
+          display: grid;
+          place-items: center;
+          flex: 0 0 auto;
+        }
+        .db-kpi-icon svg {
+          width: 30px;
+          height: 30px;
+        }
+        .db-kpi-value {
+          display: block;
+          margin-top: 10px;
+          font-size: 56px;
+          font-weight: 800;
+          font-variant-numeric: tabular-nums;
+          letter-spacing: -0.01em;
+        }
+        .db-section {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-top: 28px;
+        }
+        .db-section-title {
+          font-size: 36px;
+          font-weight: 700;
+        }
+        .db-section-amount {
+          font-size: 36px;
+          font-weight: 600;
+          color: var(--mint-ink, #28a376);
+          font-variant-numeric: tabular-nums;
+        }
+        .db-client {
+          background: var(--surface, #fff);
+          border-radius: 16px;
+          padding: 22px;
+          box-shadow: 0 1px 3px rgba(30, 41, 59, 0.06);
+          margin-top: 14px;
+        }
+        .db-client-head {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+        .db-avatar {
+          width: 72px;
+          height: 72px;
+          border-radius: 999px;
+          display: grid;
+          place-items: center;
+          font-weight: 700;
+          font-size: 34px;
+          background: #e2e8f0;
+          color: #475569;
+          flex: 0 0 auto;
+        }
+        .db-client-name {
+          font-size: 38px;
+          font-weight: 700;
+        }
+        .db-client-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-top: 12px;
+        }
+        .db-cuota {
+          font-size: 38px;
+          color: var(--muted, #64748b);
+        }
+        .db-monto {
+          font-size: 38px;
+          font-weight: 600;
+          font-variant-numeric: tabular-nums;
+        }
+        .db-scrim {
+          position: absolute;
+          inset: 0;
+          background: #0f172a;
+          opacity: 0;
+        }
+        .db-sheet {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: var(--surface, #fff);
+          border-radius: 32px 32px 0 0;
+          padding: 44px 40px 40px;
+          box-shadow: 0 -12px 34px rgba(30, 41, 59, 0.16);
+        }
+        .db-sheet-grab {
+          width: 72px;
+          height: 10px;
+          border-radius: 999px;
+          background: var(--line, #e2e8f0);
+          margin: 0 auto 24px;
+        }
+        .db-sheet-title {
+          font-size: 52px;
+          font-weight: 800;
+          letter-spacing: -0.01em;
+        }
+        .db-sheet-sub {
+          font-size: 40px;
+          color: var(--muted, #64748b);
+          margin-top: 6px;
+        }
+        .db-panel {
+          background: var(--ground, #f8f9fa);
+          border-radius: 16px;
+          padding: 26px;
+          margin-top: 24px;
+        }
+        .db-panel-row {
+          display: flex;
+          justify-content: space-between;
+          font-size: 38px;
+          margin-bottom: 14px;
+        }
+        .db-panel-row:last-child {
+          margin-bottom: 0;
+        }
+        .db-panel-label {
+          color: var(--muted, #64748b);
+        }
+        .db-panel-value {
+          font-weight: 700;
+          font-variant-numeric: tabular-nums;
+        }
+        .db-input-label {
+          display: block;
+          font-size: 40px;
+          font-weight: 600;
+          margin-top: 24px;
+        }
+        .db-input {
+          margin-top: 12px;
+          background: var(--ground, #f8f9fa);
+          border-radius: 12px;
+          padding: 18px 24px;
+          font-size: 44px;
+          font-weight: 700;
+          font-variant-numeric: tabular-nums;
+          border: 2px solid var(--brand, #47d7a4);
+        }
+        .db-buttons {
+          display: flex;
+          gap: 16px;
+          margin-top: 28px;
+        }
+        .db-btn {
+          flex: 1;
+          text-align: center;
+          padding: 24px 0;
+          border-radius: 12px;
+          font-size: 40px;
+          font-weight: 700;
+        }
+        .db-btn-cancel {
+          border: 2px solid rgba(100, 116, 139, 0.3);
+          color: var(--ink, #1e293b);
+        }
+        .db-btn-confirm {
+          background: #0e8f63;
+          color: #ffffff;
+        }
+      </style>
+
+      <div id="root" data-composition-id="demo-b" data-width="1080" data-height="1920">
+        <div
+          id="demo-b-clip"
+          class="clip"
+          data-start="0"
+          data-duration="4"
+          data-track-index="0"
+        >
+          <div id="db-phone" style="position: absolute; left: 180px; top: 180px; width: 720px; height: 1560px; background: #0f172a; border-radius: 76px; box-shadow: 0 30px 60px rgba(30, 41, 59, 0.18), 0 2px 0 rgba(255,255,255,0.06) inset">
+            <div style="position: absolute; inset: 18px; border-radius: 58px; background: var(--ground, #f8f9fa); overflow: hidden">
+              <div style="position: absolute; left: 50%; top: 14px; width: 140px; height: 28px; margin-left: -70px; border-radius: 999px; background: #0f172a"></div>
+
+              <div style="position: absolute; inset: 0">
+                <div class="db-app" data-layout-allow-overlap data-layout-ignore>
+                  <div style="font-weight: 800; font-size: 52px; letter-spacing: -0.02em">Dashboard</div>
+                  <div style="font-weight: 500; font-size: 36px; color: var(--muted, #64748b); margin-top: 4px">Resumen de cobranzas</div>
+
+                  <div class="db-kpis">
+                    <div class="db-kpi">
+                      <div class="db-kpi-head">
+                        <span class="db-kpi-label">Pendiente Hoy</span>
+                        <span class="db-kpi-icon" style="background: #fef3c7; color: #b45309">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        </span>
+                      </div>
+                      <span class="db-kpi-value">$85.00</span>
+                    </div>
+                    <div class="db-kpi" style="background: #47d7a4">
+                      <div class="db-kpi-head">
+                        <span class="db-kpi-label" style="color: var(--ink, #1e293b); opacity: 0.85">Cobrado Hoy</span>
+                        <span class="db-kpi-icon" style="background: #2cb382; color: #fff">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        </span>
+                      </div>
+                      <span class="db-kpi-value" style="color: var(--ink, #1e293b)">$45.00</span>
+                    </div>
+                    <div class="db-kpi">
+                      <div class="db-kpi-head">
+                        <span class="db-kpi-label">Prestamos activos</span>
+                        <span class="db-kpi-icon" style="background: rgba(71, 215, 164, 0.12); color: #2cb382">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>
+                        </span>
+                      </div>
+                      <span class="db-kpi-value">12</span>
+                    </div>
+                    <div class="db-kpi">
+                      <div class="db-kpi-head">
+                        <span class="db-kpi-label">Clientes totales</span>
+                        <span class="db-kpi-icon" style="background: #f5f3ff; color: #7c3aed">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </span>
+                      </div>
+                      <span class="db-kpi-value">24</span>
+                    </div>
+                  </div>
+
+                  <div class="db-section">
+                    <span class="db-section-title">Ruta de cobro</span>
+                    <span class="db-section-amount">$85.00</span>
+                  </div>
+
+                  <div class="db-client" id="db-card1">
+                    <div class="db-client-head">
+                      <div class="db-avatar">MG</div>
+                      <span class="db-client-name">María González</span>
+                    </div>
+                    <div class="db-client-row">
+                      <span class="db-cuota">Cuota #3</span>
+                      <span class="db-monto">$25.00</span>
+                    </div>
+                  </div>
+                  <div class="db-client">
+                    <div class="db-client-head">
+                      <div class="db-avatar">CP</div>
+                      <span class="db-client-name">Carlos Pérez</span>
+                    </div>
+                    <div class="db-client-row">
+                      <span class="db-cuota">Cuota #5</span>
+                      <span class="db-monto">$15.00</span>
+                    </div>
+                  </div>
+                  <div class="db-client">
+                    <div class="db-client-head">
+                      <div class="db-avatar">RM</div>
+                      <span class="db-client-name">Rosa Martínez</span>
+                    </div>
+                    <div class="db-client-row">
+                      <span class="db-cuota">Cuota #2</span>
+                      <span class="db-monto">$25.00</span>
+                    </div>
+                  </div>
+                  <div class="db-client">
+                    <div class="db-client-head">
+                      <div class="db-avatar">LG</div>
+                      <span class="db-client-name">Luis Gómez</span>
+                    </div>
+                    <div class="db-client-row">
+                      <span class="db-cuota">Cuota #1</span>
+                      <span class="db-monto">$20.00</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="db-scrim" id="db-scrim" data-layout-allow-occlusion data-layout-allow-safe-zone></div>
+
+                <div class="db-sheet" id="db-sheet" data-layout-allow-occlusion data-layout-allow-safe-zone>
+                  <div class="db-sheet-grab"></div>
+                  <div class="db-sheet-title">Registrar Pago</div>
+                  <div class="db-sheet-sub">Cuota #3 · María González</div>
+                  <div class="db-panel">
+                    <div class="db-panel-row">
+                      <span class="db-panel-label">Monto cuota:</span>
+                      <span class="db-panel-value">$25.00</span>
+                    </div>
+                    <div class="db-panel-row">
+                      <span class="db-panel-label">Ya pagado:</span>
+                      <span class="db-panel-value">$0.00</span>
+                    </div>
+                    <div class="db-panel-row">
+                      <span class="db-panel-label">Saldo pendiente:</span>
+                      <span class="db-panel-value" style="color: var(--mint-ink, #28a376)">$25.00</span>
+                    </div>
+                  </div>
+                  <label class="db-input-label">Monto a pagar</label>
+                  <div class="db-input">$25.00</div>
+                  <div class="db-buttons">
+                    <div class="db-btn db-btn-cancel">Cancelar</div>
+                    <div class="db-btn db-btn-confirm" id="db-confirm">Confirmar</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            id="db-touch-host"
+            style="position: absolute; left: 198px; top: 198px; width: 684px; height: 1524px"
+          >
+            <div
+              id="db-touch"
+              data-composition-id="touch-indicator"
+              data-composition-src="compositions/components/touch-indicator.html"
+              data-start="3.55"
+              data-duration="0.65"
+              data-track-index="1"
+              data-variable-values='{ "gesture": "tap", "polarity": "light", "targetX": 75, "targetY": 95 }'
+              style="position: absolute; inset: 0"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          "use strict";
+          var tl = gsap.timeline({ paused: true });
+
+          gsap.set("#db-card1", { scale: 0.97, transformOrigin: "50% 50%" });
+          gsap.set("#db-sheet", { y: 820, opacity: 0 });
+
+          var SPRING = [
+            [0.0, 1450, 0.0], [0.057, 1198, 0.13], [0.09, 903, 0.21],
+            [0.123, 648, 0.36], [0.157, 437, 0.43], [0.19, 262, 0.5],
+            [0.223, 120, 0.62], [0.257, 8, 0.78], [0.29, -76, 0.89],
+            [0.323, -138, 1.0], [0.357, -175, null], [0.39, -191, null],
+            [0.423, -192, null], [0.457, -181, null], [0.49, -159, null],
+            [0.523, -131, null], [0.557, -100, null], [0.59, -68, null],
+            [0.623, -41, null], [0.657, -18, null], [0.69, -5, null],
+            [0.723, 0, null],
+          ];
+          var SHEET_AT = 0.55;
+          SPRING.forEach(function (s) {
+            var props = { y: Math.round(s[1] * 0.55) };
+            if (s[2] !== null) props.opacity = s[2];
+            tl.set("#db-sheet", props, SHEET_AT + s[0]);
+          });
+
+          tl.fromTo(
+            "#db-scrim",
+            { opacity: 0 },
+            { opacity: 0.45, duration: 0.3, ease: "power2.out" },
+            SHEET_AT,
+          );
+
+          tl.to("#db-confirm", { scale: 0.97, duration: 0.12, ease: "power2.out", transformOrigin: "50% 50%" }, 3.617);
+
+          tl.seek(0);
+          window.__timelines = window.__timelines || {};
+          window.__timelines["demo-b"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

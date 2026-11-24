@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<!-- Escena 5 · CIERRE Y CTA (21.6–28s): wordmark en cascada, beneficio, cápsula WhatsApp + chip link -->
+<html lang="es" data-composition-id="cierre" data-composition-variables="[
+    { &quot;id&quot;: &quot;copyBrand&quot;, &quot;type&quot;: &quot;string&quot;, &quot;role&quot;: &quot;content&quot;, &quot;label&quot;: &quot;Marca&quot;, &quot;default&quot;: &quot;TuPrestamo&quot; },
+    { &quot;id&quot;: &quot;copyTagline&quot;, &quot;type&quot;: &quot;string&quot;, &quot;role&quot;: &quot;content&quot;, &quot;label&quot;: &quot;Frase de beneficio&quot;, &quot;default&quot;: &quot;Control total de tu cartera desde tu celular&quot; },
+    { &quot;id&quot;: &quot;copyCtaWhats&quot;, &quot;type&quot;: &quot;string&quot;, &quot;role&quot;: &quot;content&quot;, &quot;label&quot;: &quot;CTA WhatsApp&quot;, &quot;default&quot;: &quot;Escríbeme para probarlo hoy&quot; },
+    { &quot;id&quot;: &quot;copyCtaLink&quot;, &quot;type&quot;: &quot;string&quot;, &quot;role&quot;: &quot;content&quot;, &quot;label&quot;: &quot;CTA link&quot;, &quot;default&quot;: &quot;Link en el perfil&quot; }
+  ]">
+  <head><meta charset="UTF-8"><title>Cierre</title></head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          background: var(--ground, #f8f9fa);
+          font-family: var(--font-display, sans-serif);
+          color: var(--ink, #1e293b);
+        }
+        .ci-lockup {
+          position: absolute;
+          left: 60px;
+          right: 60px;
+          top: 560px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+        .ci-wordmark {
+          display: flex;
+          align-items: baseline;
+          font-weight: 900;
+          font-size: 118px;
+          letter-spacing: -0.035em;
+          line-height: 1.04;
+          white-space: nowrap;
+        }
+        .ci-letter {
+          display: inline-block;
+        }
+        .ci-period {
+          color: var(--mint-ink, #28a376);
+        }
+        .ci-tagline {
+          margin-top: 30px;
+          font-family: var(--font-body, sans-serif);
+          font-weight: 700;
+          font-size: 56px;
+          line-height: 1.25;
+          max-width: 860px;
+          letter-spacing: -0.01em;
+        }
+        .ci-cta {
+          margin-top: 64px;
+          display: inline-flex;
+          align-items: center;
+          gap: 18px;
+          background: var(--brand, #47d7a4);
+          color: var(--ink, #1e293b);
+          font-family: var(--font-body, sans-serif);
+          font-weight: 800;
+          font-size: 44px;
+          padding: 30px 54px;
+          border-radius: 16px;
+          box-shadow: 0 8px 24px rgba(71, 215, 164, 0.35);
+          white-space: nowrap;
+        }
+        .ci-cta svg {
+          width: 46px;
+          height: 46px;
+          flex: 0 0 auto;
+        }
+        .ci-chip {
+          margin-top: 26px;
+          display: inline-block;
+          border: 2px solid var(--line, #e2e8f0);
+          background: var(--surface, #fff);
+          color: var(--muted, #64748b);
+          font-family: var(--font-body, sans-serif);
+          font-weight: 600;
+          font-size: 34px;
+          padding: 18px 38px;
+          border-radius: 999px;
+        }
+      </style>
+
+      <div data-hf-id="hf-mly1" id="root" data-composition-id="cierre" data-width="1080" data-height="1920">
+        <div data-hf-id="hf-32wd" id="cierre-clip" class="clip" data-start="0" data-duration="6.4" data-track-index="0">
+          <div data-hf-id="hf-e85z" class="ci-lockup">
+            <h2 data-hf-id="hf-2tv1" class="ci-wordmark" id="ci-wordmark"></h2>
+            <p data-hf-id="hf-oicd" class="ci-tagline" id="ci-tagline"></p>
+            <div data-hf-id="hf-uzkm" class="ci-cta" id="ci-cta">
+              <svg data-hf-id="hf-h0hq" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path data-hf-id="hf-a6uk" d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+              </svg>
+              <span data-hf-id="hf-bo0l" id="ci-cta-text"></span>
+            </div>
+            <div data-hf-id="hf-fzew" class="ci-chip" id="ci-chip"></div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          "use strict";
+          var vars =
+            window.__hyperframes && window.__hyperframes.getVariables
+              ? window.__hyperframes.getVariables()
+              : {};
+
+          var brand = (vars.copyBrand || "TuPrestamo").trim();
+          var tagline = (vars.copyTagline || "Control total de tu cartera desde tu celular").trim();
+          var ctaWhats = (vars.copyCtaWhats || "Escríbeme para probarlo hoy").trim();
+          var ctaLink = (vars.copyCtaLink || "Link en el perfil").trim();
+
+          var wordmark = document.getElementById("ci-wordmark");
+          var taglineEl = document.getElementById("ci-tagline");
+          var ctaEl = document.getElementById("ci-cta");
+          var ctaText = document.getElementById("ci-cta-text");
+          var chipEl = document.getElementById("ci-chip");
+
+          // Wordmark: letras en cascada (patrón logo-brand-close) + punto de marca al final
+          var characters = Array.from(brand);
+          if (characters[characters.length - 1] !== ".") characters.push(".");
+          var letters = characters.map(function (character, index) {
+            var letter = document.createElement("span");
+            letter.className = "ci-letter";
+            if (/\s/.test(character)) {
+              letter.style.width = "0.34em";
+              letter.textContent = " ";
+            } else {
+              letter.textContent = character;
+            }
+            if (index === characters.length - 1) letter.classList.add("ci-period");
+            wordmark.appendChild(letter);
+            return letter;
+          });
+          var cascadeLetters = letters.slice(0, -1);
+          var periodLetter = letters[letters.length - 1];
+
+          taglineEl.textContent = tagline;
+          ctaText.textContent = ctaWhats;
+          chipEl.textContent = ctaLink;
+
+          var tl = gsap.timeline({ paused: true });
+tl.set("[data-hf-id=\"hf-e85z\"]", { x: 0, y: 0, data: "hf-hold" }, 0);
+
+          // Cascada letra a letra + settle del wordmark (1.04 → 1)
+          tl.fromTo(
+            cascadeLetters,
+            { opacity: 0, y: "0.62em" },
+            {
+              opacity: 1,
+              y: "0em",
+              duration: 1.05,
+              stagger: { amount: 0.62, from: "start" },
+              ease: "expo.out",
+            },
+            0.1,
+          );
+          tl.fromTo(
+            wordmark,
+            { scale: 1.05, transformOrigin: "50% 100%" },
+            { scale: 1, duration: 2.2, ease: "expo.out" },
+            0.1,
+          );
+
+          // El punto de marca aterriza al final con pop
+          tl.fromTo(
+            periodLetter,
+            { opacity: 0, scale: 0.2, y: "0.08em", transformOrigin: "50% 65%" },
+            { opacity: 1, scale: 1, y: "0em", duration: 0.75, ease: "back.out(1.8)" },
+            0.85,
+          );
+
+          // Tagline
+          tl.fromTo(
+            taglineEl,
+            { opacity: 0, y: "0.9em" },
+            { opacity: 1, y: "0em", duration: 0.8, ease: "power3.out" },
+            1.4,
+          );
+
+          // Cápsula CTA: un solo overshoot
+          tl.fromTo(
+            ctaEl,
+            { opacity: 0, scale: 0.85, transformOrigin: "50% 50%" },
+            { opacity: 1, scale: 1, duration: 0.4, ease: "back.out(1.7)" },
+            2.8,
+          );
+
+          // Chip "Link en el perfil"
+          tl.fromTo(
+            chipEl,
+            { opacity: 0, y: 22 },
+            { opacity: 1, y: 0, duration: 0.4, ease: "power3.out" },
+            3.8,
+          );
+tl.to("[data-hf-id=\"hf-e85z\"]", { keyframes: { "0%": { x: 0, y: 0 } }, duration: 1 }, 7.078);
+
+          // Hold: todo muerto quieto hasta el final (2.4s de stillness)
+
+          tl.seek(0);
+          window.__timelines = window.__timelines || {};
+          window.__timelines["cierre"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

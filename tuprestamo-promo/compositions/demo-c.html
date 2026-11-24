@@ -1,0 +1,493 @@
+<!doctype html>
+<!-- Escena 4c · DEMO Confirmación (18.8–23.2s): check de éxito, sheet baja, KPIs se actualizan, payoff -->
+<html lang="es" data-composition-id="demo-c">
+  <head><meta charset="UTF-8" /><title>Demo C</title></head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          background: var(--ground, #f8f9fa);
+          font-family: var(--font-body, sans-serif);
+          color: var(--ink, #1e293b);
+        }
+        .dc-app {
+          position: absolute;
+          left: 40px;
+          right: 40px;
+          top: 88px;
+        }
+        .dc-kpis {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 14px;
+          margin-top: 26px;
+        }
+        .dc-kpi {
+          background: var(--surface, #fff);
+          border-radius: 16px;
+          padding: 22px;
+          box-shadow: 0 1px 3px rgba(30, 41, 59, 0.06);
+        }
+        .dc-kpi-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+        }
+        .dc-kpi-label {
+          font-size: 36px;
+          font-weight: 500;
+          opacity: 0.85;
+        }
+        .dc-kpi-icon {
+          width: 56px;
+          height: 56px;
+          border-radius: 999px;
+          display: grid;
+          place-items: center;
+          flex: 0 0 auto;
+        }
+        .dc-kpi-icon svg {
+          width: 30px;
+          height: 30px;
+        }
+        .dc-kpi-value {
+          display: block;
+          margin-top: 10px;
+          font-size: 56px;
+          font-weight: 800;
+          font-variant-numeric: tabular-nums;
+          letter-spacing: -0.01em;
+          white-space: nowrap;
+        }
+        .dc-section {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-top: 28px;
+        }
+        .dc-section-title {
+          font-size: 36px;
+          font-weight: 700;
+        }
+        .dc-section-amount {
+          font-size: 36px;
+          font-weight: 600;
+          color: var(--mint-ink, #28a376);
+          font-variant-numeric: tabular-nums;
+        }
+        .dc-client {
+          background: var(--surface, #fff);
+          border-radius: 16px;
+          padding: 22px;
+          box-shadow: 0 1px 3px rgba(30, 41, 59, 0.06);
+          margin-top: 14px;
+        }
+        .dc-client-head {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+        .dc-avatar {
+          width: 72px;
+          height: 72px;
+          border-radius: 999px;
+          display: grid;
+          place-items: center;
+          font-weight: 700;
+          font-size: 34px;
+          background: #e2e8f0;
+          color: #475569;
+          flex: 0 0 auto;
+        }
+        .dc-client-name {
+          font-size: 38px;
+          font-weight: 700;
+        }
+        .dc-client-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-top: 12px;
+        }
+        .dc-cuota {
+          font-size: 38px;
+          color: var(--muted, #64748b);
+        }
+        .dc-monto {
+          font-size: 38px;
+          font-weight: 600;
+          font-variant-numeric: tabular-nums;
+        }
+        .dc-scrim {
+          position: absolute;
+          inset: 0;
+          background: #0f172a;
+          opacity: 0.45;
+        }
+        .dc-sheet {
+          position: absolute;
+          left: 0;
+          right: 0;
+          bottom: 0;
+          background: var(--surface, #fff);
+          border-radius: 32px 32px 0 0;
+          padding: 44px 40px 40px;
+          box-shadow: 0 -12px 34px rgba(30, 41, 59, 0.16);
+        }
+        .dc-sheet-grab {
+          width: 72px;
+          height: 10px;
+          border-radius: 999px;
+          background: var(--line, #e2e8f0);
+          margin: 0 auto 24px;
+        }
+        .dc-sheet-title {
+          font-size: 52px;
+          font-weight: 800;
+          letter-spacing: -0.01em;
+        }
+        .dc-sheet-sub {
+          font-size: 40px;
+          color: var(--muted, #64748b);
+          margin-top: 6px;
+        }
+        .dc-panel {
+          background: var(--ground, #f8f9fa);
+          border-radius: 16px;
+          padding: 26px;
+          margin-top: 24px;
+        }
+        .dc-panel-row {
+          display: flex;
+          justify-content: space-between;
+          font-size: 38px;
+          margin-bottom: 14px;
+        }
+        .dc-panel-row:last-child {
+          margin-bottom: 0;
+        }
+        .dc-panel-label {
+          color: var(--muted, #64748b);
+        }
+        .dc-panel-value {
+          font-weight: 700;
+          font-variant-numeric: tabular-nums;
+        }
+        .dc-input-label {
+          display: block;
+          font-size: 40px;
+          font-weight: 600;
+          margin-top: 24px;
+        }
+        .dc-input {
+          margin-top: 12px;
+          background: var(--ground, #f8f9fa);
+          border-radius: 12px;
+          padding: 18px 24px;
+          font-size: 44px;
+          font-weight: 700;
+          font-variant-numeric: tabular-nums;
+          border: 2px solid var(--brand, #47d7a4);
+        }
+        .dc-buttons {
+          display: flex;
+          gap: 16px;
+          margin-top: 28px;
+        }
+        .dc-btn {
+          flex: 1;
+          text-align: center;
+          padding: 24px 0;
+          border-radius: 12px;
+          font-size: 40px;
+          font-weight: 700;
+        }
+        .dc-btn-cancel {
+          border: 2px solid rgba(100, 116, 139, 0.3);
+          color: var(--ink, #1e293b);
+        }
+        .dc-btn-confirm {
+          background: #0e8f63;
+          color: #ffffff;
+        }
+        .hf-transition-success-check {
+          display: grid;
+          place-items: center;
+          width: var(--hf-check-size, 82px);
+          height: var(--hf-check-size, 82px);
+          border-radius: 999px;
+          background: var(--hf-check-halo, #dcfce7);
+          color: var(--hf-check-ink, #16a34a);
+        }
+        .hf-transition-success-check svg {
+          width: var(--hf-check-mark-size, 64px);
+          height: var(--hf-check-mark-size, 64px);
+          fill: none;
+          stroke: currentColor;
+          stroke-width: 5;
+          stroke-linecap: round;
+          stroke-linejoin: round;
+          filter: blur(var(--hf-check-blur, 0px));
+          transform: rotate(calc(var(--hf-check-rotate, 0deg) * var(--hf-check-spin, 1)))
+            scale(var(--hf-check-scale, 1));
+        }
+        .hf-transition-success-check circle {
+          opacity: var(--hf-check-ring-opacity, 0.28);
+        }
+        .hf-transition-success-check path {
+          stroke-dasharray: 36;
+          stroke-dashoffset: var(--hf-check-dash, 0);
+        }
+        .dc-check {
+          position: absolute;
+          left: 50%;
+          top: 38%;
+          margin-left: -60px;
+          margin-top: -60px;
+        }
+        .dc-check .hf-transition-success-check {
+          --hf-check-halo: #e6f4ea;
+          --hf-check-ink: #10b981;
+          --hf-check-size: 120px;
+          --hf-check-mark-size: 94px;
+          --hf-check-ring-opacity: 0.4;
+        }
+        .dc-payoff {
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 220px;
+          text-align: center;
+          font-weight: 900;
+          font-size: 92px;
+          letter-spacing: -0.02em;
+          line-height: 1.05;
+        }
+        .dc-payoff .accent {
+          color: var(--mint-ink, #28a376);
+        }
+      </style>
+
+      <div id="root" data-composition-id="demo-c" data-width="1080" data-height="1920">
+        <div
+          id="demo-c-clip"
+          class="clip"
+          data-start="0"
+          data-duration="4.4"
+          data-track-index="0"
+        >
+          <div id="dc-phone" style="position: absolute; left: 180px; top: 180px; width: 720px; height: 1560px; background: #0f172a; border-radius: 76px; box-shadow: 0 30px 60px rgba(30, 41, 59, 0.18), 0 2px 0 rgba(255,255,255,0.06) inset">
+            <div style="position: absolute; inset: 18px; border-radius: 58px; background: var(--ground, #f8f9fa); overflow: hidden">
+              <div style="position: absolute; left: 50%; top: 14px; width: 140px; height: 28px; margin-left: -70px; border-radius: 999px; background: #0f172a"></div>
+
+              <div style="position: absolute; inset: 0">
+                <div class="dc-app" data-layout-allow-overlap data-layout-ignore>
+                  <div style="font-weight: 800; font-size: 52px; letter-spacing: -0.02em">Dashboard</div>
+                  <div style="font-weight: 500; font-size: 36px; color: var(--muted, #64748b); margin-top: 4px">Resumen de cobranzas</div>
+
+                  <div class="dc-kpis">
+                    <div class="dc-kpi" style="position: relative">
+                      <div class="dc-kpi-head">
+                        <span class="dc-kpi-label">Pendiente Hoy</span>
+                        <span class="dc-kpi-icon" style="background: #fef3c7; color: #b45309">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        </span>
+                      </div>
+                      <span class="dc-kpi-value" id="dc-v1-old">$85.00</span>
+                      <span class="dc-kpi-value" id="dc-v1-new" style="position: absolute; left: 22px; bottom: 22px; opacity: 0">$60.00</span>
+                    </div>
+                    <div class="dc-kpi" style="background: #47d7a4; position: relative">
+                      <div class="dc-kpi-head">
+                        <span class="dc-kpi-label" style="color: var(--ink, #1e293b); opacity: 0.85">Cobrado Hoy</span>
+                        <span class="dc-kpi-icon" style="background: #2cb382; color: #fff">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        </span>
+                      </div>
+                      <span class="dc-kpi-value" id="dc-v2-old" style="color: var(--ink, #1e293b)">$45.00</span>
+                      <span class="dc-kpi-value" id="dc-v2-new" style="position: absolute; left: 22px; bottom: 22px; color: var(--ink, #1e293b); opacity: 0">$70.00</span>
+                    </div>
+                    <div class="dc-kpi">
+                      <div class="dc-kpi-head">
+                        <span class="dc-kpi-label">Prestamos activos</span>
+                        <span class="dc-kpi-icon" style="background: rgba(71, 215, 164, 0.12); color: #2cb382">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>
+                        </span>
+                      </div>
+                      <span class="dc-kpi-value">12</span>
+                    </div>
+                    <div class="dc-kpi">
+                      <div class="dc-kpi-head">
+                        <span class="dc-kpi-label">Clientes totales</span>
+                        <span class="dc-kpi-icon" style="background: #f5f3ff; color: #7c3aed">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </span>
+                      </div>
+                      <span class="dc-kpi-value">24</span>
+                    </div>
+                  </div>
+
+                  <div class="dc-section">
+                    <span class="dc-section-title">Ruta de cobro</span>
+                    <span class="dc-section-amount" id="dc-section-amount">$60.00</span>
+                  </div>
+
+                  <div class="dc-client">
+                    <div class="dc-client-head">
+                      <div class="dc-avatar">MG</div>
+                      <span class="dc-client-name">María González</span>
+                    </div>
+                    <div class="dc-client-row">
+                      <span class="dc-cuota">Cuota #3 · <span style="color: var(--success-ink, #0fa976); font-weight: 700">Pagada</span></span>
+                      <span class="dc-monto" style="color: var(--success-ink, #0fa976)">$25.00</span>
+                    </div>
+                  </div>
+                  <div class="dc-client">
+                    <div class="dc-client-head">
+                      <div class="dc-avatar">CP</div>
+                      <span class="dc-client-name">Carlos Pérez</span>
+                    </div>
+                    <div class="dc-client-row">
+                      <span class="dc-cuota">Cuota #5</span>
+                      <span class="dc-monto">$15.00</span>
+                    </div>
+                  </div>
+                  <div class="dc-client">
+                    <div class="dc-client-head">
+                      <div class="dc-avatar">RM</div>
+                      <span class="dc-client-name">Rosa Martínez</span>
+                    </div>
+                    <div class="dc-client-row">
+                      <span class="dc-cuota">Cuota #2</span>
+                      <span class="dc-monto">$25.00</span>
+                    </div>
+                  </div>
+                  <div class="dc-client">
+                    <div class="dc-client-head">
+                      <div class="dc-avatar">LG</div>
+                      <span class="dc-client-name">Luis Gómez</span>
+                    </div>
+                    <div class="dc-client-row">
+                      <span class="dc-cuota">Cuota #1</span>
+                      <span class="dc-monto">$20.00</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="dc-scrim" id="dc-scrim" data-layout-allow-occlusion data-layout-allow-safe-zone></div>
+
+                <div class="dc-sheet" id="dc-sheet" data-layout-allow-occlusion data-layout-allow-safe-zone>
+                  <div class="dc-sheet-grab"></div>
+                  <div class="dc-sheet-title">Registrar Pago</div>
+                  <div class="dc-sheet-sub">Cuota #3 · María González</div>
+                  <div class="dc-panel">
+                    <div class="dc-panel-row">
+                      <span class="dc-panel-label">Monto cuota:</span>
+                      <span class="dc-panel-value">$25.00</span>
+                    </div>
+                    <div class="dc-panel-row">
+                      <span class="dc-panel-label">Ya pagado:</span>
+                      <span class="dc-panel-value">$0.00</span>
+                    </div>
+                    <div class="dc-panel-row">
+                      <span class="dc-panel-label">Saldo pendiente:</span>
+                      <span class="dc-panel-value" style="color: var(--mint-ink, #28a376)">$25.00</span>
+                    </div>
+                  </div>
+                  <label class="dc-input-label">Monto a pagar</label>
+                  <div class="dc-input">$25.00</div>
+                  <div class="dc-buttons">
+                    <div class="dc-btn dc-btn-cancel">Cancelar</div>
+                    <div class="dc-btn dc-btn-confirm" id="dc-confirm">Confirmar</div>
+                  </div>
+
+                  <div class="dc-check" id="dc-check">
+                    <div class="hf-transition-success-check">
+                      <svg viewBox="0 0 64 64">
+                        <circle cx="32" cy="32" r="27" />
+                        <path d="M20 33.5l8 8L45 23" />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="dc-payoff" id="dc-payoff" style="opacity: 0">
+            <span class="dc-payoff-word">Cobrado</span>
+            <span> en </span><span class="accent dc-payoff-word">3 toques.</span>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          "use strict";
+          var tl = gsap.timeline({ paused: true });
+
+          gsap.set("#dc-confirm", { scale: 0.97, transformOrigin: "50% 50%" });
+
+          tl.fromTo(
+            "#dc-check svg",
+            { opacity: 0, scale: 0.72, rotate: "-18deg", filter: "blur(7px)" },
+            { opacity: 1, scale: 1, rotate: "0deg", filter: "blur(0px)", duration: 0.34, ease: "back.out(1.8)" },
+            0.15,
+          );
+          tl.fromTo(
+            "#dc-check path",
+            { strokeDashoffset: 36 },
+            { strokeDashoffset: 0, duration: 0.42, ease: "power2.out" },
+            0.27,
+          );
+
+          tl.to("#dc-sheet", { y: 900, duration: 0.42, ease: "power3.in" }, 1.0);
+          tl.to("#dc-scrim", { opacity: 0, duration: 0.4, ease: "power2.inOut" }, 1.0);
+          tl.to("#dc-check", { opacity: 0, duration: 0.28, ease: "power2.in" }, 1.12);
+
+          tl.to("#dc-v2-old", { opacity: 0, filter: "blur(5px)", y: -8, duration: 0.16, ease: "power2.in" }, 1.75);
+          tl.fromTo(
+            "#dc-v2-new",
+            { opacity: 0, y: 14, filter: "blur(6px)", scale: 0.85, transformOrigin: "0% 100%" },
+            { opacity: 1, y: 0, filter: "blur(0px)", scale: 1, duration: 0.3, ease: "back.out(1.7)" },
+            1.88,
+          );
+          tl.to("#dc-v1-old", { opacity: 0, filter: "blur(5px)", y: -8, duration: 0.16, ease: "power2.in" }, 1.85);
+          tl.fromTo(
+            "#dc-v1-new",
+            { opacity: 0, y: 14, filter: "blur(6px)", scale: 0.85, transformOrigin: "0% 100%" },
+            { opacity: 1, y: 0, filter: "blur(0px)", scale: 1, duration: 0.3, ease: "back.out(1.7)" },
+            1.98,
+          );
+
+          tl.to(
+            "#dc-phone",
+            { scale: 0.78, transformOrigin: "50% 47%", duration: 0.55, ease: "power3.inOut" },
+            2.5,
+          );
+
+          tl.fromTo(
+            ".dc-payoff-word",
+            { opacity: 0, y: 26, filter: "blur(6px)" },
+            {
+              opacity: 1,
+              y: 0,
+              filter: "blur(0px)",
+              duration: 0.3,
+              stagger: 0.08,
+              ease: "power3.out",
+            },
+            3.0,
+          );
+          tl.to("#dc-payoff", { opacity: 1, duration: 0.1 }, 3.0);
+
+          tl.seek(0);
+          window.__timelines = window.__timelines || {};
+          window.__timelines["demo-c"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

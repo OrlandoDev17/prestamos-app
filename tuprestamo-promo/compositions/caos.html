@@ -1,0 +1,435 @@
+<!doctype html>
+<!-- Escena 2 · LA PROBLEMÁTICA (3.2–10.2s): 4 beats de caos, whip vertical entre ellos -->
+<html lang="es" data-composition-id="caos">
+  <head><meta charset="UTF-8" /><title>Caos</title></head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          background: var(--ground, #f8f9fa);
+          font-family: var(--font-body, sans-serif);
+          color: var(--ink, #1e293b);
+          overflow: hidden;
+        }
+        .caos-beat {
+          position: absolute;
+          left: 0;
+          right: 0;
+          top: 300px;
+          height: 1080px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+        }
+        .caos-caption {
+          font-weight: 900;
+          font-size: 96px;
+          letter-spacing: -0.02em;
+          text-align: center;
+          line-height: 1.06;
+          max-width: 900px;
+        }
+        .caos-visual {
+          position: relative;
+          flex: 1;
+          width: 100%;
+        }
+
+        /* Recibos apilados */
+        .caos-receipt {
+          position: absolute;
+          width: 470px;
+          height: 280px;
+          background: var(--surface, #fff);
+          border-radius: 8px 8px 20px 20px;
+          box-shadow: 0 6px 18px rgba(30, 41, 59, 0.1);
+          padding: 34px 38px;
+        }
+        .caos-receipt::after {
+          content: "";
+          position: absolute;
+          left: 12px;
+          right: 12px;
+          bottom: 8px;
+          height: 2px;
+          background-image: repeating-linear-gradient(
+            to right,
+            var(--line, #e2e8f0) 0 10px,
+            transparent 10px 20px
+          );
+        }
+        .caos-receipt-row {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 20px;
+        }
+        .caos-receipt-name {
+          width: 52%;
+          height: 16px;
+          border-radius: 8px;
+          background: var(--line, #e2e8f0);
+        }
+        .caos-receipt-amount {
+          font-weight: 700;
+          font-size: 36px;
+          color: var(--ink, #1e293b);
+          font-variant-numeric: tabular-nums;
+        }
+        .caos-stamp {
+          position: absolute;
+          border: 7px solid var(--danger, #ef4444);
+          color: var(--danger, #ef4444);
+          font-weight: 900;
+          font-size: 46px;
+          letter-spacing: 0.04em;
+          padding: 14px 28px;
+          border-radius: 10px;
+          background: rgba(255, 255, 255, 0.6);
+        }
+
+        /* Spreadsheet / Excel */
+        .caos-sheet {
+          position: absolute;
+          left: 50%;
+          top: 80px;
+          margin-left: -380px;
+          width: 760px;
+          background: var(--surface, #fff);
+          border: 2px solid var(--line, #e2e8f0);
+          border-radius: 14px;
+          box-shadow: 0 12px 32px rgba(30, 41, 59, 0.14);
+          overflow: hidden;
+        }
+        .caos-sheet-header {
+          display: grid;
+          grid-template-columns: 180px 1fr 1fr;
+          background: var(--line, #e2e8f0);
+        }
+        .caos-sheet-header div {
+          padding: 18px 20px;
+          font-weight: 700;
+          font-size: 30px;
+          color: var(--ink, #1e293b);
+          border-right: 2px solid var(--ground, #f8f9fa);
+        }
+        .caos-sheet-header div:last-child {
+          border-right: none;
+        }
+        .caos-sheet-row {
+          display: grid;
+          grid-template-columns: 180px 1fr 1fr;
+          border-top: 2px solid var(--line, #e2e8f0);
+        }
+        .caos-sheet-cell {
+          padding: 16px 20px;
+          font-size: 30px;
+          font-variant-numeric: tabular-nums;
+          color: var(--ink, #1e293b);
+          border-right: 2px solid var(--line, #e2e8f0);
+        }
+        .caos-sheet-cell:last-child {
+          border-right: none;
+        }
+        .caos-sheet-cell.bad {
+          background: var(--danger-bg, #fee2e2);
+          color: var(--danger, #ef4444);
+          font-weight: 800;
+        }
+        .caos-sheet-cell.old {
+          color: var(--muted, #64748b);
+          font-size: 24px;
+        }
+        .caos-time-badge {
+          position: absolute;
+          left: 50%;
+          top: 600px;
+          margin-left: -90px;
+          background: var(--warning-bg, #fef3c7);
+          color: var(--warning, #b45309);
+          font-weight: 800;
+          font-size: 44px;
+          padding: 14px 34px;
+          border-radius: 999px;
+          box-shadow: 0 6px 16px rgba(245, 158, 11, 0.3);
+          white-space: nowrap;
+        }
+
+        /* Atrasados */
+        .caos-client {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 22px;
+        }
+        .caos-avatar {
+          width: 136px;
+          height: 136px;
+          border-radius: 999px;
+          display: grid;
+          place-items: center;
+          font-weight: 800;
+          font-size: 46px;
+          color: var(--mint-ink, #28a376);
+          background: rgba(71, 215, 164, 0.12);
+          border: 2px solid var(--line, #e2e8f0);
+        }
+        .caos-badge {
+          background: var(--danger-bg, #fee2e2);
+          color: var(--danger, #ef4444);
+          font-weight: 800;
+          font-size: 30px;
+          padding: 10px 20px;
+          border-radius: 999px;
+          white-space: nowrap;
+        }
+        .caos-bell {
+          position: relative;
+          width: 96px;
+          height: 96px;
+        }
+        .caos-bell svg {
+          width: 100%;
+          height: 100%;
+          stroke: var(--muted, #64748b);
+        }
+        .caos-bell-slash {
+          position: absolute;
+          left: -10px;
+          top: 46px;
+          width: 116px;
+          height: 8px;
+          background: var(--danger, #ef4444);
+          border-radius: 6px;
+          transform: rotate(-32deg);
+        }
+
+        /* Costo final */
+        .caos-final {
+          font-weight: 900;
+          font-size: 116px;
+          letter-spacing: -0.02em;
+          text-align: center;
+          line-height: 1.08;
+          max-width: 900px;
+        }
+        .caos-final .fade-word {
+          color: var(--danger, #ef4444);
+        }
+      </style>
+
+      <div id="root" data-composition-id="caos" data-width="1080" data-height="1920">
+        <div
+          id="caos-clip"
+          class="clip"
+          data-start="0"
+          data-duration="7"
+          data-track-index="0"
+        >
+          <!-- Beat 1 · Cuotas olvidadas -->
+          <div class="caos-beat" id="caos-b1" style="opacity: 0">
+            <div class="caos-caption">Cuotas olvidadas</div>
+            <div class="caos-visual">
+              <div class="caos-receipt" id="caos-r1" style="left: 290px; top: 30px">
+                <div class="caos-receipt-row"><span class="caos-receipt-name"></span><span class="caos-receipt-amount">$25.00</span></div>
+                <div class="caos-receipt-row"><span class="caos-receipt-due"></span></div>
+              </div>
+              <div class="caos-receipt" id="caos-r2" style="left: 250px; top: 180px">
+                <div class="caos-receipt-row"><span class="caos-receipt-name"></span><span class="caos-receipt-amount">$15.00</span></div>
+                <div class="caos-receipt-row"><span class="caos-receipt-due"></span></div>
+              </div>
+              <div class="caos-receipt" id="caos-r3" style="left: 310px; top: 330px">
+                <div class="caos-receipt-row"><span class="caos-receipt-name"></span><span class="caos-receipt-amount">$20.00</span></div>
+                <div class="caos-receipt-row"><span class="caos-receipt-due"></span></div>
+              </div>
+              <div class="caos-stamp" id="caos-stamp" style="left: 295px; top: 400px">
+                ✗ SIN REGISTRAR
+              </div>
+            </div>
+          </div>
+
+          <!-- Beat 2 · Horas perdidas en Excel -->
+          <div class="caos-beat" id="caos-b2" style="opacity: 0">
+            <div class="caos-caption">Horas perdidas en Excel</div>
+            <div class="caos-visual">
+              <div class="caos-sheet" id="caos-sheet">
+                <div class="caos-sheet-header">
+                  <div>Cliente</div>
+                  <div>Monto</div>
+                  <div>Estado</div>
+                </div>
+                <div class="caos-sheet-row">
+                  <div class="caos-sheet-cell">MG</div>
+                  <div class="caos-sheet-cell">$25.00</div>
+                  <div class="caos-sheet-cell bad" id="caos-ref">#REF!</div>
+                </div>
+                <div class="caos-sheet-row">
+                  <div class="caos-sheet-cell">CP</div>
+                  <div class="caos-sheet-cell">$15.00</div>
+                  <div class="caos-sheet-cell old">pendiente</div>
+                </div>
+                <div class="caos-sheet-row">
+                  <div class="caos-sheet-cell">RM</div>
+                  <div class="caos-sheet-cell">$25.00</div>
+                  <div class="caos-sheet-cell bad" id="caos-value">#VALUE!</div>
+                </div>
+              </div>
+              <div class="caos-time-badge" id="caos-time">2h/día</div>
+            </div>
+          </div>
+
+          <!-- Beat 3 · Atrasados sin aviso -->
+          <div class="caos-beat" id="caos-b3" style="opacity: 0">
+            <div class="caos-caption">Atrasados sin aviso</div>
+            <div class="caos-visual">
+              <div style="position: absolute; left: 0; right: 0; top: 50px; display: flex; justify-content: center">
+                <div class="caos-bell" id="caos-bell">
+                  <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
+                    <path d="M13.7 21a2 2 0 0 1-3.4 0" />
+                  </svg>
+                  <div class="caos-bell-slash" id="caos-bell-slash"></div>
+                </div>
+              </div>
+              <div style="position: absolute; left: 0; right: 0; top: 240px; display: flex; justify-content: center; gap: 30px">
+                <div class="caos-client">
+                  <div class="caos-avatar">MG</div>
+                  <div class="caos-badge" id="caos-badge1">ATRASADO ×3</div>
+                </div>
+                <div class="caos-client">
+                  <div class="caos-avatar">CP</div>
+                  <div class="caos-badge" id="caos-badge2">ATRASADO ×7</div>
+                </div>
+                <div class="caos-client">
+                  <div class="caos-avatar">RM</div>
+                  <div class="caos-badge" id="caos-badge3">ATRASADO ×12</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Beat 4 · El costo -->
+          <div class="caos-beat" id="caos-b4" style="opacity: 0; justify-content: center; top: 380px; height: 900px">
+            <div style="font-weight: 800; font-size: 52px; color: var(--muted, #64748b); letter-spacing: 0.06em; margin-bottom: 18px" id="caos-b4-kicker">SIN CONTROL.</div>
+            <div class="caos-final">
+              El dinero <span class="fade-word">se esfuma.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          "use strict";
+          var tl = gsap.timeline({ paused: true });
+
+          function beatIn(id, at) {
+            tl.fromTo(
+              id,
+              { opacity: 0, y: 110, filter: "blur(10px)" },
+              { opacity: 1, y: 0, filter: "blur(0px)", duration: 0.22, ease: "power3.out" },
+              at,
+            );
+          }
+          function beatOut(id, at) {
+            tl.to(
+              id,
+              { opacity: 0, y: -90, filter: "blur(8px)", duration: 0.18, ease: "power3.in" },
+              at,
+            );
+          }
+
+          /* ---- Beat 1 (0.0–1.6): recibos caen y sello ---- */
+          beatIn("#caos-b1", 0.05);
+          tl.fromTo(
+            "#caos-r1",
+            { y: -420, rotate: -14, opacity: 0 },
+            { y: 0, rotate: -5, opacity: 1, duration: 0.36, ease: "power2.in" },
+            0.22,
+          );
+          tl.fromTo(
+            "#caos-r2",
+            { y: -420, rotate: 12, opacity: 0 },
+            { y: 0, rotate: 4, opacity: 1, duration: 0.36, ease: "power2.in" },
+            0.56,
+          );
+          tl.fromTo(
+            "#caos-r3",
+            { y: -420, rotate: -8, opacity: 0 },
+            { y: 0, rotate: -2, opacity: 1, duration: 0.36, ease: "power2.in" },
+            0.88,
+          );
+          tl.fromTo(
+            "#caos-stamp",
+            { scale: 2.4, opacity: 0, rotate: -10 },
+            { scale: 1, opacity: 1, rotate: -10, duration: 0.2, ease: "power4.in" },
+            1.02,
+          );
+          tl.to("#caos-b1", { y: -3, duration: 1 / 30 }, 1.38);
+          tl.to("#caos-b1", { y: 0, duration: 1 / 30 }, 1.42);
+          beatOut("#caos-b1", 1.52);
+
+          /* ---- Beat 2 (1.72–3.14): Excel con errores ---- */
+          beatIn("#caos-b2", 1.72);
+          tl.fromTo(
+            "#caos-sheet",
+            { y: -420, rotate: -6, opacity: 0 },
+            { y: 0, rotate: 0, opacity: 1, duration: 0.4, ease: "power3.out" },
+            1.85,
+          );
+          tl.fromTo(
+            "#caos-ref",
+            { scale: 0.6, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.2, ease: "back.out(1.7)" },
+            2.3,
+          );
+          tl.fromTo(
+            "#caos-value",
+            { scale: 0.6, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.2, ease: "back.out(1.7)" },
+            2.5,
+          );
+          tl.fromTo(
+            "#caos-time",
+            { scale: 0.4, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.22, ease: "back.out(1.7)" },
+            2.7,
+          );
+          beatOut("#caos-b2", 3.14);
+
+          /* ---- Beat 3 (3.25–4.85): atrasados sin aviso ---- */
+          beatIn("#caos-b3", 3.28);
+          tl.fromTo("#caos-bell-slash", { scaleX: 0 }, { scaleX: 1, duration: 0.18, ease: "power4.in" }, 3.6);
+          tl.fromTo(
+            "#caos-badge1",
+            { scale: 0.4, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.2, ease: "back.out(1.7)" },
+            3.78,
+          );
+          tl.fromTo(
+            "#caos-badge2",
+            { scale: 0.4, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.2, ease: "back.out(1.7)" },
+            3.9,
+          );
+          tl.fromTo(
+            "#caos-badge3",
+            { scale: 0.4, opacity: 0 },
+            { scale: 1, opacity: 1, duration: 0.2, ease: "back.out(1.7)" },
+            4.02,
+          );
+          beatOut("#caos-b3", 4.78);
+
+          /* ---- Beat 4 (4.9–7.0): el costo ---- */
+          beatIn("#caos-b4", 4.92);
+
+          tl.seek(0);
+          window.__timelines = window.__timelines || {};
+          window.__timelines["caos"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>

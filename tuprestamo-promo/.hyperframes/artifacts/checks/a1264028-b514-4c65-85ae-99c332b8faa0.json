@@ -1,0 +1,5010 @@
+{
+  "ok": false,
+  "strict": false,
+  "browserSkipped": false,
+  "lint": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 7,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "duplicate_audio_track",
+        "severity": "warning",
+        "message": "Audible clips overlap on Studio track 9: assets/sfx/whoosh-short.mp3 at 8.5-8.95s and assets/sfx/impact-bass-1.mp3 at 8.9-9.6s. Both play at once whatever their track (the render mixes every audible clip; data-track-index only picks the Studio lane), and Studio draws them over each other in that lane.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "If both should sound (a whoosh into a hit), give one its own data-track-index; the mix does not change. If one is a leftover duplicate, remove it or move it so the windows do not overlap."
+      },
+      {
+        "code": "duplicate_audio_track",
+        "severity": "warning",
+        "message": "Audible clips overlap on Studio track 9: assets/sfx/impact-bass-1.mp3 at 8.9-9.6s and assets/sfx/whoosh.mp3 at 9.5-10s. Both play at once whatever their track (the render mixes every audible clip; data-track-index only picks the Studio lane), and Studio draws them over each other in that lane.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "If both should sound (a whoosh into a hit), give one its own data-track-index; the mix does not change. If one is a leftover duplicate, remove it or move it so the windows do not overlap."
+      },
+      {
+        "code": "duplicate_audio_track",
+        "severity": "warning",
+        "message": "Audible clips overlap on Studio track 9: assets/sfx/whoosh-short.mp3 at 21.5-21.95s and assets/sfx/impact-bass-2.mp3 at 21.9-22.6s. Both play at once whatever their track (the render mixes every audible clip; data-track-index only picks the Studio lane), and Studio draws them over each other in that lane.",
+        "selector": "[data-composition-id]",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "If both should sound (a whoosh into a hit), give one its own data-track-index; the mix does not change. If one is a leftover duplicate, remove it or move it so the windows do not overlap."
+      },
+      {
+        "code": "overlapping_gsap_tweens",
+        "severity": "warning",
+        "message": "GSAP tweens overlap on \"#caos-b1\" for y between 1.70s and 1.70s.",
+        "selector": "#caos-b1",
+        "dataAttributes": {},
+        "sourceFile": "C:\\Users\\orlan\\dev\\product\\prestamos-app\\tuprestamo-promo\\compositions\\caos.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Shorten the earlier tween, move the later tween, or add `overwrite: \"auto\"`."
+      },
+      {
+        "code": "studio_missing_editable_id",
+        "severity": "warning",
+        "message": "<div data-composition-id=\"touch-indicator\" data-start=\"2.05\" data-track-index=\"1\"> has no id, so Studio cannot use a stable edit target for its timeline and canvas controls.",
+        "selector": "[data-composition-id=\"touch-indicator\"]",
+        "dataAttributes": {},
+        "sourceFile": "C:\\Users\\orlan\\dev\\product\\prestamos-app\\tuprestamo-promo\\compositions\\demo-a.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Add a stable, human-readable id such as id=\"hero-title\" or id=\"scene-1-card\" to every timeline-visible element you want agents or Studio to edit."
+      },
+      {
+        "code": "studio_missing_editable_id",
+        "severity": "warning",
+        "message": "<div data-composition-id=\"touch-indicator\" data-start=\"3.55\" data-track-index=\"1\"> has no id, so Studio cannot use a stable edit target for its timeline and canvas controls.",
+        "selector": "[data-composition-id=\"touch-indicator\"]",
+        "dataAttributes": {},
+        "sourceFile": "C:\\Users\\orlan\\dev\\product\\prestamos-app\\tuprestamo-promo\\compositions\\demo-b.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Add a stable, human-readable id such as id=\"hero-title\" or id=\"scene-1-card\" to every timeline-visible element you want agents or Studio to edit."
+      },
+      {
+        "code": "overlapping_gsap_tweens",
+        "severity": "warning",
+        "message": "GSAP tweens overlap on \"#reveal-kicker\" for opacity, y between 0.78s and 0.80s.",
+        "selector": "#reveal-kicker",
+        "dataAttributes": {},
+        "sourceFile": "C:\\Users\\orlan\\dev\\product\\prestamos-app\\tuprestamo-promo\\compositions\\reveal.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "fixHint": "Shorten the earlier tween, move the later tween, or add `overwrite: \"auto\"`."
+      }
+    ],
+    "filesScanned": 8
+  },
+  "runtime": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": []
+  },
+  "layout": {
+    "ok": false,
+    "errorCount": 14,
+    "warningCount": 36,
+    "infoCount": 30,
+    "findings": [
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 17.111,
+        "selector": "span.db-section-title",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 316,
+          "top": 766,
+          "right": 500.16,
+          "bottom": 801,
+          "width": 184.16,
+          "height": 35
+        },
+        "containerSelector": "div.db-sheet-sub",
+        "text": "Ruta de cobro",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 316,
+          "y": 766,
+          "width": 184.16,
+          "height": 35
+        },
+        "firstSeen": 13.296,
+        "lastSeen": 17.111,
+        "occurrences": 23,
+        "heldMs": 3815.0000000000014,
+        "times": [
+          13.296,
+          13.453,
+          13.609,
+          13.765,
+          14,
+          14.547,
+          14.704,
+          14.86,
+          15.017,
+          15.173,
+          15.33,
+          15.486,
+          15.642,
+          15.799,
+          15.955,
+          16.112,
+          16.268,
+          16.425,
+          16.581,
+          16.737,
+          16.894,
+          17.05,
+          17.111
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 17.111,
+        "selector": "#db-card1 > div:nth-of-type(2) > span:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 342.12,
+          "top": 905.99,
+          "right": 443.18,
+          "bottom": 936.06,
+          "width": 101.06,
+          "height": 30.07
+        },
+        "containerSelector": "div.db-panel > div:nth-of-type(2) > span:nth-of-type(1)",
+        "text": "Cuota #3",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 342.12,
+          "y": 905.99,
+          "width": 101.06,
+          "height": 30.07
+        },
+        "firstSeen": 13.296,
+        "lastSeen": 17.111,
+        "occurrences": 25,
+        "heldMs": 3815.0000000000014,
+        "times": [
+          13.296,
+          13.453,
+          13.609,
+          13.765,
+          14,
+          14.078,
+          14.391,
+          14.547,
+          14.704,
+          14.86,
+          15.017,
+          15.173,
+          15.33,
+          15.486,
+          15.642,
+          15.799,
+          15.955,
+          16.112,
+          16.268,
+          16.425,
+          16.581,
+          16.737,
+          16.894,
+          17.05,
+          17.111
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 17.111,
+        "selector": "#db-card1 > div:nth-of-type(2) > span:nth-of-type(2)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 639.23,
+          "top": 903.57,
+          "right": 737.88,
+          "bottom": 938.48,
+          "width": 98.65,
+          "height": 34.91
+        },
+        "containerSelector": "div.db-panel > div:nth-of-type(2) > span:nth-of-type(2)",
+        "text": "$25.00",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 639.23,
+          "y": 903.57,
+          "width": 98.65,
+          "height": 34.91
+        },
+        "firstSeen": 13.296,
+        "lastSeen": 17.111,
+        "occurrences": 25,
+        "heldMs": 3815.0000000000014,
+        "times": [
+          13.296,
+          13.453,
+          13.609,
+          13.765,
+          14,
+          14.078,
+          14.391,
+          14.547,
+          14.704,
+          14.86,
+          15.017,
+          15.173,
+          15.33,
+          15.486,
+          15.642,
+          15.799,
+          15.955,
+          16.112,
+          16.268,
+          16.425,
+          16.581,
+          16.737,
+          16.894,
+          17.05,
+          17.111
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 17.111,
+        "selector": "#db-card1 > div:nth-of-type(1) > div:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 350.53,
+          "top": 851.67,
+          "right": 386.07,
+          "bottom": 877.86,
+          "width": 35.54,
+          "height": 26.19
+        },
+        "containerSelector": "div.db-panel > div:nth-of-type(1) > span:nth-of-type(1)",
+        "text": "MG",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 350.53,
+          "y": 851.67,
+          "width": 35.54,
+          "height": 26.19
+        },
+        "firstSeen": 13.296,
+        "lastSeen": 17.111,
+        "occurrences": 25,
+        "heldMs": 3815.0000000000014,
+        "times": [
+          13.296,
+          13.453,
+          13.609,
+          13.765,
+          14.078,
+          14.235,
+          14.391,
+          14.547,
+          14.704,
+          14.86,
+          15.017,
+          15.173,
+          15.33,
+          15.486,
+          15.642,
+          15.799,
+          15.955,
+          16.112,
+          16.268,
+          16.425,
+          16.581,
+          16.737,
+          16.894,
+          17.05,
+          17.111
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 17.111,
+        "selector": "#db-card1 > div:nth-of-type(1) > span:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 408.08,
+          "top": 846.82,
+          "right": 609.19,
+          "bottom": 881.74,
+          "width": 201.11,
+          "height": 34.92
+        },
+        "containerSelector": "div.db-panel > div:nth-of-type(1) > span:nth-of-type(1)",
+        "text": "María González",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 408.08,
+          "y": 846.82,
+          "width": 201.11,
+          "height": 34.92
+        },
+        "firstSeen": 13.296,
+        "lastSeen": 17.111,
+        "occurrences": 24,
+        "heldMs": 3815.0000000000014,
+        "times": [
+          13.296,
+          13.453,
+          13.609,
+          13.765,
+          14.078,
+          14.235,
+          14.547,
+          14.704,
+          14.86,
+          15.017,
+          15.173,
+          15.33,
+          15.486,
+          15.642,
+          15.799,
+          15.955,
+          16.112,
+          16.268,
+          16.425,
+          16.581,
+          16.737,
+          16.894,
+          17.05,
+          17.111
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 17.111,
+        "selector": "div.db-app > div:nth-of-type(7) > div:nth-of-type(2) > span:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 336,
+          "top": 1224.5,
+          "right": 440.03,
+          "bottom": 1255.5,
+          "width": 104.03,
+          "height": 31
+        },
+        "containerSelector": "div.db-btn.db-btn-cancel",
+        "text": "Cuota #2",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 336,
+          "y": 1224.5,
+          "width": 104.03,
+          "height": 31
+        },
+        "firstSeen": 13.296,
+        "lastSeen": 17.111,
+        "occurrences": 22,
+        "heldMs": 3815.0000000000014,
+        "times": [
+          13.296,
+          13.453,
+          13.609,
+          13.765,
+          14.547,
+          14.704,
+          14.86,
+          15.017,
+          15.173,
+          15.33,
+          15.486,
+          15.642,
+          15.799,
+          15.955,
+          16.112,
+          16.268,
+          16.425,
+          16.581,
+          16.737,
+          16.894,
+          17.05,
+          17.111
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 17.111,
+        "selector": "div.db-app > div:nth-of-type(7) > div:nth-of-type(2) > span:nth-of-type(2)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 642.3,
+          "top": 1222,
+          "right": 744,
+          "bottom": 1258,
+          "width": 101.7,
+          "height": 36
+        },
+        "containerSelector": "#db-confirm",
+        "text": "$25.00",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 642.3,
+          "y": 1222,
+          "width": 101.7,
+          "height": 36
+        },
+        "firstSeen": 13.296,
+        "lastSeen": 17.111,
+        "occurrences": 22,
+        "heldMs": 3815.0000000000014,
+        "times": [
+          13.296,
+          13.453,
+          13.609,
+          13.765,
+          14.547,
+          14.704,
+          14.86,
+          15.017,
+          15.173,
+          15.33,
+          15.486,
+          15.642,
+          15.799,
+          15.955,
+          16.112,
+          16.268,
+          16.425,
+          16.581,
+          16.737,
+          16.894,
+          17.05,
+          17.111
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 17.207,
+        "selector": "span.dc-section-title",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 316,
+          "top": 766,
+          "right": 500.16,
+          "bottom": 801,
+          "width": 184.16,
+          "height": 35
+        },
+        "containerSelector": "div.dc-sheet-sub",
+        "text": "Ruta de cobro",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 316,
+          "y": 766,
+          "width": 184.16,
+          "height": 35
+        },
+        "firstSeen": 17.207,
+        "lastSeen": 18.302,
+        "occurrences": 8,
+        "heldMs": 1094.9999999999989,
+        "times": [
+          17.207,
+          17.363,
+          17.52,
+          17.676,
+          17.832,
+          17.989,
+          18.145,
+          18.302
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 17.207,
+        "selector": "div.dc-app > div:nth-of-type(5) > div:nth-of-type(1) > div:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 344.67,
+          "top": 850.5,
+          "right": 381.31,
+          "bottom": 877.5,
+          "width": 36.64,
+          "height": 27
+        },
+        "containerSelector": "div.dc-panel > div:nth-of-type(1) > span:nth-of-type(1)",
+        "text": "MG",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 344.67,
+          "y": 850.5,
+          "width": 36.64,
+          "height": 27
+        },
+        "firstSeen": 17.207,
+        "lastSeen": 18.458,
+        "occurrences": 9,
+        "heldMs": 1250.9999999999977,
+        "times": [
+          17.207,
+          17.363,
+          17.52,
+          17.676,
+          17.832,
+          17.989,
+          18.145,
+          18.302,
+          18.458
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 17.207,
+        "selector": "div.dc-app > div:nth-of-type(5) > div:nth-of-type(1) > span:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 404,
+          "top": 845.5,
+          "right": 611.33,
+          "bottom": 881.5,
+          "width": 207.33,
+          "height": 36
+        },
+        "containerSelector": "div.dc-panel > div:nth-of-type(1) > span:nth-of-type(1)",
+        "text": "María González",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 404,
+          "y": 845.5,
+          "width": 207.33,
+          "height": 36
+        },
+        "firstSeen": 17.207,
+        "lastSeen": 18.458,
+        "occurrences": 9,
+        "heldMs": 1250.9999999999977,
+        "times": [
+          17.207,
+          17.363,
+          17.52,
+          17.676,
+          17.832,
+          17.989,
+          18.145,
+          18.302,
+          18.458
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 17.207,
+        "selector": "div.dc-app > div:nth-of-type(5) > div:nth-of-type(2) > span:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 336,
+          "top": 906.5,
+          "right": 460.91,
+          "bottom": 937.5,
+          "width": 124.91,
+          "height": 31
+        },
+        "containerSelector": "div.dc-panel > div:nth-of-type(2) > span:nth-of-type(1)",
+        "text": "Cuota #3 · Pagada",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 336,
+          "y": 906.5,
+          "width": 124.91,
+          "height": 31
+        },
+        "firstSeen": 17.207,
+        "lastSeen": 18.302,
+        "occurrences": 8,
+        "heldMs": 1094.9999999999989,
+        "times": [
+          17.207,
+          17.363,
+          17.52,
+          17.676,
+          17.832,
+          17.989,
+          18.145,
+          18.302
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 17.207,
+        "selector": "div.dc-app > div:nth-of-type(5) > div:nth-of-type(2) > span:nth-of-type(2)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 642.3,
+          "top": 904,
+          "right": 744,
+          "bottom": 940,
+          "width": 101.7,
+          "height": 36
+        },
+        "containerSelector": "div.dc-panel > div:nth-of-type(2) > span:nth-of-type(2)",
+        "text": "$25.00",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 642.3,
+          "y": 904,
+          "width": 101.7,
+          "height": 36
+        },
+        "firstSeen": 17.207,
+        "lastSeen": 18.458,
+        "occurrences": 9,
+        "heldMs": 1250.9999999999977,
+        "times": [
+          17.207,
+          17.363,
+          17.52,
+          17.676,
+          17.832,
+          17.989,
+          18.145,
+          18.302,
+          18.458
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 17.207,
+        "selector": "div.dc-app > div:nth-of-type(7) > div:nth-of-type(2) > span:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 336,
+          "top": 1224.5,
+          "right": 440.03,
+          "bottom": 1255.5,
+          "width": 104.03,
+          "height": 31
+        },
+        "containerSelector": "div.dc-btn.dc-btn-cancel",
+        "text": "Cuota #2",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 336,
+          "y": 1224.5,
+          "width": 104.03,
+          "height": 31
+        },
+        "firstSeen": 17.207,
+        "lastSeen": 18.302,
+        "occurrences": 8,
+        "heldMs": 1094.9999999999989,
+        "times": [
+          17.207,
+          17.363,
+          17.52,
+          17.676,
+          17.832,
+          17.989,
+          18.145,
+          18.302
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "error",
+        "time": 17.207,
+        "selector": "div.dc-app > div:nth-of-type(7) > div:nth-of-type(2) > span:nth-of-type(2)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 642.3,
+          "top": 1222,
+          "right": 744,
+          "bottom": 1258,
+          "width": 101.7,
+          "height": 36
+        },
+        "containerSelector": "#dc-confirm",
+        "text": "$25.00",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 642.3,
+          "y": 1222,
+          "width": 101.7,
+          "height": 36
+        },
+        "firstSeen": 17.207,
+        "lastSeen": 18.302,
+        "occurrences": 8,
+        "heldMs": 1094.9999999999989,
+        "times": [
+          17.207,
+          17.363,
+          17.52,
+          17.676,
+          17.832,
+          17.989,
+          18.145,
+          18.302
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "warning",
+        "time": 14.078,
+        "selector": "div.db-app > div:nth-of-type(6) > div:nth-of-type(1) > div:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 347.61,
+          "top": 1009.5,
+          "right": 378.38,
+          "bottom": 1036.5,
+          "width": 30.77,
+          "height": 27
+        },
+        "containerSelector": "label.db-input-label",
+        "text": "CP",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 347.61,
+          "y": 1009.5,
+          "width": 30.77,
+          "height": 27
+        },
+        "firstSeen": 14,
+        "lastSeen": 14.391,
+        "occurrences": 4,
+        "heldMs": 391,
+        "times": [
+          14,
+          14.078,
+          14.235,
+          14.391
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "warning",
+        "time": 14.078,
+        "selector": "div.db-app > div:nth-of-type(6) > div:nth-of-type(1) > span:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 404,
+          "top": 1004.5,
+          "right": 573.34,
+          "bottom": 1040.5,
+          "width": 169.34,
+          "height": 36
+        },
+        "containerSelector": "label.db-input-label",
+        "text": "Carlos Pérez",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 404,
+          "y": 1004.5,
+          "width": 169.34,
+          "height": 36
+        },
+        "firstSeen": 14,
+        "lastSeen": 14.391,
+        "occurrences": 4,
+        "heldMs": 391,
+        "times": [
+          14,
+          14.078,
+          14.235,
+          14.391
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "warning",
+        "time": 14.078,
+        "selector": "div.db-app > div:nth-of-type(7) > div:nth-of-type(1) > div:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 345.89,
+          "top": 1168.5,
+          "right": 380.09,
+          "bottom": 1195.5,
+          "width": 34.2,
+          "height": 27
+        },
+        "containerSelector": "div.db-btn.db-btn-cancel",
+        "text": "RM",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 345.89,
+          "y": 1168.5,
+          "width": 34.2,
+          "height": 27
+        },
+        "firstSeen": 14,
+        "lastSeen": 14.391,
+        "occurrences": 3,
+        "heldMs": 391,
+        "times": [
+          14,
+          14.078,
+          14.391
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "warning",
+        "time": 14.078,
+        "selector": "div.db-app > div:nth-of-type(7) > div:nth-of-type(1) > span:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 404,
+          "top": 1163.5,
+          "right": 594.08,
+          "bottom": 1199.5,
+          "width": 190.08,
+          "height": 36
+        },
+        "containerSelector": "div.db-btn.db-btn-cancel",
+        "text": "Rosa Martínez",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 404,
+          "y": 1163.5,
+          "width": 190.08,
+          "height": 36
+        },
+        "firstSeen": 14,
+        "lastSeen": 14.391,
+        "occurrences": 3,
+        "heldMs": 391,
+        "times": [
+          14,
+          14.078,
+          14.391
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "warning",
+        "time": 14.078,
+        "selector": "div.db-app > div:nth-of-type(6) > div:nth-of-type(2) > span:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 336,
+          "top": 1065.5,
+          "right": 440.56,
+          "bottom": 1096.5,
+          "width": 104.56,
+          "height": 31
+        },
+        "containerSelector": "div.db-input",
+        "text": "Cuota #5",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 336,
+          "y": 1065.5,
+          "width": 104.56,
+          "height": 31
+        },
+        "firstSeen": 13.922,
+        "lastSeen": 14.391,
+        "occurrences": 3,
+        "heldMs": 468.99999999999943,
+        "times": [
+          13.922,
+          14.078,
+          14.391
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "warning",
+        "time": 14.078,
+        "selector": "div.db-kpis > div:nth-of-type(3) > span:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 334,
+          "top": 660,
+          "right": 391.2,
+          "bottom": 715,
+          "width": 57.2,
+          "height": 55
+        },
+        "containerSelector": "div.db-sheet-title",
+        "text": "12",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 334,
+          "y": 660,
+          "width": 57.2,
+          "height": 55
+        },
+        "firstSeen": 14.078,
+        "lastSeen": 14.391,
+        "occurrences": 3,
+        "heldMs": 313.0000000000006,
+        "times": [
+          14.078,
+          14.235,
+          14.391
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "warning",
+        "time": 14.078,
+        "selector": "div.db-kpis > div:nth-of-type(4) > span:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 565,
+          "top": 660,
+          "right": 622.2,
+          "bottom": 715,
+          "width": 57.2,
+          "height": 55
+        },
+        "containerSelector": "div.db-sheet-title",
+        "text": "24",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 565,
+          "y": 660,
+          "width": 57.2,
+          "height": 55
+        },
+        "firstSeen": 14.078,
+        "lastSeen": 14.391,
+        "occurrences": 3,
+        "heldMs": 313.0000000000006,
+        "times": [
+          14.078,
+          14.235,
+          14.391
+        ]
+      },
+      {
+        "selector": "#hook-line1",
+        "dataAttributes": {},
+        "sourceFile": "compositions/hook.html",
+        "bbox": {
+          "x": 140.23,
+          "y": 472.45,
+          "width": 799.52,
+          "height": 290.55
+        },
+        "time": 1.556,
+        "rect": {
+          "left": 140.23,
+          "top": 472.45,
+          "right": 939.75,
+          "bottom": 763,
+          "width": 799.52,
+          "height": 290.55
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "¿CUÁNTO TE DEBEN HOY?",
+        "message": "<h1> \"¿CUÁNTO TE DEBEN HOY?\" is outside the safe area: YouTube Shorts (right edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 1.556,
+        "lastSeen": 1.556,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          1.556
+        ]
+      },
+      {
+        "selector": "#caos-b1 > div:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/caos.html",
+        "bbox": {
+          "x": 227.08,
+          "y": 239,
+          "width": 625.83,
+          "height": 219.83
+        },
+        "time": 4.667,
+        "rect": {
+          "left": 227.08,
+          "top": 239,
+          "right": 852.91,
+          "bottom": 458.83,
+          "width": 625.83,
+          "height": 219.83
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "Cuotas que seolvidan",
+        "message": "<div> \"Cuotas que seolvidan\" is outside the safe area: TikTok (top edge), Instagram Reels (top edge), YouTube Shorts (top edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 4.667,
+        "lastSeen": 4.667,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          4.667
+        ]
+      },
+      {
+        "selector": "#caos-b3 > div:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/caos.html",
+        "bbox": {
+          "x": 244.64,
+          "y": 172.85,
+          "width": 590.7,
+          "height": 219.83
+        },
+        "time": 7.778,
+        "rect": {
+          "left": 244.64,
+          "top": 172.85,
+          "right": 835.34,
+          "bottom": 392.68,
+          "width": 590.7,
+          "height": 219.83
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "Atrasados sinningún aviso",
+        "message": "<div> \"Atrasados sinningún aviso\" is outside the safe area: TikTok (top edge), Instagram Reels (top edge), YouTube Shorts (top edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 7.778,
+        "lastSeen": 7.778,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          7.778
+        ]
+      },
+      {
+        "selector": "#caos-badge3",
+        "dataAttributes": {},
+        "sourceFile": "compositions/caos.html",
+        "bbox": {
+          "x": 715.06,
+          "y": 806.5,
+          "width": 221.41,
+          "height": 37
+        },
+        "time": 7.778,
+        "rect": {
+          "left": 715.06,
+          "top": 806.5,
+          "right": 936.47,
+          "bottom": 843.5,
+          "width": 221.41,
+          "height": 37
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "ATRASADO ×12",
+        "message": "<div> \"ATRASADO ×12\" is outside the safe area: TikTok (right edge), YouTube Shorts (right edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 7.778,
+        "lastSeen": 7.778,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          7.778
+        ]
+      },
+      {
+        "selector": "#caos-b3 > div:nth-of-type(2) > div:nth-of-type(3)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/caos.html",
+        "bbox": {
+          "x": 0,
+          "y": 1039.5,
+          "width": 432.41,
+          "height": 50
+        },
+        "time": 7.778,
+        "rect": {
+          "left": 0,
+          "top": 1039.5,
+          "right": 432.41,
+          "bottom": 1089.5,
+          "width": 432.41,
+          "height": 50
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "¿Quién no te pagó hoy?",
+        "message": "<div> \"¿Quién no te pagó hoy?\" is outside the safe area: TikTok (left edge), Instagram Reels (left edge), YouTube Shorts (left edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 7.778,
+        "lastSeen": 7.778,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          7.778
+        ]
+      },
+      {
+        "selector": "div.da-app > div:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-a.html",
+        "bbox": {
+          "x": 316,
+          "y": 271,
+          "width": 200.22,
+          "height": 50
+        },
+        "time": 10.889,
+        "rect": {
+          "left": 316,
+          "top": 271,
+          "right": 516.22,
+          "bottom": 321,
+          "width": 200.22,
+          "height": 50
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "Dashboard",
+        "message": "<div> \"Dashboard\" is outside the safe area: YouTube Shorts (top edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 10.889,
+        "lastSeen": 10.889,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          10.889
+        ]
+      },
+      {
+        "selector": "div.db-app > div:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 316,
+          "y": 271,
+          "width": 200.22,
+          "height": 50
+        },
+        "time": 14,
+        "rect": {
+          "left": 316,
+          "top": 271,
+          "right": 516.22,
+          "bottom": 321,
+          "width": 200.22,
+          "height": 50
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "Dashboard",
+        "message": "<div> \"Dashboard\" is outside the safe area: YouTube Shorts (top edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "selector": "div.db-app > div:nth-of-type(7) > div:nth-of-type(2) > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 336,
+          "y": 1224.5,
+          "width": 104.03,
+          "height": 31
+        },
+        "time": 14,
+        "rect": {
+          "left": 336,
+          "top": 1224.5,
+          "right": 440.03,
+          "bottom": 1255.5,
+          "width": 104.03,
+          "height": 31
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "Cuota #2",
+        "message": "<span> \"Cuota #2\" is outside the safe area: Instagram Reels (bottom edge), YouTube Shorts (bottom edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "selector": "div.db-app > div:nth-of-type(7) > div:nth-of-type(2) > span:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 642.3,
+          "y": 1222,
+          "width": 101.7,
+          "height": 36
+        },
+        "time": 14,
+        "rect": {
+          "left": 642.3,
+          "top": 1222,
+          "right": 744,
+          "bottom": 1258,
+          "width": 101.7,
+          "height": 36
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "$25.00",
+        "message": "<span> \"$25.00\" is outside the safe area: Instagram Reels (bottom edge), YouTube Shorts (bottom edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "selector": "div.db-app > div:nth-of-type(8) > div:nth-of-type(1) > div:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 348.88,
+          "y": 1327.5,
+          "width": 28.25,
+          "height": 27
+        },
+        "time": 14,
+        "rect": {
+          "left": 348.88,
+          "top": 1327.5,
+          "right": 377.13,
+          "bottom": 1354.5,
+          "width": 28.25,
+          "height": 27
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "LG",
+        "message": "<div> \"LG\" is outside the safe area: TikTok (bottom edge), Instagram Reels (bottom edge), YouTube Shorts (bottom edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "selector": "div.db-app > div:nth-of-type(8) > div:nth-of-type(1) > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 404,
+          "y": 1322.5,
+          "width": 156.14,
+          "height": 36
+        },
+        "time": 14,
+        "rect": {
+          "left": 404,
+          "top": 1322.5,
+          "right": 560.14,
+          "bottom": 1358.5,
+          "width": 156.14,
+          "height": 36
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "Luis Gómez",
+        "message": "<span> \"Luis Gómez\" is outside the safe area: TikTok (bottom edge), Instagram Reels (bottom edge), YouTube Shorts (bottom edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "selector": "div.db-app > div:nth-of-type(8) > div:nth-of-type(2) > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 336,
+          "y": 1383.5,
+          "width": 98.33,
+          "height": 31
+        },
+        "time": 14,
+        "rect": {
+          "left": 336,
+          "top": 1383.5,
+          "right": 434.33,
+          "bottom": 1414.5,
+          "width": 98.33,
+          "height": 31
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "Cuota #1",
+        "message": "<span> \"Cuota #1\" is outside the safe area: TikTok (bottom edge), Instagram Reels (bottom edge), YouTube Shorts (bottom edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "selector": "div.db-app > div:nth-of-type(8) > div:nth-of-type(2) > span:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 642.3,
+          "y": 1381,
+          "width": 101.7,
+          "height": 36
+        },
+        "time": 14,
+        "rect": {
+          "left": 642.3,
+          "top": 1381,
+          "right": 744,
+          "bottom": 1417,
+          "width": 101.7,
+          "height": 36
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "$20.00",
+        "message": "<span> \"$20.00\" is outside the safe area: TikTok (bottom edge), Instagram Reels (bottom edge), YouTube Shorts (bottom edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "selector": "div.db-btn.db-btn-cancel",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 361.72,
+          "y": 1280,
+          "width": 125.56,
+          "height": 37
+        },
+        "time": 14,
+        "rect": {
+          "left": 361.72,
+          "top": 1280,
+          "right": 487.28,
+          "bottom": 1317,
+          "width": 125.56,
+          "height": 37
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "Cancelar",
+        "message": "<div> \"Cancelar\" is outside the safe area: TikTok (bottom edge), Instagram Reels (bottom edge), YouTube Shorts (bottom edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "selector": "#db-confirm",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 586.16,
+          "y": 1278,
+          "width": 142.68,
+          "height": 37
+        },
+        "time": 14,
+        "rect": {
+          "left": 586.16,
+          "top": 1278,
+          "right": 728.84,
+          "bottom": 1315,
+          "width": 142.68,
+          "height": 37
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "Confirmar",
+        "message": "<div> \"Confirmar\" is outside the safe area: TikTok (bottom edge), Instagram Reels (bottom edge), YouTube Shorts (bottom edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "selector": "div.dc-sheet-title",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 377.23,
+          "y": 1328.79,
+          "width": 196.02,
+          "height": 36.01
+        },
+        "time": 20.222,
+        "rect": {
+          "left": 377.23,
+          "top": 1328.79,
+          "right": 573.25,
+          "bottom": 1364.8,
+          "width": 196.02,
+          "height": 36.01
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "Registrar Pago",
+        "message": "<div> \"Registrar Pago\" is outside the safe area: TikTok (bottom edge), Instagram Reels (bottom edge), YouTube Shorts (bottom edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 20.222,
+        "lastSeen": 20.222,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          20.222
+        ]
+      },
+      {
+        "selector": "div.dc-sheet-sub",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 377.23,
+          "y": 1369.84,
+          "width": 219.82,
+          "height": 23.05
+        },
+        "time": 20.222,
+        "rect": {
+          "left": 377.23,
+          "top": 1369.84,
+          "right": 597.05,
+          "bottom": 1392.89,
+          "width": 219.82,
+          "height": 23.05
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "Cuota #3 · María González",
+        "message": "<div> \"Cuota #3 · María González\" is outside the safe area: TikTok (bottom edge), Instagram Reels (bottom edge), YouTube Shorts (bottom edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 20.222,
+        "lastSeen": 20.222,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          20.222
+        ]
+      },
+      {
+        "selector": "div.dc-panel > div:nth-of-type(1) > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 393.08,
+          "y": 1428.18,
+          "width": 117.52,
+          "height": 25.21
+        },
+        "time": 20.222,
+        "rect": {
+          "left": 393.08,
+          "top": 1428.18,
+          "right": 510.6,
+          "bottom": 1453.39,
+          "width": 117.52,
+          "height": 25.21
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "Monto cuota:",
+        "message": "<span> \"Monto cuota:\" is outside the safe area: TikTok (bottom edge), Instagram Reels (bottom edge), YouTube Shorts (bottom edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 20.222,
+        "lastSeen": 20.222,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          20.222
+        ]
+      },
+      {
+        "selector": "div.dc-panel > div:nth-of-type(1) > span:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 615.87,
+          "y": 1428.18,
+          "width": 71.05,
+          "height": 25.21
+        },
+        "time": 20.222,
+        "rect": {
+          "left": 615.87,
+          "top": 1428.18,
+          "right": 686.92,
+          "bottom": 1453.39,
+          "width": 71.05,
+          "height": 25.21
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "$25.00",
+        "message": "<span> \"$25.00\" is outside the safe area: TikTok (bottom edge), Instagram Reels (bottom edge), YouTube Shorts (bottom edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 20.222,
+        "lastSeen": 20.222,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          20.222
+        ]
+      },
+      {
+        "selector": "div.dc-panel > div:nth-of-type(2) > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 393.08,
+          "y": 1465.63,
+          "width": 99.35,
+          "height": 25.21
+        },
+        "time": 20.222,
+        "rect": {
+          "left": 393.08,
+          "top": 1465.63,
+          "right": 492.43,
+          "bottom": 1490.84,
+          "width": 99.35,
+          "height": 25.21
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "Ya pagado:",
+        "message": "<span> \"Ya pagado:\" is outside the safe area: TikTok (bottom edge), Instagram Reels (bottom edge), YouTube Shorts (bottom edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 20.222,
+        "lastSeen": 20.222,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          20.222
+        ]
+      },
+      {
+        "selector": "div.dc-panel > div:nth-of-type(2) > span:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 629.18,
+          "y": 1465.63,
+          "width": 57.74,
+          "height": 25.21
+        },
+        "time": 20.222,
+        "rect": {
+          "left": 629.18,
+          "top": 1465.63,
+          "right": 686.92,
+          "bottom": 1490.84,
+          "width": 57.74,
+          "height": 25.21
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "$0.00",
+        "message": "<span> \"$0.00\" is outside the safe area: TikTok (bottom edge), Instagram Reels (bottom edge), YouTube Shorts (bottom edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 20.222,
+        "lastSeen": 20.222,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          20.222
+        ]
+      },
+      {
+        "selector": "div.dc-panel > div:nth-of-type(3) > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 393.08,
+          "y": 1503.08,
+          "width": 149.17,
+          "height": 25.21
+        },
+        "time": 20.222,
+        "rect": {
+          "left": 393.08,
+          "top": 1503.08,
+          "right": 542.25,
+          "bottom": 1528.29,
+          "width": 149.17,
+          "height": 25.21
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "Saldo pendiente:",
+        "message": "<span> \"Saldo pendiente:\" is outside the safe area: TikTok (bottom edge), Instagram Reels (bottom edge), YouTube Shorts (bottom edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 20.222,
+        "lastSeen": 20.222,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          20.222
+        ]
+      },
+      {
+        "selector": "div.dc-panel > div:nth-of-type(3) > span:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 615.87,
+          "y": 1503.08,
+          "width": 71.05,
+          "height": 25.21
+        },
+        "time": 20.222,
+        "rect": {
+          "left": 615.87,
+          "top": 1503.08,
+          "right": 686.92,
+          "bottom": 1528.29,
+          "width": 71.05,
+          "height": 25.21
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "$25.00",
+        "message": "<span> \"$25.00\" is outside the safe area: TikTok (bottom edge), Instagram Reels (bottom edge), YouTube Shorts (bottom edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 20.222,
+        "lastSeen": 20.222,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          20.222
+        ]
+      },
+      {
+        "selector": "label.dc-input-label",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 377.23,
+          "y": 1565.02,
+          "width": 130.56,
+          "height": 23.77
+        },
+        "time": 20.222,
+        "rect": {
+          "left": 377.23,
+          "top": 1565.02,
+          "right": 507.79,
+          "bottom": 1588.79,
+          "width": 130.56,
+          "height": 23.77
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "Monto a pagar",
+        "message": "<label> \"Monto a pagar\" is outside the safe area: TikTok (bottom edge), Instagram Reels (bottom edge), YouTube Shorts (bottom edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 20.222,
+        "lastSeen": 20.222,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          20.222
+        ]
+      },
+      {
+        "selector": "div.dc-input",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 393.08,
+          "y": 1612.55,
+          "width": 86.28,
+          "height": 30.25
+        },
+        "time": 20.222,
+        "rect": {
+          "left": 393.08,
+          "top": 1612.55,
+          "right": 479.36,
+          "bottom": 1642.8,
+          "width": 86.28,
+          "height": 30.25
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "$25.00",
+        "message": "<div> \"$25.00\" is outside the safe area: TikTok (bottom edge), Instagram Reels (bottom edge), YouTube Shorts (bottom edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 20.222,
+        "lastSeen": 20.222,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          20.222
+        ]
+      },
+      {
+        "selector": "div.dc-btn.dc-btn-cancel",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 411.6,
+          "y": 1695.37,
+          "width": 90.43,
+          "height": 26.65
+        },
+        "time": 20.222,
+        "rect": {
+          "left": 411.6,
+          "top": 1695.37,
+          "right": 502.03,
+          "bottom": 1722.02,
+          "width": 90.43,
+          "height": 26.65
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "Cancelar",
+        "message": "<div> \"Cancelar\" is outside the safe area: TikTok (bottom edge), Instagram Reels (bottom edge), YouTube Shorts (bottom edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 20.222,
+        "lastSeen": 20.222,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          20.222
+        ]
+      },
+      {
+        "selector": "#dc-confirm",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 574.78,
+          "y": 1694.39,
+          "width": 99.68,
+          "height": 25.85
+        },
+        "time": 20.222,
+        "rect": {
+          "left": 574.78,
+          "top": 1694.39,
+          "right": 674.46,
+          "bottom": 1720.24,
+          "width": 99.68,
+          "height": 25.85
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "Confirmar",
+        "message": "<div> \"Confirmar\" is outside the safe area: TikTok (bottom edge), Instagram Reels (bottom edge), YouTube Shorts (bottom edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 20.222,
+        "lastSeen": 20.222,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          20.222
+        ]
+      },
+      {
+        "selector": "#ci-tagline",
+        "dataAttributes": {},
+        "sourceFile": "compositions/cierre.html",
+        "bbox": {
+          "x": 124.83,
+          "y": 720.41,
+          "width": 830.34,
+          "height": 140
+        },
+        "time": 23.333,
+        "rect": {
+          "left": 124.83,
+          "top": 720.41,
+          "right": 955.17,
+          "bottom": 860.41,
+          "width": 830.34,
+          "height": 140
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "Control total de tu cartera desde tu celular",
+        "message": "<p> \"Control total de tu cartera desde tu celular\" is outside the safe area: TikTok (right edge), YouTube Shorts (right edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 23.333,
+        "lastSeen": 26.444,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          23.333,
+          26.444
+        ]
+      },
+      {
+        "selector": "#ci-cta-text",
+        "dataAttributes": {},
+        "sourceFile": "compositions/cierre.html",
+        "bbox": {
+          "x": 270.72,
+          "y": 948.72,
+          "width": 602.55,
+          "height": 55
+        },
+        "time": 26.444,
+        "rect": {
+          "left": 270.72,
+          "top": 948.72,
+          "right": 873.27,
+          "bottom": 1003.72,
+          "width": 602.55,
+          "height": 55
+        },
+        "code": "outside_safe_zone",
+        "severity": "warning",
+        "text": "Escríbeme para probarlo hoy",
+        "message": "<span> \"Escríbeme para probarlo hoy\" is outside the safe area: TikTok (right edge).",
+        "fixHint": "Move the text inside the safe area, or mark text meant to sit there with data-layout-allow-safe-zone.",
+        "firstSeen": 26.444,
+        "lastSeen": 26.444,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          26.444
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "info",
+        "time": 3.754,
+        "selector": "#caos-b1 > div:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 227.08,
+          "top": 239,
+          "right": 852.91,
+          "bottom": 458.83,
+          "width": 625.83,
+          "height": 219.83
+        },
+        "containerSelector": "#caos-r1 > div:nth-of-type(1) > span:nth-of-type(2)",
+        "text": "Cuotas que se olvidan",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/caos.html",
+        "bbox": {
+          "x": 227.08,
+          "y": 239,
+          "width": 625.83,
+          "height": 219.83
+        },
+        "firstSeen": 3.754,
+        "lastSeen": 4.067,
+        "occurrences": 2,
+        "heldMs": 313.00000000000017,
+        "times": [
+          3.754,
+          4.067
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "info",
+        "time": 4.849,
+        "selector": "#caos-r3 > div:nth-of-type(1) > span:nth-of-type(2)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 618.14,
+          "top": 827.85,
+          "right": 739.33,
+          "bottom": 874.01,
+          "width": 121.19,
+          "height": 46.16
+        },
+        "containerSelector": "#caos-stamp",
+        "text": "$20.00",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/caos.html",
+        "bbox": {
+          "x": 618.14,
+          "y": 827.85,
+          "width": 121.19,
+          "height": 46.16
+        },
+        "firstSeen": 4.849,
+        "lastSeen": 4.849,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          4.849
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 14,
+        "selector": "div.db-kpis > div:nth-of-type(3) > span:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 334,
+          "top": 660,
+          "right": 391.2,
+          "bottom": 715,
+          "width": 57.2,
+          "height": 55
+        },
+        "containerSelector": "#db-sheet",
+        "text": "12",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 0.33,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 334,
+          "y": 660,
+          "width": 57.2,
+          "height": 55
+        },
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 14,
+        "selector": "div.db-kpis > div:nth-of-type(4) > span:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 565,
+          "top": 660,
+          "right": 622.2,
+          "bottom": 715,
+          "width": 57.2,
+          "height": 55
+        },
+        "containerSelector": "#db-sheet",
+        "text": "24",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 0.33,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 565,
+          "y": 660,
+          "width": 57.2,
+          "height": 55
+        },
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 14,
+        "selector": "span.db-section-title",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 316,
+          "top": 766,
+          "right": 500.16,
+          "bottom": 801,
+          "width": 184.16,
+          "height": 35
+        },
+        "containerSelector": "#db-sheet",
+        "text": "Ruta de cobro",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 316,
+          "y": 766,
+          "width": 184.16,
+          "height": 35
+        },
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 14,
+        "selector": "span.db-section-amount",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 676.31,
+          "top": 768,
+          "right": 764,
+          "bottom": 799,
+          "width": 87.69,
+          "height": 31
+        },
+        "containerSelector": "#db-sheet",
+        "text": "$85.00",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 676.31,
+          "y": 768,
+          "width": 87.69,
+          "height": 31
+        },
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 14,
+        "selector": "#db-card1 > div:nth-of-type(1) > div:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 350.53,
+          "top": 851.67,
+          "right": 386.07,
+          "bottom": 877.86,
+          "width": 35.54,
+          "height": 26.19
+        },
+        "containerSelector": "#db-sheet",
+        "text": "MG",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 350.53,
+          "y": 851.67,
+          "width": 35.54,
+          "height": 26.19
+        },
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 14,
+        "selector": "#db-card1 > div:nth-of-type(1) > span:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 408.08,
+          "top": 846.82,
+          "right": 609.19,
+          "bottom": 881.74,
+          "width": 201.11,
+          "height": 34.92
+        },
+        "containerSelector": "#db-sheet",
+        "text": "María González",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 408.08,
+          "y": 846.82,
+          "width": 201.11,
+          "height": 34.92
+        },
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 14,
+        "selector": "#db-card1 > div:nth-of-type(2) > span:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 342.12,
+          "top": 905.99,
+          "right": 443.18,
+          "bottom": 936.06,
+          "width": 101.06,
+          "height": 30.07
+        },
+        "containerSelector": "div.db-panel",
+        "text": "Cuota #3",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 342.12,
+          "y": 905.99,
+          "width": 101.06,
+          "height": 30.07
+        },
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 14,
+        "selector": "#db-card1 > div:nth-of-type(2) > span:nth-of-type(2)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 639.23,
+          "top": 903.57,
+          "right": 737.88,
+          "bottom": 938.48,
+          "width": 98.65,
+          "height": 34.92
+        },
+        "containerSelector": "div.db-panel",
+        "text": "$25.00",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 639.23,
+          "y": 903.57,
+          "width": 98.65,
+          "height": 34.92
+        },
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 14,
+        "selector": "div.db-app > div:nth-of-type(6) > div:nth-of-type(1) > div:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 347.61,
+          "top": 1009.5,
+          "right": 378.38,
+          "bottom": 1036.5,
+          "width": 30.77,
+          "height": 27
+        },
+        "containerSelector": "div.db-panel",
+        "text": "CP",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 347.61,
+          "y": 1009.5,
+          "width": 30.77,
+          "height": 27
+        },
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 14,
+        "selector": "div.db-app > div:nth-of-type(6) > div:nth-of-type(1) > span:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 404,
+          "top": 1004.5,
+          "right": 573.34,
+          "bottom": 1040.5,
+          "width": 169.34,
+          "height": 36
+        },
+        "containerSelector": "div.db-panel",
+        "text": "Carlos Pérez",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 404,
+          "y": 1004.5,
+          "width": 169.34,
+          "height": 36
+        },
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 14,
+        "selector": "div.db-app > div:nth-of-type(6) > div:nth-of-type(2) > span:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 336,
+          "top": 1065.5,
+          "right": 440.56,
+          "bottom": 1096.5,
+          "width": 104.56,
+          "height": 31
+        },
+        "containerSelector": "#db-sheet",
+        "text": "Cuota #5",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 336,
+          "y": 1065.5,
+          "width": 104.56,
+          "height": 31
+        },
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 14,
+        "selector": "div.db-app > div:nth-of-type(6) > div:nth-of-type(2) > span:nth-of-type(2)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 642.3,
+          "top": 1063,
+          "right": 744,
+          "bottom": 1099,
+          "width": 101.7,
+          "height": 36
+        },
+        "containerSelector": "#db-sheet",
+        "text": "$15.00",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 642.3,
+          "y": 1063,
+          "width": 101.7,
+          "height": 36
+        },
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 14,
+        "selector": "div.db-app > div:nth-of-type(7) > div:nth-of-type(1) > div:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 345.89,
+          "top": 1168.5,
+          "right": 380.09,
+          "bottom": 1195.5,
+          "width": 34.2,
+          "height": 27
+        },
+        "containerSelector": "div.db-input",
+        "text": "RM",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 345.89,
+          "y": 1168.5,
+          "width": 34.2,
+          "height": 27
+        },
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 14,
+        "selector": "div.db-app > div:nth-of-type(7) > div:nth-of-type(1) > span:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 404,
+          "top": 1163.5,
+          "right": 594.08,
+          "bottom": 1199.5,
+          "width": 190.08,
+          "height": 36
+        },
+        "containerSelector": "div.db-input",
+        "text": "Rosa Martínez",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 404,
+          "y": 1163.5,
+          "width": 190.08,
+          "height": 36
+        },
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 14,
+        "selector": "div.db-app > div:nth-of-type(7) > div:nth-of-type(2) > span:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 336,
+          "top": 1224.5,
+          "right": 440.03,
+          "bottom": 1255.5,
+          "width": 104.03,
+          "height": 31
+        },
+        "containerSelector": "#db-sheet",
+        "text": "Cuota #2",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 336,
+          "y": 1224.5,
+          "width": 104.03,
+          "height": 31
+        },
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 14,
+        "selector": "div.db-app > div:nth-of-type(7) > div:nth-of-type(2) > span:nth-of-type(2)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 642.3,
+          "top": 1222,
+          "right": 744,
+          "bottom": 1258,
+          "width": 101.7,
+          "height": 36
+        },
+        "containerSelector": "#db-sheet",
+        "text": "$25.00",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 642.3,
+          "y": 1222,
+          "width": 101.7,
+          "height": 36
+        },
+        "firstSeen": 14,
+        "lastSeen": 17.111,
+        "occurrences": 2,
+        "heldMs": 0,
+        "times": [
+          14,
+          17.111
+        ]
+      },
+      {
+        "code": "content_overlap",
+        "severity": "info",
+        "time": 14.235,
+        "selector": "div.db-kpis > div:nth-of-type(3) > div:nth-of-type(1) > span:nth-of-type(1)",
+        "message": "Two text blocks overlap and may render unreadable.",
+        "rect": {
+          "left": 334,
+          "top": 587,
+          "right": 442.17,
+          "bottom": 647,
+          "width": 108.17,
+          "height": 60
+        },
+        "containerSelector": "div.db-sheet-title",
+        "text": "Prestamos activos",
+        "fixHint": "Give each block its own zone, or put data-layout-allow-overlap on the text or on a container inside the scene. A marker on the scene root does not apply. Decoration nobody needs to read can take data-layout-ignore.",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 334,
+          "y": 587,
+          "width": 108.17,
+          "height": 60
+        },
+        "firstSeen": 14.235,
+        "lastSeen": 14.235,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          14.235
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 17.111,
+        "selector": "div.db-app > div:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 316,
+          "top": 271,
+          "right": 516.22,
+          "bottom": 321,
+          "width": 200.22,
+          "height": 50
+        },
+        "containerSelector": "#db-touch-host > div:nth-of-type(1) > div:nth-of-type(1)",
+        "text": "Dashboard",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 316,
+          "y": 271,
+          "width": 200.22,
+          "height": 50
+        },
+        "firstSeen": 17.111,
+        "lastSeen": 17.111,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 17.111,
+        "selector": "div.db-app > div:nth-of-type(2)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 316,
+          "top": 330,
+          "right": 566.91,
+          "bottom": 360,
+          "width": 250.91,
+          "height": 30
+        },
+        "containerSelector": "#db-touch-host > div:nth-of-type(1) > div:nth-of-type(1)",
+        "text": "Resumen de cobranzas",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 316,
+          "y": 330,
+          "width": 250.91,
+          "height": 30
+        },
+        "firstSeen": 17.111,
+        "lastSeen": 17.111,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 17.111,
+        "selector": "div.db-kpis > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 334,
+          "top": 406,
+          "right": 438.02,
+          "bottom": 466,
+          "width": 104.02,
+          "height": 60
+        },
+        "containerSelector": "#db-touch-host > div:nth-of-type(1) > div:nth-of-type(1)",
+        "text": "Pendiente Hoy",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 334,
+          "y": 406,
+          "width": 104.02,
+          "height": 60
+        },
+        "firstSeen": 17.111,
+        "lastSeen": 17.111,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 17.111,
+        "selector": "div.db-kpis > div:nth-of-type(1) > span:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 334,
+          "top": 479,
+          "right": 487.08,
+          "bottom": 534,
+          "width": 153.08,
+          "height": 55
+        },
+        "containerSelector": "#db-touch-host > div:nth-of-type(1) > div:nth-of-type(1)",
+        "text": "$85.00",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 334,
+          "y": 479,
+          "width": 153.08,
+          "height": 55
+        },
+        "firstSeen": 17.111,
+        "lastSeen": 17.111,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 17.111,
+        "selector": "div.db-kpis > div:nth-of-type(2) > div:nth-of-type(1) > span:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 565,
+          "top": 406,
+          "right": 656.7,
+          "bottom": 466,
+          "width": 91.7,
+          "height": 60
+        },
+        "containerSelector": "#db-touch-host > div:nth-of-type(1) > div:nth-of-type(1)",
+        "text": "Cobrado Hoy",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 565,
+          "y": 406,
+          "width": 91.7,
+          "height": 60
+        },
+        "firstSeen": 17.111,
+        "lastSeen": 17.111,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 17.111,
+        "selector": "div.db-kpis > div:nth-of-type(2) > span:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 565,
+          "top": 479,
+          "right": 718.08,
+          "bottom": 534,
+          "width": 153.08,
+          "height": 55
+        },
+        "containerSelector": "#db-touch-host > div:nth-of-type(1) > div:nth-of-type(1)",
+        "text": "$45.00",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 565,
+          "y": 479,
+          "width": 153.08,
+          "height": 55
+        },
+        "firstSeen": 17.111,
+        "lastSeen": 17.111,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 17.111,
+        "selector": "div.db-kpis > div:nth-of-type(3) > div:nth-of-type(1) > span:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 334,
+          "top": 587,
+          "right": 442.17,
+          "bottom": 647,
+          "width": 108.17,
+          "height": 60
+        },
+        "containerSelector": "#db-touch-host > div:nth-of-type(1) > div:nth-of-type(1)",
+        "text": "Prestamos activos",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 334,
+          "y": 587,
+          "width": 108.17,
+          "height": 60
+        },
+        "firstSeen": 17.111,
+        "lastSeen": 17.111,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 17.111,
+        "selector": "div.db-kpis > div:nth-of-type(4) > div:nth-of-type(1) > span:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 565,
+          "top": 587,
+          "right": 648.31,
+          "bottom": 647,
+          "width": 83.31,
+          "height": 60
+        },
+        "containerSelector": "#db-touch-host > div:nth-of-type(1) > div:nth-of-type(1)",
+        "text": "Clientes totales",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 565,
+          "y": 587,
+          "width": 83.31,
+          "height": 60
+        },
+        "firstSeen": 17.111,
+        "lastSeen": 17.111,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 17.111,
+        "selector": "div.db-sheet-title",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 314,
+          "top": 705,
+          "right": 586.17,
+          "bottom": 755,
+          "width": 272.17,
+          "height": 50
+        },
+        "containerSelector": "#db-touch-host > div:nth-of-type(1) > div:nth-of-type(1)",
+        "text": "Registrar Pago",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 314,
+          "y": 705,
+          "width": 272.17,
+          "height": 50
+        },
+        "firstSeen": 17.111,
+        "lastSeen": 17.111,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 17.111,
+        "selector": "div.db-sheet-sub",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 314,
+          "top": 762,
+          "right": 619.22,
+          "bottom": 794,
+          "width": 305.22,
+          "height": 32
+        },
+        "containerSelector": "#db-touch-host > div:nth-of-type(1) > div:nth-of-type(1)",
+        "text": "Cuota #3 · María González",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 314,
+          "y": 762,
+          "width": 305.22,
+          "height": 32
+        },
+        "firstSeen": 17.111,
+        "lastSeen": 17.111,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          17.111
+        ]
+      },
+      {
+        "code": "text_occluded",
+        "severity": "info",
+        "time": 17.111,
+        "selector": "div.db-panel > div:nth-of-type(1) > span:nth-of-type(1)",
+        "message": "Text is hidden beneath an opaque element.",
+        "rect": {
+          "left": 336,
+          "top": 843,
+          "right": 499.17,
+          "bottom": 878,
+          "width": 163.17,
+          "height": 35
+        },
+        "containerSelector": "#db-touch-host > div:nth-of-type(1) > div:nth-of-type(1)",
+        "text": "Monto cuota:",
+        "fixHint": "Give the text its own zone, raise its stacking order above the covering element, or mark intentional layering with data-layout-allow-occlusion.",
+        "coveredFraction": 1,
+        "lifetime": {
+          "start": 13.2,
+          "end": 17.2
+        },
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 336,
+          "y": 843,
+          "width": 163.17,
+          "height": 35
+        },
+        "firstSeen": 17.111,
+        "lastSeen": 17.111,
+        "occurrences": 1,
+        "heldMs": 0,
+        "times": [
+          17.111
+        ]
+      }
+    ],
+    "duration": 28,
+    "samples": [
+      1.556,
+      4.667,
+      7.778,
+      10.889,
+      14,
+      17.111,
+      20.222,
+      23.333,
+      26.444
+    ],
+    "transitionSamples": [],
+    "transitionSamplesDropped": 0,
+    "tolerance": 2,
+    "totalIssueCount": 90,
+    "truncated": true
+  },
+  "motion": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [],
+    "enabled": false,
+    "samples": 0
+  },
+  "contrast": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 15,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.49:1; WCAG AA requires 3:1.",
+        "text": "MG",
+        "fg": "rgb(44,179,130)",
+        "bg": "rgb(243,248,247)",
+        "ratio": 2.49,
+        "requiredRatio": 3,
+        "suggestedColor": "rgb(40,162,118)",
+        "large": true,
+        "selector": "div > div:nth-of-type(2) > div > div > div:nth-of-type(3) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/caos.html",
+        "bbox": {
+          "x": 172.5625,
+          "y": 623.5035400390625,
+          "width": 150,
+          "height": 150
+        },
+        "time": 7.778,
+        "times": [
+          7.778
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.49:1; WCAG AA requires 3:1.",
+        "text": "CP",
+        "fg": "rgb(44,179,130)",
+        "bg": "rgb(243,248,247)",
+        "ratio": 2.49,
+        "requiredRatio": 3,
+        "suggestedColor": "rgb(40,162,118)",
+        "large": true,
+        "selector": "div > div:nth-of-type(2) > div > div > div:nth-of-type(3) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/caos.html",
+        "bbox": {
+          "x": 458.328125,
+          "y": 623.5035400390625,
+          "width": 150,
+          "height": 150
+        },
+        "time": 7.778,
+        "times": [
+          7.778
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.49:1; WCAG AA requires 3:1.",
+        "text": "RM",
+        "fg": "rgb(44,179,130)",
+        "bg": "rgb(243,248,247)",
+        "ratio": 2.49,
+        "requiredRatio": 3,
+        "suggestedColor": "rgb(40,162,118)",
+        "large": true,
+        "selector": "div > div:nth-of-type(2) > div > div > div:nth-of-type(3) > div:nth-of-type(2) > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/caos.html",
+        "bbox": {
+          "x": 750.765625,
+          "y": 623.5035400390625,
+          "width": 150,
+          "height": 150
+        },
+        "time": 7.778,
+        "times": [
+          7.778
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 1.57:1; WCAG AA requires 3:1.",
+        "text": "Resumen de cobranzas",
+        "fg": "rgb(100,116,139)",
+        "bg": "rgb(144,148,157)",
+        "ratio": 1.57,
+        "requiredRatio": 3,
+        "suggestedColor": "rgb(63,73,87)",
+        "large": true,
+        "selector": "div > div:nth-of-type(5) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 316,
+          "y": 329,
+          "width": 448,
+          "height": 32
+        },
+        "time": 14,
+        "times": [
+          14
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 1.84:1; WCAG AA requires 3:1.",
+        "text": "$85.00",
+        "fg": "rgb(44,179,130)",
+        "bg": "rgb(213,214,218)",
+        "ratio": 1.84,
+        "requiredRatio": 3,
+        "suggestedColor": "rgb(33,136,99)",
+        "large": true,
+        "selector": "div > div:nth-of-type(5) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(4) > span:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 676.3125,
+          "y": 767,
+          "width": 87.6875,
+          "height": 34
+        },
+        "time": 14,
+        "times": [
+          14
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 1.8:1; WCAG AA requires 3:1.",
+        "text": "$25.00",
+        "fg": "rgb(44,179,130)",
+        "bg": "rgb(210,212,216)",
+        "ratio": 1.8,
+        "requiredRatio": 3,
+        "suggestedColor": "rgb(33,135,98)",
+        "large": true,
+        "selector": "div > div:nth-of-type(5) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(4) > div:nth-of-type(3) > span:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 645.34375,
+          "y": 1012,
+          "width": 98.65625,
+          "height": 38
+        },
+        "time": 14,
+        "times": [
+          14
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.54:1; WCAG AA requires 3:1.",
+        "text": "Confirmar",
+        "fg": "rgb(255,255,255)",
+        "bg": "rgb(16,185,129)",
+        "ratio": 2.54,
+        "requiredRatio": 3,
+        "suggestedColor": "rgb(83,83,83)",
+        "large": true,
+        "selector": "#db-confirm",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 549,
+          "y": 1255,
+          "width": 217,
+          "height": 88
+        },
+        "time": 14,
+        "times": [
+          14
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 1.82:1; WCAG AA requires 4.5:1.",
+        "text": "Cobrado Hoy",
+        "fg": "rgb(255,255,255)",
+        "bg": "rgb(71,215,164)",
+        "ratio": 1.82,
+        "requiredRatio": 4.5,
+        "suggestedColor": "rgb(78,78,78)",
+        "large": false,
+        "selector": "div > div:nth-of-type(6) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(3) > div:nth-of-type(2) > div > span:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 558.0050048828125,
+          "y": 493.36083984375,
+          "width": 97.22705078125,
+          "height": 44.65240478515625
+        },
+        "time": 20.222,
+        "times": [
+          20.222
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 1.82:1; WCAG AA requires 3:1.",
+        "text": "$70.00",
+        "fg": "rgb(255,255,255)",
+        "bg": "rgb(71,215,164)",
+        "ratio": 1.82,
+        "requiredRatio": 3,
+        "suggestedColor": "rgb(105,105,105)",
+        "large": true,
+        "selector": "#dc-v2-new",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 558.0050048828125,
+          "y": 545.2152099609375,
+          "width": 110.24688720703125,
+          "height": 42.4918212890625
+        },
+        "time": 20.222,
+        "times": [
+          20.222
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.53:1; WCAG AA requires 3:1.",
+        "text": "$60.00",
+        "fg": "rgb(44,179,130)",
+        "bg": "rgb(248,249,250)",
+        "ratio": 2.53,
+        "requiredRatio": 3,
+        "suggestedColor": "rgb(40,163,118)",
+        "large": true,
+        "selector": "#dc-section-amount",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 638.1722412109375,
+          "y": 754.0732421875,
+          "width": 63.152587890625,
+          "height": 24.48681640625
+        },
+        "time": 20.222,
+        "times": [
+          20.222
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.54:1; WCAG AA requires 3:1.",
+        "text": "Pagada",
+        "fg": "rgb(16,185,129)",
+        "bg": "rgb(255,255,255)",
+        "ratio": 2.54,
+        "requiredRatio": 3,
+        "suggestedColor": "rgb(15,169,118)",
+        "large": true,
+        "selector": "div > div:nth-of-type(6) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(5) > div:nth-of-type(2) > span:nth-of-type(1) > span",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 483.0367126464844,
+          "y": 854.5411376953125,
+          "width": 62.949981689453125,
+          "height": 22.326171875
+        },
+        "time": 20.222,
+        "times": [
+          20.222
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.54:1; WCAG AA requires 3:1.",
+        "text": "$25.00",
+        "fg": "rgb(16,185,129)",
+        "bg": "rgb(255,255,255)",
+        "ratio": 2.54,
+        "requiredRatio": 3,
+        "suggestedColor": "rgb(15,169,118)",
+        "large": true,
+        "selector": "div > div:nth-of-type(6) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(1) > div:nth-of-type(5) > div:nth-of-type(2) > span:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 613.6741943359375,
+          "y": 852.0203857421875,
+          "width": 73.24658203125,
+          "height": 28.087890625
+        },
+        "time": 20.222,
+        "times": [
+          20.222
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.53:1; WCAG AA requires 3:1.",
+        "text": "$25.00",
+        "fg": "rgb(44,179,130)",
+        "bg": "rgb(248,249,250)",
+        "ratio": 2.53,
+        "requiredRatio": 3,
+        "suggestedColor": "rgb(40,163,118)",
+        "large": true,
+        "selector": "div > div:nth-of-type(6) > div > div > div:nth-of-type(1) > div > div:nth-of-type(2) > div:nth-of-type(3) > div:nth-of-type(4) > div:nth-of-type(3) > span:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 615.8685913085938,
+          "y": 1502.361083984375,
+          "width": 71.05218505859375,
+          "height": 27.3675537109375
+        },
+        "time": 20.222,
+        "times": [
+          20.222
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.54:1; WCAG AA requires 3:1.",
+        "text": "Confirmar",
+        "fg": "rgb(255,255,255)",
+        "bg": "rgb(16,185,129)",
+        "ratio": 2.54,
+        "requiredRatio": 3,
+        "suggestedColor": "rgb(83,83,83)",
+        "large": true,
+        "selector": "#dc-confirm",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 548.8260498046875,
+          "y": 1678.3203125,
+          "width": 151.59490966796875,
+          "height": 61.476318359375
+        },
+        "time": 20.222,
+        "times": [
+          20.222
+        ]
+      },
+      {
+        "code": "contrast_aa_failure",
+        "severity": "warning",
+        "message": "Contrast is 2.53:1; WCAG AA requires 3:1.",
+        "text": ".",
+        "fg": "rgb(44,179,130)",
+        "bg": "rgb(248,249,250)",
+        "ratio": 2.53,
+        "requiredRatio": 3,
+        "suggestedColor": "rgb(40,163,118)",
+        "large": true,
+        "selector": "div > div:nth-of-type(7) > div > div > div > h2 > span:nth-of-type(11)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/cierre.html",
+        "bbox": {
+          "x": 846.078125,
+          "y": 560,
+          "width": 32.21875,
+          "height": 122.71875
+        },
+        "time": 26.444,
+        "times": [
+          26.444
+        ]
+      }
+    ],
+    "enabled": true,
+    "samples": [
+      1.556,
+      7.778,
+      14,
+      20.222,
+      26.444
+    ],
+    "checked": 107,
+    "passed": 92
+  },
+  "craft": {
+    "ok": true,
+    "errorCount": 0,
+    "warningCount": 11,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "line_unread",
+        "severity": "warning",
+        "message": "\"¿LO SABES TODO… O COBRAS A OJO?\" (7 words) is on screen 1.44 s (±0.01 s), under its 1.95 s floor: hold it about 0.5 s + 0.3 s a word (2.60 s here) before it leaves or changes; see references/motion.md.",
+        "text": "¿LO SABES TODO… O COBRAS A OJO?",
+        "selector": "#hook-line2",
+        "dataAttributes": {},
+        "sourceFile": "compositions/hook.html",
+        "bbox": {
+          "x": 104.74,
+          "y": 730.79,
+          "width": 309.03,
+          "height": 211.06999999999994
+        },
+        "time": 1.734,
+        "words": 7,
+        "seconds": 1.438,
+        "floorSeconds": 1.95,
+        "measured": [
+          {
+            "time": 1.375,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 1.5,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 1.625,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 1.75,
+            "opacity": 0.73,
+            "heightPx": 211
+          },
+          {
+            "time": 1.875,
+            "opacity": 0.97,
+            "heightPx": 348
+          },
+          {
+            "time": 2,
+            "opacity": 1,
+            "heightPx": 495
+          },
+          {
+            "time": 2.125,
+            "opacity": 1,
+            "heightPx": 647
+          },
+          {
+            "time": 2.75,
+            "opacity": 1,
+            "heightPx": 647
+          },
+          {
+            "time": 2.875,
+            "opacity": 1,
+            "heightPx": 647
+          },
+          {
+            "time": 3,
+            "opacity": 0.99,
+            "heightPx": 647
+          },
+          {
+            "time": 3.125,
+            "opacity": 0.8,
+            "heightPx": 647
+          },
+          {
+            "time": 3.25,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 3.375,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 3.5,
+            "opacity": null,
+            "heightPx": null
+          }
+        ]
+      },
+      {
+        "code": "line_unread",
+        "severity": "warning",
+        "message": "\"✗ SIN REGISTRAR\" (2 words) is on screen 0.27 s (±0.01 s), under its 0.40 s floor: hold it about 0.5 s + 0.3 s a word (1.10 s here) before it leaves or changes; see references/motion.md.",
+        "text": "✗ SIN REGISTRAR",
+        "selector": "#caos-stamp",
+        "dataAttributes": {},
+        "sourceFile": "compositions/caos.html",
+        "bbox": {
+          "x": 311.99,
+          "y": 849.06,
+          "width": 499.78999999999996,
+          "height": 151.26999999999998
+        },
+        "time": 4.867,
+        "words": 2,
+        "seconds": 0.273,
+        "floorSeconds": 0.4,
+        "measured": [
+          {
+            "time": 4.5,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 4.625,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 4.75,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 4.875,
+            "opacity": 0.93,
+            "heightPx": 151
+          },
+          {
+            "time": 5,
+            "opacity": 1,
+            "heightPx": 137
+          },
+          {
+            "time": 5.125,
+            "opacity": 0.8,
+            "heightPx": 137
+          },
+          {
+            "time": 5.25,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 5.375,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 5.5,
+            "opacity": null,
+            "heightPx": null
+          }
+        ]
+      },
+      {
+        "code": "line_unread",
+        "severity": "warning",
+        "message": "\"¿Cuánto quedó pendiente de verdad?\" (5 words) is on screen 1.37 s (±0.01 s), under its 1.50 s floor: hold it about 0.5 s + 0.3 s a word (2.00 s here) before it leaves or changes; see references/motion.md.",
+        "text": "¿Cuánto quedó pendiente de verdad?",
+        "selector": "#caos-b2 > div:nth-of-type(2) > div:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/caos.html",
+        "bbox": {
+          "x": 0,
+          "y": 1122.04,
+          "width": 685,
+          "height": 50
+        },
+        "time": 5.203,
+        "words": 5,
+        "seconds": 1.367,
+        "floorSeconds": 1.5,
+        "measured": [
+          {
+            "time": 4.875,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 5,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 5.125,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 5.25,
+            "opacity": 0.85,
+            "heightPx": 50
+          },
+          {
+            "time": 5.375,
+            "opacity": 1,
+            "heightPx": 50
+          },
+          {
+            "time": 5.5,
+            "opacity": 1,
+            "heightPx": 50
+          },
+          {
+            "time": 5.625,
+            "opacity": 1,
+            "heightPx": 50
+          },
+          {
+            "time": 6.125,
+            "opacity": 1,
+            "heightPx": 50
+          },
+          {
+            "time": 6.25,
+            "opacity": 1,
+            "heightPx": 50
+          },
+          {
+            "time": 6.375,
+            "opacity": 1,
+            "heightPx": 50
+          },
+          {
+            "time": 6.5,
+            "opacity": 0.9,
+            "heightPx": 50
+          },
+          {
+            "time": 6.625,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 6.75,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 6.875,
+            "opacity": null,
+            "heightPx": null
+          }
+        ]
+      },
+      {
+        "code": "line_unread",
+        "severity": "warning",
+        "message": "\"Atrasados sin ningún aviso\" (4 words) is on screen 1.10 s (±0.01 s), under its 1.27 s floor: hold it about 0.5 s + 0.3 s a word (1.70 s here) before it leaves or changes; see references/motion.md.",
+        "text": "Atrasados sin ningún aviso",
+        "selector": "#caos-b3 > div:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/caos.html",
+        "bbox": {
+          "x": 244.64,
+          "y": 241.65,
+          "width": 590.7,
+          "height": 219.83
+        },
+        "time": 6.672,
+        "words": 4,
+        "seconds": 1.102,
+        "floorSeconds": 1.275,
+        "measured": [
+          {
+            "time": 6.375,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 6.5,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 6.625,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 6.75,
+            "opacity": 0.98,
+            "heightPx": 220
+          },
+          {
+            "time": 6.875,
+            "opacity": 1,
+            "heightPx": 220
+          },
+          {
+            "time": 7,
+            "opacity": 1,
+            "heightPx": 220
+          },
+          {
+            "time": 7.125,
+            "opacity": 1,
+            "heightPx": 220
+          },
+          {
+            "time": 7.375,
+            "opacity": 1,
+            "heightPx": 220
+          },
+          {
+            "time": 7.5,
+            "opacity": 1,
+            "heightPx": 220
+          },
+          {
+            "time": 7.625,
+            "opacity": 1,
+            "heightPx": 220
+          },
+          {
+            "time": 7.75,
+            "opacity": 0.7,
+            "heightPx": 220
+          },
+          {
+            "time": 7.875,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 8,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 8.125,
+            "opacity": null,
+            "heightPx": null
+          }
+        ]
+      },
+      {
+        "code": "line_unread",
+        "severity": "warning",
+        "message": "\"¿Quién no te pagó hoy?\" (5 words) is on screen 1.10 s (±0.01 s), under its 1.50 s floor: hold it about 0.5 s + 0.3 s a word (2.00 s here) before it leaves or changes; see references/motion.md.",
+        "text": "¿Quién no te pagó hoy?",
+        "selector": "#caos-b3 > div:nth-of-type(2) > div:nth-of-type(3)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/caos.html",
+        "bbox": {
+          "x": 0,
+          "y": 1108.31,
+          "width": 432.41,
+          "height": 50
+        },
+        "time": 6.672,
+        "words": 5,
+        "seconds": 1.102,
+        "floorSeconds": 1.5,
+        "measured": [
+          {
+            "time": 6.375,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 6.5,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 6.625,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 6.75,
+            "opacity": 0.98,
+            "heightPx": 50
+          },
+          {
+            "time": 6.875,
+            "opacity": 1,
+            "heightPx": 50
+          },
+          {
+            "time": 7,
+            "opacity": 1,
+            "heightPx": 50
+          },
+          {
+            "time": 7.125,
+            "opacity": 1,
+            "heightPx": 50
+          },
+          {
+            "time": 7.375,
+            "opacity": 1,
+            "heightPx": 50
+          },
+          {
+            "time": 7.5,
+            "opacity": 1,
+            "heightPx": 50
+          },
+          {
+            "time": 7.625,
+            "opacity": 1,
+            "heightPx": 50
+          },
+          {
+            "time": 7.75,
+            "opacity": 0.7,
+            "heightPx": 50
+          },
+          {
+            "time": 7.875,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 8,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 8.125,
+            "opacity": null,
+            "heightPx": null
+          }
+        ]
+      },
+      {
+        "code": "line_unread",
+        "severity": "warning",
+        "message": "\"Sin control, el dinero se esfuma.\" (6 words) is on screen 0.73 s (±0.01 s), under its 1.72 s floor: hold it about 0.5 s + 0.3 s a word (2.30 s here) before it leaves or changes; see references/motion.md.",
+        "text": "Sin control, el dinero se esfuma.",
+        "selector": "div.caos-final",
+        "dataAttributes": {},
+        "sourceFile": "compositions/caos.html",
+        "bbox": {
+          "x": 5.3,
+          "y": 716.24,
+          "width": 1069.39,
+          "height": 258.72
+        },
+        "time": 7.867,
+        "words": 6,
+        "seconds": 0.734,
+        "floorSeconds": 1.725,
+        "measured": [
+          {
+            "time": 7.5,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 7.625,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 7.75,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 7.875,
+            "opacity": 0.76,
+            "heightPx": 259
+          },
+          {
+            "time": 8,
+            "opacity": 1,
+            "heightPx": 259
+          },
+          {
+            "time": 8.125,
+            "opacity": 1,
+            "heightPx": 259
+          },
+          {
+            "time": 8.25,
+            "opacity": 1,
+            "heightPx": 259
+          },
+          {
+            "time": 8.375,
+            "opacity": 1,
+            "heightPx": 259
+          },
+          {
+            "time": 8.5,
+            "opacity": 1,
+            "heightPx": 259
+          },
+          {
+            "time": 8.625,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 8.75,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 8.875,
+            "opacity": null,
+            "heightPx": null
+          }
+        ]
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and \"Resumen de cobranzas\" renders at 24 px for 1.88 s: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "Resumen de cobranzas",
+        "selector": "#reveal-phone > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/reveal.html",
+        "bbox": {
+          "x": 316,
+          "y": 1830,
+          "width": 250.91,
+          "height": 30
+        },
+        "time": 8.625,
+        "times": [
+          8.625
+        ],
+        "fontPx": 24,
+        "floorPx": 28,
+        "seconds": 1.875,
+        "elements": [
+          {
+            "selector": "#reveal-phone > div:nth-of-type(1) > div:nth-of-type(2) > div:nth-of-type(2)",
+            "text": "Resumen de cobranzas",
+            "fontPx": 24,
+            "time": 8.625,
+            "seconds": 1.875
+          }
+        ]
+      },
+      {
+        "code": "line_unread",
+        "severity": "warning",
+        "message": "\"Tu cartera, ordenada\" (3 words) is on screen 0.40 s (±0.01 s), under its 1.05 s floor: hold it about 0.5 s + 0.3 s a word (1.40 s here) before it leaves or changes; see references/motion.md.",
+        "text": "Tu cartera, ordenada",
+        "selector": "#reveal-kicker",
+        "dataAttributes": {},
+        "sourceFile": "compositions/reveal.html",
+        "bbox": {
+          "x": 326.14,
+          "y": 503.71,
+          "width": 427.69999999999993,
+          "height": 55.00000000000006
+        },
+        "time": 9.203,
+        "words": 3,
+        "seconds": 0.398,
+        "floorSeconds": 1.05,
+        "measured": [
+          {
+            "time": 8.875,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 9,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 9.125,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 9.25,
+            "opacity": 0.68,
+            "heightPx": 55
+          },
+          {
+            "time": 9.375,
+            "opacity": 0.75,
+            "heightPx": 55
+          },
+          {
+            "time": 9.5,
+            "opacity": 0.72,
+            "heightPx": 55
+          },
+          {
+            "time": 9.625,
+            "opacity": 0.46,
+            "heightPx": 55
+          },
+          {
+            "time": 9.75,
+            "opacity": null,
+            "heightPx": null
+          },
+          {
+            "time": 9.875,
+            "opacity": null,
+            "heightPx": null
+          }
+        ]
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 12 text elements stay under it for 0.5 s or more, the smallest \"MG\" at 21 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "MG",
+        "selector": "#da-card1 > div:nth-of-type(1) > div:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-a.html",
+        "bbox": {
+          "x": 344.67,
+          "y": 857.86,
+          "width": 36.64,
+          "height": 27
+        },
+        "time": 11,
+        "times": [
+          10.5,
+          10.625,
+          10.75,
+          10.75,
+          10.875,
+          10.875,
+          11,
+          11,
+          11.125,
+          11.125,
+          11.125,
+          11.125
+        ],
+        "fontPx": 21.34,
+        "floorPx": 28,
+        "seconds": 2.25,
+        "elements": [
+          {
+            "selector": "#da-card1 > div:nth-of-type(1) > div:nth-of-type(1)",
+            "text": "MG",
+            "fontPx": 21.34,
+            "time": 11,
+            "seconds": 2.25
+          },
+          {
+            "selector": "#da-kpi3 > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "Prestamos activos",
+            "fontPx": 21.88,
+            "time": 10.75,
+            "seconds": 2.5
+          },
+          {
+            "selector": "#da-card2 > div:nth-of-type(1) > div:nth-of-type(1)",
+            "text": "CP",
+            "fontPx": 22,
+            "time": 11.125,
+            "seconds": 2.125
+          },
+          {
+            "selector": "#da-card3 > div:nth-of-type(1) > div:nth-of-type(1)",
+            "text": "RM",
+            "fontPx": 22,
+            "time": 11.125,
+            "seconds": 2.125
+          },
+          {
+            "selector": "#da-kpi4 > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "Clientes totales",
+            "fontPx": 22.81,
+            "time": 10.875,
+            "seconds": 2.375
+          },
+          {
+            "selector": "#da-kpi1 > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "Pendiente Hoy",
+            "fontPx": 22.86,
+            "time": 10.625,
+            "seconds": 2.625
+          },
+          {
+            "selector": "#da-kpi2 > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "Cobrado Hoy",
+            "fontPx": 23,
+            "time": 10.75,
+            "seconds": 2.5
+          },
+          {
+            "selector": "div.da-app > div:nth-of-type(2)",
+            "text": "Resumen de cobranzas",
+            "fontPx": 24,
+            "time": 10.5,
+            "seconds": 2.75
+          },
+          {
+            "selector": "#da-card1 > div:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "Cuota #3",
+            "fontPx": 24.25,
+            "time": 11,
+            "seconds": 2.25
+          },
+          {
+            "selector": "span.da-section-amount",
+            "text": "$85.00",
+            "fontPx": 25,
+            "time": 10.875,
+            "seconds": 2.375
+          },
+          {
+            "selector": "#da-card2 > div:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "Cuota #5",
+            "fontPx": 25,
+            "time": 11.125,
+            "seconds": 2.125
+          },
+          {
+            "selector": "#da-card3 > div:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "Cuota #2",
+            "fontPx": 25,
+            "time": 11.125,
+            "seconds": 2.125
+          }
+        ]
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 14 text elements stay under it for 0.5 s or more, the smallest \"MG\" at 21 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "MG",
+        "selector": "#db-card1 > div:nth-of-type(1) > div:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-b.html",
+        "bbox": {
+          "x": 350.53,
+          "y": 851.67,
+          "width": 35.54,
+          "height": 26.19
+        },
+        "time": 13.25,
+        "times": [
+          13.25,
+          13.25,
+          13.25,
+          13.25,
+          13.25,
+          13.25,
+          13.25,
+          13.25,
+          13.25,
+          13.25,
+          13.25,
+          13.25,
+          14,
+          14
+        ],
+        "fontPx": 21.34,
+        "floorPx": 28,
+        "seconds": 4,
+        "elements": [
+          {
+            "selector": "#db-card1 > div:nth-of-type(1) > div:nth-of-type(1)",
+            "text": "MG",
+            "fontPx": 21.34,
+            "time": 13.25,
+            "seconds": 4
+          },
+          {
+            "selector": "div.db-app > div:nth-of-type(6) > div:nth-of-type(1) > div:nth-of-type(1)",
+            "text": "CP",
+            "fontPx": 22,
+            "time": 13.25,
+            "seconds": 4
+          },
+          {
+            "selector": "div.db-app > div:nth-of-type(7) > div:nth-of-type(1) > div:nth-of-type(1)",
+            "text": "RM",
+            "fontPx": 22,
+            "time": 13.25,
+            "seconds": 4
+          },
+          {
+            "selector": "div.db-kpis > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "Pendiente Hoy",
+            "fontPx": 23,
+            "time": 13.25,
+            "seconds": 4
+          },
+          {
+            "selector": "div.db-kpis > div:nth-of-type(2) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "Cobrado Hoy",
+            "fontPx": 23,
+            "time": 13.25,
+            "seconds": 4
+          },
+          {
+            "selector": "div.db-kpis > div:nth-of-type(3) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "Prestamos activos",
+            "fontPx": 23,
+            "time": 13.25,
+            "seconds": 4
+          },
+          {
+            "selector": "div.db-kpis > div:nth-of-type(4) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "Clientes totales",
+            "fontPx": 23,
+            "time": 13.25,
+            "seconds": 4
+          },
+          {
+            "selector": "div.db-app > div:nth-of-type(2)",
+            "text": "Resumen de cobranzas",
+            "fontPx": 24,
+            "time": 13.25,
+            "seconds": 4
+          },
+          {
+            "selector": "#db-card1 > div:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "Cuota #3",
+            "fontPx": 24.25,
+            "time": 13.25,
+            "seconds": 4
+          },
+          {
+            "selector": "span.db-section-amount",
+            "text": "$85.00",
+            "fontPx": 25,
+            "time": 13.25,
+            "seconds": 4
+          },
+          {
+            "selector": "div.db-app > div:nth-of-type(6) > div:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "Cuota #5",
+            "fontPx": 25,
+            "time": 13.25,
+            "seconds": 4
+          },
+          {
+            "selector": "div.db-app > div:nth-of-type(7) > div:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "Cuota #2",
+            "fontPx": 25,
+            "time": 13.25,
+            "seconds": 4
+          },
+          {
+            "selector": "div.db-sheet-sub",
+            "text": "Cuota #3 · María González",
+            "fontPx": 26,
+            "time": 14,
+            "seconds": 3.25
+          },
+          {
+            "selector": "label.db-input-label",
+            "text": "Monto a pagar",
+            "fontPx": 27,
+            "time": 14,
+            "seconds": 3.25
+          }
+        ]
+      },
+      {
+        "code": "text_below_floor",
+        "severity": "warning",
+        "message": "Type floor is 28 px (2.6% of the 1080 px short side, what a phone can read) and 22 text elements stay under it for 0.5 s or more, the smallest \"MG\" at 16 px: set reading text to at least 28 px, or put data-layout-ignore on text that is texture rather than reading; see references/look.md.",
+        "text": "MG",
+        "selector": "div.dc-app > div:nth-of-type(5) > div:nth-of-type(1) > div:nth-of-type(1)",
+        "dataAttributes": {},
+        "sourceFile": "compositions/demo-c.html",
+        "bbox": {
+          "x": 344.67,
+          "y": 850.5,
+          "width": 36.64,
+          "height": 27
+        },
+        "time": 17.25,
+        "times": [
+          17.25,
+          17.25,
+          17.25,
+          17.25,
+          17.25,
+          17.25,
+          17.25,
+          17.25,
+          17.25,
+          17.25,
+          17.25,
+          17.25,
+          17.25,
+          17.25,
+          17.25,
+          19.875,
+          20,
+          20,
+          20,
+          20,
+          20,
+          20
+        ],
+        "fontPx": 15.84,
+        "floorPx": 28,
+        "seconds": 4.375,
+        "elements": [
+          {
+            "selector": "div.dc-app > div:nth-of-type(5) > div:nth-of-type(1) > div:nth-of-type(1)",
+            "text": "MG",
+            "fontPx": 15.84,
+            "time": 17.25,
+            "seconds": 4.375
+          },
+          {
+            "selector": "div.dc-app > div:nth-of-type(6) > div:nth-of-type(1) > div:nth-of-type(1)",
+            "text": "CP",
+            "fontPx": 15.84,
+            "time": 17.25,
+            "seconds": 4.375
+          },
+          {
+            "selector": "div.dc-app > div:nth-of-type(7) > div:nth-of-type(1) > div:nth-of-type(1)",
+            "text": "RM",
+            "fontPx": 15.84,
+            "time": 17.25,
+            "seconds": 4.375
+          },
+          {
+            "selector": "div.dc-kpis > div:nth-of-type(1) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "Pendiente Hoy",
+            "fontPx": 16.56,
+            "time": 17.25,
+            "seconds": 4.375
+          },
+          {
+            "selector": "div.dc-kpis > div:nth-of-type(2) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "Cobrado Hoy",
+            "fontPx": 16.56,
+            "time": 17.25,
+            "seconds": 4.375
+          },
+          {
+            "selector": "div.dc-kpis > div:nth-of-type(3) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "Prestamos activos",
+            "fontPx": 16.56,
+            "time": 17.25,
+            "seconds": 4.375
+          },
+          {
+            "selector": "div.dc-kpis > div:nth-of-type(4) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "Clientes totales",
+            "fontPx": 16.56,
+            "time": 17.25,
+            "seconds": 4.375
+          },
+          {
+            "selector": "div.dc-app > div:nth-of-type(2)",
+            "text": "Resumen de cobranzas",
+            "fontPx": 17.28,
+            "time": 17.25,
+            "seconds": 4.375
+          },
+          {
+            "selector": "#dc-section-amount",
+            "text": "$60.00",
+            "fontPx": 18,
+            "time": 17.25,
+            "seconds": 4.375
+          },
+          {
+            "selector": "div.dc-app > div:nth-of-type(5) > div:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "Cuota #3 ·",
+            "fontPx": 18,
+            "time": 17.25,
+            "seconds": 4.375
+          },
+          {
+            "selector": "span.dc-cuota > span:nth-of-type(1)",
+            "text": "Pagada",
+            "fontPx": 18,
+            "time": 17.25,
+            "seconds": 4.375
+          },
+          {
+            "selector": "div.dc-app > div:nth-of-type(6) > div:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "Cuota #5",
+            "fontPx": 18,
+            "time": 17.25,
+            "seconds": 4.375
+          },
+          {
+            "selector": "div.dc-app > div:nth-of-type(7) > div:nth-of-type(2) > span:nth-of-type(1)",
+            "text": "Cuota #2",
+            "fontPx": 18,
+            "time": 17.25,
+            "seconds": 4.375
+          },
+          {
+            "selector": "span.dc-section-title",
+            "text": "Ruta de cobro",
+            "fontPx": 20.16,
+            "time": 19.875,
+            "seconds": 1.75
+          },
+          {
+            "selector": "div.dc-app > div:nth-of-type(5) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "María González",
+            "fontPx": 20.88,
+            "time": 20,
+            "seconds": 1.625
+          },
+          {
+            "selector": "div.dc-app > div:nth-of-type(5) > div:nth-of-type(2) > span:nth-of-type(2)",
+            "text": "$25.00",
+            "fontPx": 20.88,
+            "time": 20,
+            "seconds": 1.625
+          },
+          {
+            "selector": "div.dc-app > div:nth-of-type(6) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "Carlos Pérez",
+            "fontPx": 20.88,
+            "time": 20,
+            "seconds": 1.625
+          },
+          {
+            "selector": "div.dc-app > div:nth-of-type(6) > div:nth-of-type(2) > span:nth-of-type(2)",
+            "text": "$15.00",
+            "fontPx": 20.88,
+            "time": 20,
+            "seconds": 1.625
+          },
+          {
+            "selector": "div.dc-app > div:nth-of-type(7) > div:nth-of-type(1) > span:nth-of-type(1)",
+            "text": "Rosa Martínez",
+            "fontPx": 20.88,
+            "time": 20,
+            "seconds": 1.625
+          },
+          {
+            "selector": "div.dc-app > div:nth-of-type(7) > div:nth-of-type(2) > span:nth-of-type(2)",
+            "text": "$25.00",
+            "fontPx": 20.88,
+            "time": 20,
+            "seconds": 1.625
+          },
+          {
+            "selector": "div.dc-sheet-sub",
+            "text": "Cuota #3 · María González",
+            "fontPx": 26,
+            "time": 17.25,
+            "seconds": 1.375
+          },
+          {
+            "selector": "label.dc-input-label",
+            "text": "Monto a pagar",
+            "fontPx": 27,
+            "time": 17.25,
+            "seconds": 1.375
+          }
+        ]
+      }
+    ],
+    "enabled": true,
+    "step": 0.125,
+    "samples": 224
+  },
+  "audio": {
+    "ok": false,
+    "errorCount": 18,
+    "warningCount": 0,
+    "infoCount": 0,
+    "findings": [
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/impact-bass-1.mp3 cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-hook-1",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 0,
+        "timeRange": [
+          0,
+          0.7
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/impact-bass-2.mp3 cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-hook-2",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 1.6,
+        "timeRange": [
+          1.6,
+          2.3
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/whoosh-short.mp3 cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-to-caos",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 3.1,
+        "timeRange": [
+          3.1,
+          3.5500000000000003
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/glitch-2.mp3 cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-tachon",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 4.9,
+        "timeRange": [
+          4.9,
+          5.4
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/error.mp3 cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-mora",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 6.4,
+        "timeRange": [
+          6.4,
+          7
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/whoosh-short.mp3 cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-reveal-whoosh",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 8.5,
+        "timeRange": [
+          8.5,
+          8.95
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/impact-bass-1.mp3 cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-reveal-slam",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 8.9,
+        "timeRange": [
+          8.9,
+          9.6
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/whoosh.mp3 cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-phone-in",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 9.5,
+        "timeRange": [
+          9.5,
+          10
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/pop.mp3 cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-kpis",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 10.9,
+        "timeRange": [
+          10.9,
+          11.3
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/click-soft.mp3 cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-tap-card",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 12.7,
+        "timeRange": [
+          12.7,
+          13
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/whoosh-short.mp3 cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-zoom",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 13,
+        "timeRange": [
+          13,
+          13.45
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/notification.mp3 cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-sheet",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 13.75,
+        "timeRange": [
+          13.75,
+          14.35
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/click.mp3 cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-confirm",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 16.8,
+        "timeRange": [
+          16.8,
+          17.1
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/chime.mp3 cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-check",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 17.5,
+        "timeRange": [
+          17.5,
+          18.3
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/pop.mp3 cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-kpi-update",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 18.3,
+        "timeRange": [
+          18.3,
+          18.7
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/whoosh-short.mp3 cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-cierre-in",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 21.5,
+        "timeRange": [
+          21.5,
+          21.95
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/impact-bass-2.mp3 cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-cierre-slam",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 21.9,
+        "timeRange": [
+          21.9,
+          22.599999999999998
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      },
+      {
+        "code": "audio_source_unreadable",
+        "severity": "error",
+        "message": "assets/sfx/ping.mp3 cannot be read as audio ([FFmpeg] ffprobe not found. Please install FFmpeg.), so the render's audio mix fails and the render stops.",
+        "selector": "#sfx-cta",
+        "dataAttributes": {},
+        "sourceFile": "index.html",
+        "bbox": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "time": 24.4,
+        "timeRange": [
+          24.4,
+          25
+        ],
+        "fixHint": "Point src at a file with an audio track, or re-export this one."
+      }
+    ]
+  },
+  "hdr": {
+    "autoPromotion": null,
+    "inspection": "available"
+  },
+  "snapshots": {
+    "enabled": false,
+    "files": [],
+    "times": [],
+    "findingFiles": []
+  }
+}

@@ -1,0 +1,287 @@
+<!doctype html>
+<!-- Escena 4a · DEMO Dashboard (12–14.8s): teléfono grande, KPIs y ruta de cobro, tap en María -->
+<html lang="es" data-composition-id="demo-a">
+  <head><meta charset="UTF-8" /><title>Demo A</title></head>
+  <body>
+    <template>
+      <style>
+        #root {
+          position: absolute;
+          inset: 0;
+          background: var(--ground, #f8f9fa);
+          font-family: var(--font-body, sans-serif);
+          color: var(--ink, #1e293b);
+        }
+        .da-app {
+          position: absolute;
+          left: 40px;
+          right: 40px;
+          top: 88px;
+        }
+        .da-kpis {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 14px;
+          margin-top: 26px;
+        }
+        .da-kpi {
+          background: var(--surface, #fff);
+          border-radius: 16px;
+          padding: 22px;
+          box-shadow: 0 1px 3px rgba(30, 41, 59, 0.06);
+        }
+        .da-kpi-head {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 8px;
+        }
+        .da-kpi-label {
+          font-size: 36px;
+          font-weight: 500;
+          opacity: 0.85;
+        }
+        .da-kpi-icon {
+          width: 56px;
+          height: 56px;
+          border-radius: 999px;
+          display: grid;
+          place-items: center;
+          flex: 0 0 auto;
+        }
+        .da-kpi-icon svg {
+          width: 30px;
+          height: 30px;
+        }
+        .da-kpi-value {
+          display: block;
+          margin-top: 10px;
+          font-size: 56px;
+          font-weight: 800;
+          font-variant-numeric: tabular-nums;
+          letter-spacing: -0.01em;
+        }
+        .da-section {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-top: 28px;
+        }
+        .da-section-title {
+          font-size: 36px;
+          font-weight: 700;
+        }
+        .da-section-amount {
+          font-size: 36px;
+          font-weight: 600;
+          color: var(--mint-ink, #28a376);
+          font-variant-numeric: tabular-nums;
+        }
+        .da-client {
+          background: var(--surface, #fff);
+          border-radius: 16px;
+          padding: 22px;
+          box-shadow: 0 1px 3px rgba(30, 41, 59, 0.06);
+          margin-top: 14px;
+        }
+        .da-client-head {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+        }
+        .da-avatar {
+          width: 72px;
+          height: 72px;
+          border-radius: 999px;
+          display: grid;
+          place-items: center;
+          font-weight: 700;
+          font-size: 34px;
+          background: #e2e8f0;
+          color: #475569;
+          flex: 0 0 auto;
+        }
+        .da-client-name {
+          font-size: 38px;
+          font-weight: 700;
+        }
+        .da-client-row {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-top: 12px;
+        }
+        .da-cuota {
+          font-size: 38px;
+          color: var(--muted, #64748b);
+        }
+        .da-monto {
+          font-size: 38px;
+          font-weight: 600;
+          font-variant-numeric: tabular-nums;
+        }
+      </style>
+
+      <div id="root" data-composition-id="demo-a" data-width="1080" data-height="1920">
+        <div
+          id="demo-a-clip"
+          class="clip"
+          data-start="0"
+          data-duration="2.8"
+          data-track-index="0"
+        >
+          <div id="da-phone" style="position: absolute; left: 180px; top: 180px; width: 720px; height: 1560px; background: #0f172a; border-radius: 76px; box-shadow: 0 30px 60px rgba(30, 41, 59, 0.18), 0 2px 0 rgba(255,255,255,0.06) inset">
+            <div style="position: absolute; inset: 18px; border-radius: 58px; background: var(--ground, #f8f9fa); overflow: hidden">
+              <div style="position: absolute; left: 50%; top: 14px; width: 140px; height: 28px; margin-left: -70px; border-radius: 999px; background: #0f172a"></div>
+
+              <div id="da-zoom" style="position: absolute; inset: 0">
+                <div class="da-app">
+                  <div style="font-weight: 800; font-size: 52px; letter-spacing: -0.02em">Dashboard</div>
+                  <div style="font-weight: 500; font-size: 36px; color: var(--muted, #64748b); margin-top: 4px">Resumen de cobranzas</div>
+
+                  <div class="da-kpis">
+                    <div class="da-kpi" id="da-kpi1">
+                      <div class="da-kpi-head">
+                        <span class="da-kpi-label">Pendiente Hoy</span>
+                        <span class="da-kpi-icon" style="background: #fef3c7; color: #b45309">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                        </span>
+                      </div>
+                      <span class="da-kpi-value" id="da-v1">$85.00</span>
+                    </div>
+                    <div class="da-kpi" id="da-kpi2" style="background: #47d7a4">
+                      <div class="da-kpi-head">
+                        <span class="da-kpi-label" style="color: var(--ink, #1e293b); opacity: 0.85">Cobrado Hoy</span>
+                        <span class="da-kpi-icon" style="background: #2cb382; color: #fff">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        </span>
+                      </div>
+                      <span class="da-kpi-value" id="da-v2" style="color: var(--ink, #1e293b)">$45.00</span>
+                    </div>
+                    <div class="da-kpi" id="da-kpi3">
+                      <div class="da-kpi-head">
+                        <span class="da-kpi-label">Prestamos activos</span>
+                        <span class="da-kpi-icon" style="background: rgba(71, 215, 164, 0.12); color: #2cb382">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="22" x2="21" y2="22"/><line x1="6" y1="18" x2="6" y2="11"/><line x1="10" y1="18" x2="10" y2="11"/><line x1="14" y1="18" x2="14" y2="11"/><line x1="18" y1="18" x2="18" y2="11"/><polygon points="12 2 20 7 4 7"/></svg>
+                        </span>
+                      </div>
+                      <span class="da-kpi-value" id="da-v3">12</span>
+                    </div>
+                    <div class="da-kpi" id="da-kpi4">
+                      <div class="da-kpi-head">
+                        <span class="da-kpi-label">Clientes totales</span>
+                        <span class="da-kpi-icon" style="background: #f5f3ff; color: #7c3aed">
+                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        </span>
+                      </div>
+                      <span class="da-kpi-value" id="da-v4">24</span>
+                    </div>
+                  </div>
+
+                  <div class="da-section" id="da-section">
+                    <span class="da-section-title">Ruta de cobro</span>
+                    <span class="da-section-amount">$85.00</span>
+                  </div>
+
+                  <div class="da-client" id="da-card1">
+                    <div class="da-client-head">
+                      <div class="da-avatar">MG</div>
+                      <span class="da-client-name">María González</span>
+                    </div>
+                    <div class="da-client-row">
+                      <span class="da-cuota">Cuota #3</span>
+                      <span class="da-monto">$25.00</span>
+                    </div>
+                  </div>
+                  <div class="da-client" id="da-card2">
+                    <div class="da-client-head">
+                      <div class="da-avatar">CP</div>
+                      <span class="da-client-name">Carlos Pérez</span>
+                    </div>
+                    <div class="da-client-row">
+                      <span class="da-cuota">Cuota #5</span>
+                      <span class="da-monto">$15.00</span>
+                    </div>
+                  </div>
+                  <div class="da-client" id="da-card3">
+                    <div class="da-client-head">
+                      <div class="da-avatar">RM</div>
+                      <span class="da-client-name">Rosa Martínez</span>
+                    </div>
+                    <div class="da-client-row">
+                      <span class="da-cuota">Cuota #2</span>
+                      <span class="da-monto">$25.00</span>
+                    </div>
+                  </div>
+                  <div class="da-client" id="da-card4">
+                    <div class="da-client-head">
+                      <div class="da-avatar">LG</div>
+                      <span class="da-client-name">Luis Gómez</span>
+                    </div>
+                    <div class="da-client-row">
+                      <span class="da-cuota">Cuota #1</span>
+                      <span class="da-monto">$20.00</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            id="da-touch-host"
+            style="position: absolute; left: 198px; top: 198px; width: 684px; height: 1524px"
+          >
+            <div
+              id="da-touch"
+              data-composition-id="touch-indicator"
+              data-composition-src="compositions/components/touch-indicator.html"
+              data-start="2.05"
+              data-duration="0.65"
+              data-track-index="1"
+              data-variable-values='{ "gesture": "tap", "polarity": "dark", "targetX": 50, "targetY": 45 }'
+              style="position: absolute; inset: 0"
+            ></div>
+          </div>
+        </div>
+      </div>
+
+      <script>
+        (function () {
+          "use strict";
+          var tl = gsap.timeline({ paused: true });
+
+          ["#da-kpi1", "#da-kpi2", "#da-kpi3", "#da-kpi4"].forEach(function (id, i) {
+            tl.fromTo(
+              id,
+              { scale: 0.82, opacity: 0, transformOrigin: "50% 50%" },
+              { scale: 1, opacity: 1, duration: 0.34, ease: "back.out(1.6)" },
+              0.08 + i * 0.09,
+            );
+          });
+
+          [
+            "#da-section",
+            "#da-card1",
+            "#da-card2",
+            "#da-card3",
+            "#da-card4",
+          ].forEach(function (id, i) {
+            tl.fromTo(
+              id,
+              { y: 42, opacity: 0 },
+              { y: 0, opacity: 1, duration: 0.34, ease: "power3.out" },
+              0.4 + i * 0.08,
+            );
+          });
+
+          tl.to("#da-card1", { scale: 0.97, duration: 0.12, ease: "power2.out", transformOrigin: "50% 50%" }, 2.117);
+
+          tl.seek(0);
+          window.__timelines = window.__timelines || {};
+          window.__timelines["demo-a"] = tl;
+        })();
+      </script>
+    </template>
+  </body>
+</html>
